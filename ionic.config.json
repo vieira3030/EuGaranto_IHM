@@ -1,0 +1,7 @@
+{
+  "name": "EuGaranto",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

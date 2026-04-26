@@ -1,13 +1,21 @@
 import { Component } from '@angular/core';
-import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
+import { CommonModule } from '@angular/common'; // Resolve o erro do *ngFor
+import { IonicModule } from '@ionic/angular';   // Resolve os erros do <ion-...>
+import { GarantiasService } from '../services/garantias';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent],
+  standalone: true,
+  imports: [CommonModule, IonicModule] // Importa as tags necessárias para o HTML
 })
 export class Tab1Page {
-  constructor() {}
+  listaGarantias: any[] = [];
+
+  constructor(private garantiasService: GarantiasService) {}
+
+  async ionViewWillEnter() {
+    this.listaGarantias = await this.garantiasService.getGarantias();
+  }
 }

@@ -5,10 +5,17 @@ import { IonicRouteStrategy, provideIonicAngular } from '@ionic/angular/standalo
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 
+// 1. As novas importações para o Storage
+import { importProvidersFrom } from '@angular/core';
+import { IonicStorageModule } from '@ionic/storage-angular';
+
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
+    
+    // 2. A configuração do Storage
+    importProvidersFrom(IonicStorageModule.forRoot())
   ],
 });

@@ -1,0 +1,38 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="Voltar"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Detalhes do Produto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="garantia">
+    <h1 style="font-weight: bold; margin-bottom: 20px;">{{ garantia.nome }}</h1>
+    
+    <ion-item>
+      <ion-icon name="calendar-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>Data de Compra</h2>
+        <p>{{ garantia.dataCompra }}</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="location-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>Local de Arrumação</h2>
+        <p>{{ garantia.localFisico }}</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-icon name="time-outline" slot="start"></ion-icon>
+      <ion-label>
+        <h2>Tempo Restante</h2>
+        <p style="color: green; font-weight: bold;">{{ garantia.diasRestantes }} dias</p>
+      </ion-label>
+    </ion-item>
+  </div>
+</ion-content>

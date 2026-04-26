@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Resolve o erro do *ngFor
-import { IonicModule } from '@ionic/angular';   // Resolve os erros do <ion-...>
+import { CommonModule } from '@angular/common';
+import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router'; 
 import { GarantiasService } from '../services/garantias';
 
 @Component({
@@ -8,7 +9,8 @@ import { GarantiasService } from '../services/garantias';
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   standalone: true,
-  imports: [CommonModule, IonicModule] // Importa as tags necessárias para o HTML
+  // 2. E adicionamos o RouterModule a esta lista de imports:
+  imports: [CommonModule, IonicModule, RouterModule] 
 })
 export class Tab1Page {
   listaGarantias: any[] = [];

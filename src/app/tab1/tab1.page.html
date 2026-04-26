@@ -6,7 +6,7 @@
 
 <ion-content [fullscreen]="true" class="ion-padding">
   
-  <ion-card *ngFor="let item of listaGarantias" color="light">
+  <ion-card *ngFor="let item of listaGarantias" color="light" [routerLink]="['/garantia-detalhe', item.id]" button="true">
     <ion-card-header>
       <ion-card-title>{{ item.nome }}</ion-card-title>
     </ion-card-header>

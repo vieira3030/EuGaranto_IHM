@@ -1,17 +1,27 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
+    <ion-title>Grupos</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
+  
+  <ion-list lines="inset">
+    
+    <ion-item *ngFor="let grupo of listaGrupos" button="true">
+      <ion-icon name="folder-open-outline" slot="start" color="primary"></ion-icon>
+      <ion-label>
+        <h2 style="font-weight: bold;">{{ grupo }}</h2>
+      </ion-label>
+      
+      <ion-note slot="end">Ver garantias</ion-note>
+    </ion-item>
+  </ion-list>
 
-  <app-explore-container name="Tab 2 page"></app-explore-container>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button>
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

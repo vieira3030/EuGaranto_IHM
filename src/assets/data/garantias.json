@@ -3,6 +3,7 @@
     {
       "id": "1",
       "nome": "Televisor Samsung",
+      "grupo": "Tecnologia",
       "dataCompra": "2025-03-24",
       "diasRestantes": 365,
       "valor": 500,
@@ -12,6 +13,7 @@
     {
       "id": "2",
       "nome": "iPhone 16",
+      "grupo": "Tecnologia",
       "dataCompra": "2025-01-01",
       "diasRestantes": 167,
       "valor": 950,
@@ -21,11 +23,19 @@
     {
       "id": "3",
       "nome": "Máquina de Lavar",
+      "grupo": "Eletrodomésticos",
       "dataCompra": "2026-03-24",
       "diasRestantes": 730,
       "valor": 350,
       "localFisico": "Capa de argolas do escritório",
       "alerta": "1 mês antes"
     }
+  ],
+  "grupos": [
+    "Tecnologia",
+    "Cozinha",
+    "Eletrodomésticos",
+    "Ferramentas",
+    "Outros"
   ]
 }

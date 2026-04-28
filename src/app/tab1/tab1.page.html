@@ -1,21 +1,20 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Garantias</ion-title>
+    <ion-title style="text-decoration: underline; font-weight: bold;">EuGaranto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  
-  <ion-card *ngFor="let item of listaGarantias" color="light" [routerLink]="['/garantia-detalhe', item.id]" button="true">
-    <ion-card-header>
-      <ion-card-title>{{ item.nome }}</ion-card-title>
-    </ion-card-header>
+<ion-content class="ion-padding">
+  <p style="margin-bottom: 20px; font-size: 16px;">As minhas garantias:</p>
 
-    <ion-card-content>
-      <h2 style="color: green; font-weight: bold;">{{ item.diasRestantes }} dias restantes</h2>
-      <p><strong>Comprado a:</strong> {{ item.dataCompra }}</p>
-      <p><strong>Local:</strong> {{ item.localFisico }}</p>
-    </ion-card-content>
-  </ion-card>
+  <div *ngFor="let g of garantias" [routerLink]="['/garantia-detalhe', g.id]" 
+       style="background: #e0e0e0; padding: 15px; margin-bottom: 12px; color: black; border-radius: 2px;">
+    <div style="font-size: 14px; margin-bottom: 4px;">Nome do produto: {{ g.nome }}</div>
+    <div style="font-size: 14px;">Dias restantes: <b>{{ g.diasRestantes }} dias restantes</b></div>
+  </div>
 
+  <ion-button expand="block" 
+              style="--background: #7CFC00; --color: black; height: 70px; font-size: 22px; margin-top: 25px; font-weight: bold;">
+    Adicionar garantia
+  </ion-button>
 </ion-content>

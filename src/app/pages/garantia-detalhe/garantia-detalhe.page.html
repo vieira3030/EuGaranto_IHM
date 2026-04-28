@@ -1,60 +1,39 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/" text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalhes do Produto</ion-title>
+    <ion-title style="font-weight: bold;">EuGaranto</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
   <div *ngIf="garantia">
-    <h1 style="font-weight: bold; margin-bottom: 20px;">{{ garantia.nome }}</h1>
+    <p style="font-size: 16px; margin-bottom: 10px;">Detalhe do Produto:</p>
     
-    <ion-item>
-      <ion-icon name="calendar-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>Data de Compra</h2>
-        <p>{{ garantia.dataCompra }}</p>
-      </ion-label>
-    </ion-item>
+    <h2 style="text-align: center; font-weight: bold; margin-bottom: 15px;">{{ garantia.nome }}</h2>
 
-    <ion-item>
-      <ion-icon name="location-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>Local de Arrumação</h2>
-        <p>{{ garantia.localFisico }}</p>
-      </ion-label>
-    </ion-item>
+    <div style="background: #d9d9d9; height: 160px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
+      <span style="font-size: 20px; color: #444;">Foto do talão</span>
+    </div>
 
-    <ion-item>
-      <ion-icon name="time-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>Tempo Restante</h2>
-        <p style="color: green; font-weight: bold;">{{ garantia.diasRestantes }} dias</p>
-      </ion-label>
-    </ion-item>
+    <div style="line-height: 1.6; font-size: 15px; margin-bottom: 20px;">
+      <div>Data de compra: {{ garantia.dataCompra }}</div>
+      <div>Data de expiração: (cálculo automático)</div>
+      <div>Dias restantes: {{ garantia.diasRestantes }} dias</div>
+      <div>Alerta configurado: {{ garantia.alerta }}</div>
+    </div>
 
-    <ion-item>
-      <ion-icon name="notifications-outline" slot="start"></ion-icon>
-      <ion-label>
-        <h2>Alerta Configurado</h2>
-        <p>{{ garantia.alerta }}</p>
-      </ion-label>
-    </ion-item>
+    <div style="background: #d9d9d9; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto; text-align: center; padding: 10px;">
+      <span style="font-size: 14px; color: #444;">Foto do<br>local físico</span>
+    </div>
 
-    <ion-item>
-      <ion-icon name="receipt-outline" slot="start"></ion-icon>
-      <ion-label><h2>Foto do Talão</h2></ion-label>
-      <ion-button slot="end" fill="clear">Ver Talão</ion-button>
-    </ion-item>
-
-    <div style="display: flex; gap: 10px; margin-top: 30px;">
-      <ion-button expand="block" color="warning" style="flex: 1;" (click)="editar()">
-        <ion-icon name="pencil" slot="start"></ion-icon> Editar
+    <div style="display: flex; justify-content: space-between;">
+      <ion-button style="--background: #7CFC00; --color: black; width: 48%; font-weight: bold;" (click)="editar()">
+        Editar
       </ion-button>
-      <ion-button expand="block" color="danger" style="flex: 1;" (click)="eliminar()">
-        <ion-icon name="trash" slot="start"></ion-icon> Eliminar
+      <ion-button style="--background: #FF0000; --color: white; width: 48%; font-weight: bold;" (click)="eliminar()">
+        Eliminar
       </ion-button>
     </div>
   </div>

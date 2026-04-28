@@ -55,4 +55,33 @@ export class GarantiasService {
     const data = await this._storage?.get('dados_app');
     return data?.grupos || ["Tecnologia", "Cozinha", "Eletrodomésticos", "Ferramentas", "Outros"];
   }
+
+  /**
+   * Remove uma garantia da base de dados local com base no seu ID.
+   */
+  async removerGarantia(id: string) {
+    let garantias = await this.getGarantias();
+    // Filtra a lista, removendo o item que tem o ID igual ao que queremos apagar
+    garantias = garantias.filter((g: any) => g.id !== id);
+
+    const dadosAtuais = await this._storage?.get('dados_app');
+    if (dadosAtuais) {
+      dadosAtuais.garantias = garantias;
+      await this._storage?.set('dados_app', dadosAtuais); // Atualiza o Storage
+    }
+  }
+
+  /**
+   * Adiciona uma nova garantia à base de dados local.
+   */
+  async adicionarGarantia(novaGarantia: any) {
+    let garantias = await this.getGarantias();
+    garantias.push(novaGarantia);
+
+    const dadosAtuais = await this._storage?.get('dados_app');
+    if (dadosAtuais) {
+      dadosAtuais.garantias = garantias;
+      await this._storage?.set('dados_app', dadosAtuais); // Atualiza o Storage
+    }
+  }
 }

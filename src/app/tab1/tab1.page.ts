@@ -15,21 +15,21 @@ export class Tab1Page implements OnInit {
 
   constructor(private garantiasService: GarantiasService) {}
 
+  /** Inicializa o componente e subscreve o evento de alteração de dados do serviço. */
   async ngOnInit() {
-    // Carrega a lista ao iniciar
     this.carregarLista();
 
-    // Fica atento a mudanças (ex: quando alguém apaga um item no detalhe)
     this.garantiasService.dadosAlterados.subscribe(() => {
       this.carregarLista();
     });
   }
 
+  /** Obtém a lista atualizada de garantias através do serviço. */
   async carregarLista() {
     this.garantias = await this.garantiasService.getGarantias();
   }
 
-  // Reforço para quando mudas de tabs
+  /** Garante a atualização dos dados expostos na interface sempre que o componente entra em foco. */
   async ionViewWillEnter() {
     this.carregarLista();
   }

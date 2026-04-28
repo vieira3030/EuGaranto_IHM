@@ -16,10 +16,11 @@ export class GarantiaDetalhePage implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private alertController: AlertController, // Para o pop-up de confirmação
+    private alertController: AlertController,
     private garantiasService: GarantiasService
   ) { }
 
+  /** Método executado na inicialização do componente para carregar os detalhes do produto pelo ID. */
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -28,6 +29,7 @@ export class GarantiaDetalhePage implements OnInit {
     }
   }
 
+  /** Apresenta um alerta de confirmação e procede com a eliminação do registo caso o utilizador confirme. */
   async eliminar() {
     const alert = await this.alertController.create({
       header: 'Deseja mesmo eliminar esta garantia?',
@@ -37,7 +39,7 @@ export class GarantiaDetalhePage implements OnInit {
           text: 'Sim',
           handler: async () => {
             await this.garantiasService.removerGarantia(this.garantia.id);
-            this.router.navigate(['/tabs/tab1']); // Volta para a lista
+            this.router.navigate(['/tabs/tab1']); // Redireciona para o ecrã de listagem
           }
         }
       ]
@@ -45,5 +47,8 @@ export class GarantiaDetalhePage implements OnInit {
     await alert.present();
   }
 
-  editar() { console.log('Editar clicado'); }
+  /** Método reservado para futura implementação da funcionalidade de edição. */
+  editar() { 
+    console.log('Método editar acionado.'); 
+  }
 }

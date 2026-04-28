@@ -4,19 +4,22 @@ import { Storage } from '@ionic/storage-angular';
 @Injectable({ providedIn: 'root' })
 export class GarantiasService {
   private _storage: Storage | null = null;
-  // Evento que avisa quando a lista de garantias muda
+  
+  /** Evento emitido para notificar os componentes sobre alterações na base de dados local. */
   public dadosAlterados = new EventEmitter<void>();
 
   constructor(private storage: Storage) { 
     this.init(); 
   }
 
+  /** Inicializa o serviço de armazenamento assíncrono. */
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
     await this.carregarDadosIniciais();
   }
 
+  /** Carrega os dados do ficheiro JSON local caso a base de dados esteja vazia. */
   private async carregarDadosIniciais() {
     const jaTemDados = await this._storage?.get('dados_app');
     if (!jaTemDados) {
@@ -26,17 +29,19 @@ export class GarantiasService {
     }
   }
 
+  /** Recupera a lista de garantias do armazenamento local. */
   async getGarantias() {
     const data = await this._storage?.get('dados_app');
     return data?.garantias || [];
   }
 
-  // A FUNÇÃO QUE FALTAVA
+  /** Recupera a lista de grupos disponíveis no armazenamento local. */
   async getGrupos(): Promise<string[]> {
     const data = await this._storage?.get('dados_app');
     return data?.grupos || ["Tecnologia", "Cozinha", "Eletrodomésticos", "Ferramentas", "Outros"];
   }
 
+  /** Remove um registo de garantia com base no identificador fornecido. */
   async removerGarantia(id: string) {
     let garantias = await this.getGarantias();
     garantias = garantias.filter((g: any) => g.id !== id);
@@ -45,12 +50,11 @@ export class GarantiasService {
     if (dadosAtuais) {
       dadosAtuais.garantias = garantias;
       await this._storage?.set('dados_app', dadosAtuais);
-      // Avisa que os dados mudaram
-      this.dadosAlterados.emit();
+      this.dadosAlterados.emit(); // Aciona a notificação de atualização
     }
   }
 
-  // FUNÇÃO REPOSTA PARA QUANDO FIZERMOS O FORMULÁRIO
+  /** Insere um novo registo de garantia no armazenamento local. */
   async adicionarGarantia(novaGarantia: any) {
     let garantias = await this.getGarantias();
     garantias.push(novaGarantia);
@@ -59,8 +63,7 @@ export class GarantiasService {
     if (dadosAtuais) {
       dadosAtuais.garantias = garantias;
       await this._storage?.set('dados_app', dadosAtuais);
-      // Avisa que os dados mudaram
-      this.dadosAlterados.emit();
+      this.dadosAlterados.emit(); // Aciona a notificação de atualização
     }
   }
 }

@@ -9,4 +9,12 @@ export const routes: Routes = [
     path: 'garantia-detalhe/:id', // O :id é o parâmetro que vamos passar
     loadComponent: () => import('./pages/garantia-detalhe/garantia-detalhe.page').then( m => m.GarantiaDetalhePage)
   },
+  {
+    path: 'registar-garantia',
+    loadComponent: () => import('./pages/registar-garantia/registar-garantia.page').then( m => m.RegistarGarantiaPage)
+  },
+  {
+    path: 'registar-garantia',
+    loadComponent: () => import('./pages/registar-garantia/registar-garantia.page').then( m => m.RegistarGarantiaPage)
+  },
 ];

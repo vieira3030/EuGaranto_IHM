@@ -7,13 +7,15 @@
 <ion-content class="ion-padding">
   <p style="margin-bottom: 20px; font-size: 16px;">As minhas garantias:</p>
 
+  <!-- Lista iterativa dos registos de garantias com redirecionamento dinâmico para a página de detalhes -->
   <div *ngFor="let g of garantias" [routerLink]="['/garantia-detalhe', g.id]" 
        style="background: #e0e0e0; padding: 15px; margin-bottom: 12px; color: black; border-radius: 2px;">
     <div style="font-size: 14px; margin-bottom: 4px;">Nome do produto: {{ g.nome }}</div>
     <div style="font-size: 14px;">Dias restantes: <b>{{ g.diasRestantes }} dias restantes</b></div>
   </div>
 
-  <ion-button expand="block" 
+  <!-- Ação de redirecionamento estático para o formulário de novo registo (Tarefa 2) -->
+  <ion-button expand="block" routerLink="/registar-garantia"
               style="--background: #7CFC00; --color: black; height: 70px; font-size: 22px; margin-top: 25px; font-weight: bold;">
     Adicionar garantia
   </ion-button>

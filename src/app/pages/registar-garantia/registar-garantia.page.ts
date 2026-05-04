@@ -2,25 +2,22 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { GarantiasService } from '../../services/garantias';
-
-// Importações necessárias para a arquitetura Standalone Components
-import { IonicModule } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+
+// Importações corretas para Standalone
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonFooter } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-registar-garantia',
   templateUrl: './registar-garantia.page.html',
   styleUrls: ['./registar-garantia.page.scss'],
-  standalone: true, // Tem de estar a true nesta arquitetura
-  imports: [IonicModule, CommonModule, FormsModule] // Importação explícita dos módulos exigidos pelo HTML
+  standalone: true,
+  imports: [CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonInput, IonButton, IonFooter]
 })
 export class RegistarGarantiaPage {
-  
-  /** Controlador de estado para o progresso do formulário (1 a 5). */
   passoAtual: number = 1;
 
-  /** Objeto de dados para armazenamento temporário das propriedades da garantia. */
   novaGarantia = {
     id: Date.now().toString(),
     nome: '',
@@ -33,12 +30,8 @@ export class RegistarGarantiaPage {
     diasRestantes: 0
   };
 
-  constructor(
-    private garantiasService: GarantiasService,
-    private router: Router
-  ) {}
+  constructor(private garantiasService: GarantiasService, private router: Router) {}
 
-  /** Incrementa o estado do formulário para avançar na interface. */
   avancarPasso() {
     if (this.passoAtual < 5) {
       this.passoAtual++;
@@ -48,28 +41,22 @@ export class RegistarGarantiaPage {
     }
   }
 
-  /** Decrementa o estado do formulário para regressar ao ecrã anterior. */
   recuarPasso() {
     if (this.passoAtual > 1) {
       this.passoAtual--;
     }
   }
 
-  /** Define a periodicidade de notificação. */
   setAlerta(alerta: string) {
     this.novaGarantia.alerta = alerta;
   }
 
-  /** 
-   * Invoca a API nativa da câmara via Capacitor para captura de imagem.
-   * O parâmetro define se a imagem se destina ao talão ou ao local físico.
-   */
   async tirarFoto(tipo: 'talao' | 'local') {
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
       resultType: CameraResultType.DataUrl,
-      source: CameraSource.Prompt // Permite escolher entre Câmara e Galeria
+      source: CameraSource.Prompt
     });
 
     if (image.dataUrl) {
@@ -78,7 +65,6 @@ export class RegistarGarantiaPage {
     }
   }
 
-  /** Calcula de forma simplificada a diferença em dias até à expiração. */
   calcularDiasRestantes() {
     if (this.novaGarantia.dataExpiracao) {
       const dataExp = new Date(this.novaGarantia.dataExpiracao);
@@ -88,10 +74,6 @@ export class RegistarGarantiaPage {
     }
   }
 
-  /** 
-   * Executa a inserção do objeto no Ionic Storage através do serviço 
-   * e redireciona o utilizador para a listagem principal.
-   */
   async concluirRegisto() {
     await this.garantiasService.adicionarGarantia(this.novaGarantia);
     this.router.navigate(['/tabs/tab1']);

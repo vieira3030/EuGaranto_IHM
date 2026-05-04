@@ -1,14 +1,17 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IonicModule, AlertController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GarantiasService } from '../../services/garantias';
+import { AlertController } from '@ionic/angular';
+
+// Importações corretas para Standalone
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, IonBackButton } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-garantia-detalhe',
   templateUrl: './garantia-detalhe.page.html',
   standalone: true,
-  imports: [CommonModule, IonicModule]
+  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, IonBackButton]
 })
 export class GarantiaDetalhePage implements OnInit {
   garantia: any;
@@ -20,7 +23,6 @@ export class GarantiaDetalhePage implements OnInit {
     private garantiasService: GarantiasService
   ) { }
 
-  /** Método executado na inicialização do componente para carregar os detalhes do produto pelo ID. */
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -29,7 +31,6 @@ export class GarantiaDetalhePage implements OnInit {
     }
   }
 
-  /** Apresenta um alerta de confirmação e procede com a eliminação do registo caso o utilizador confirme. */
   async eliminar() {
     const alert = await this.alertController.create({
       header: 'Deseja mesmo eliminar esta garantia?',
@@ -39,7 +40,7 @@ export class GarantiaDetalhePage implements OnInit {
           text: 'Sim',
           handler: async () => {
             await this.garantiasService.removerGarantia(this.garantia.id);
-            this.router.navigate(['/tabs/tab1']); // Redireciona para o ecrã de listagem
+            this.router.navigate(['/tabs/tab1']);
           }
         }
       ]
@@ -47,7 +48,6 @@ export class GarantiaDetalhePage implements OnInit {
     await alert.present();
   }
 
-  /** Método reservado para futura implementação da funcionalidade de edição. */
   editar() { 
     console.log('Método editar acionado.'); 
   }

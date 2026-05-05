@@ -1,27 +1,27 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Grupos</ion-title>
+    <ion-title style="text-decoration: underline; font-weight: bold;">EuGaranto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  
-  <ion-list lines="inset">
-    
-    <ion-item *ngFor="let grupo of listaGrupos" button="true">
-      <ion-icon name="folder-open-outline" slot="start" color="primary"></ion-icon>
-      <ion-label>
-        <h2 style="font-weight: bold;">{{ grupo }}</h2>
-      </ion-label>
-      
-      <ion-note slot="end">Ver garantias</ion-note>
-    </ion-item>
-  </ion-list>
+<ion-content class="ion-padding">
+  <p style="margin-bottom: 20px; font-size: 16px;">Os meus grupos:</p>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <!-- Lista iterativa dos grupos criados (Preparação para a Issue #9) -->
+  <div *ngFor="let g of grupos"
+       style="background: #e0e0e0; padding: 15px; margin-bottom: 12px; color: black; border-radius: 4px;">
+    <div style="font-size: 16px; margin-bottom: 4px; font-weight: bold;">{{ g.nome }}</div>
+    <div style="font-size: 14px;">Membros: {{ g.membros?.length || 0 }} | Garantias partilhadas: {{ g.garantiasPartilhadas?.length || 0 }}</div>
+  </div>
 
+  <!-- Mensagem de estado vazio (quando não há grupos) -->
+  <p *ngIf="!grupos || grupos.length === 0" style="text-align: center; color: gray; margin-top: 30px;">
+    Ainda não tens grupos criados.
+  </p>
+
+  <!-- Ação de redirecionamento estático para o formulário de novo grupo (Issue #8) -->
+  <ion-button expand="block" routerLink="/criar-grupo"
+              style="--background: #7CFC00; --color: black; height: 70px; font-size: 22px; margin-top: 25px; font-weight: bold;">
+    Adicionar Grupo
+  </ion-button>
 </ion-content>

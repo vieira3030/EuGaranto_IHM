@@ -1,0 +1,113 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title style="font-weight: bold;">EuGaranto</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+  <!-- Indicador de Progresso -->
+  <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+    <div [style.background]="passoAtual >= 1 ? '#7CFC00' : '#e0e0e0'" style="width: 25px; height: 25px; border-radius: 50%; text-align: center; font-weight: bold; color: black;">1</div>
+    <div [style.background]="passoAtual >= 2 ? '#7CFC00' : '#e0e0e0'" style="width: 25px; height: 25px; border-radius: 50%; text-align: center; font-weight: bold; color: black;">2</div>
+    <div [style.background]="passoAtual >= 3 ? '#7CFC00' : '#e0e0e0'" style="width: 25px; height: 25px; border-radius: 50%; text-align: center; font-weight: bold; color: black;">3</div>
+    <div [style.background]="passoAtual >= 4 ? '#7CFC00' : '#e0e0e0'" style="width: 25px; height: 25px; border-radius: 50%; text-align: center; font-weight: bold; color: black;">4</div>
+  </div>
+
+  <!-- PASSO 1: DADOS DO GRUPO E MEMBROS -->
+  <div *ngIf="passoAtual === 1">
+    <h3 style="font-weight: bold; text-align: center;">Passo 1: Detalhes do Grupo</h3>
+    
+    <ion-item lines="none" style="--background: #e0e0e0; margin-bottom: 20px; border-radius: 4px;">
+      <div style="width: 100%; padding: 5px 0;">
+        <div style="font-size: 12px; color: #555;">Nome do Grupo:</div>
+        <ion-input type="text" [(ngModel)]="novoGrupo.nome" placeholder="Ex: Família, Colegas..."></ion-input>
+      </div>
+    </ion-item>
+
+    <h4 style="font-size: 16px;">Adicionar Membros</h4>
+    <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+      <ion-item lines="none" style="--background: #e0e0e0; border-radius: 4px; flex: 1;">
+        <ion-input type="email" [(ngModel)]="novoMembroEmail" placeholder="Email do membro"></ion-input>
+      </ion-item>
+      <ion-button style="--background: #7CFC00; --color: black;" (click)="adicionarMembro()">Adicionar</ion-button>
+    </div>
+
+    <ion-list style="background: transparent;">
+      <ion-item *ngFor="let membro of novoGrupo.membros" style="--background: #f4f5f8; margin-bottom: 5px; border-radius: 4px;" lines="none">
+        <ion-label>{{ membro }}</ion-label>
+        <ion-icon slot="end" name="close-circle" style="color: red; cursor: pointer;" (click)="removerMembro(membro)"></ion-icon>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- PASSO 2: SELEÇÃO DE GARANTIAS -->
+  <div *ngIf="passoAtual === 2">
+    <h3 style="font-weight: bold; text-align: center;">Passo 2: Partilhar Garantias</h3>
+    <p style="font-size: 14px; text-align: center;">Selecione os produtos que este grupo poderá ver:</p>
+
+    <p *ngIf="garantiasDisponiveis.length === 0" style="text-align: center; color: gray;">Ainda não tem garantias registadas.</p>
+
+    <ion-list style="background: transparent;">
+      <ion-item *ngFor="let garantia of garantiasDisponiveis" style="--background: #e0e0e0; margin-bottom: 10px; border-radius: 4px;" lines="none">
+        <ion-checkbox slot="start" [checked]="isGarantiaSelecionada(garantia.id)" (ionChange)="toggleGarantia(garantia)" style="--checkbox-background-checked: #7CFC00; --border-color-checked: #7CFC00;"></ion-checkbox>
+        <ion-label>
+          <h2 style="font-weight: bold;">{{ garantia.nome }}</h2>
+          <p>Expira a: {{ garantia.dataExpiracao }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- PASSO 3: ALERTAS POR MEMBRO -->
+  <div *ngIf="passoAtual === 3">
+    <h3 style="font-weight: bold; text-align: center;">Passo 3: Configurar Alertas</h3>
+    <p style="font-size: 14px; text-align: center;">Com que antecedência cada membro deve ser avisado?</p>
+
+    <p *ngIf="novoGrupo.membros.length === 0" style="text-align: center; color: gray;">Sem membros adicionados.</p>
+
+    <ion-list style="background: transparent;">
+      <ion-item *ngFor="let membro of novoGrupo.membros" style="--background: #e0e0e0; margin-bottom: 10px; border-radius: 4px;" lines="none">
+        <ion-label position="stacked" style="font-weight: bold; margin-bottom: 5px;">{{ membro }}</ion-label>
+        <ion-select [(ngModel)]="novoGrupo.alertasMembros[membro]" interface="popover" style="width: 100%;">
+          <ion-select-option value="1 dia antes">1 dia antes</ion-select-option>
+          <ion-select-option value="1 semana antes">1 semana antes</ion-select-option>
+          <ion-select-option value="1 mes antes">1 mês antes</ion-select-option>
+          <ion-select-option value="Sem alertas">Sem alertas</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+  </div>
+
+  <!-- PASSO 4: CONFIRMAÇÃO -->
+  <div *ngIf="passoAtual === 4">
+    <h2 style="font-weight: bold; text-align: center;">Resumo do Grupo</h2>
+    
+    <div style="background: #e0e0e0; padding: 15px; color: black; margin-top: 20px; border-radius: 4px;">
+      <div style="font-size: 16px; margin-bottom: 10px;"><b>Nome:</b> {{ novoGrupo.nome }}</div>
+      <div style="font-size: 14px; margin-bottom: 5px;"><b>Membros:</b> {{ novoGrupo.membros.length }} adicionados</div>
+      <div style="font-size: 14px;"><b>Garantias partilhadas:</b> {{ novoGrupo.garantiasPartilhadas.length }} selecionadas</div>
+    </div>
+  </div>
+
+</ion-content>
+
+<!-- RODAPÉ DE NAVEGAÇÃO -->
+<ion-footer class="ion-no-border">
+  <ion-toolbar class="ion-padding-horizontal">
+    <div style="display: flex; justify-content: space-between;">
+      <ion-button *ngIf="passoAtual > 1" color="medium" (click)="recuarPasso()">
+        &larr; Anterior
+      </ion-button>
+      <div *ngIf="passoAtual === 1"></div>
+
+      <ion-button *ngIf="passoAtual < 4" style="--background: #7CFC00; --color: black;" (click)="avancarPasso()">
+        Seguinte &rarr;
+      </ion-button>
+      
+      <ion-button *ngIf="passoAtual === 4" style="--background: #7CFC00; --color: black;" (click)="concluirCriacao()">
+        Criar Grupo
+      </ion-button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

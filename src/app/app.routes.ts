@@ -16,5 +16,9 @@ export const routes: Routes = [
   {
     path: 'registar-garantia',
     loadComponent: () => import('./pages/registar-garantia/registar-garantia.page').then( m => m.RegistarGarantiaPage)
+  },  {
+    path: 'criar-grupo',
+    loadComponent: () => import('./pages/criar-grupo/criar-grupo.page').then( m => m.CriarGrupoPage)
   },
+
 ];

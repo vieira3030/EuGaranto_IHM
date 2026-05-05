@@ -1,8 +1,7 @@
 import { Component, EnvironmentInjector, inject } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-// 1. Adicionado o ícone 'person' à lista de importações
-import { triangle, ellipse, square, person } from 'ionicons/icons';
+import { person, shieldCheckmark, people } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tabs',
@@ -14,7 +13,6 @@ export class TabsPage {
   public environmentInjector = inject(EnvironmentInjector);
 
   constructor() {
-    // 2. Registado o ícone 'person' para poder ser usado no HTML
-    addIcons({ triangle, ellipse, square, person });
+    addIcons({ shieldCheckmark, people, person });
   }
 }

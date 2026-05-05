@@ -101,7 +101,10 @@
       </ion-button>
       <div *ngIf="passoAtual === 1"></div>
 
-      <ion-button *ngIf="passoAtual < 4" style="--background: #7CFC00; --color: black;" (click)="avancarPasso()">
+      <ion-button *ngIf="passoAtual < 4" 
+                  style="--background: #7CFC00; --color: black;" 
+                  (click)="avancarPasso()"
+                  [disabled]="passoAtual === 1 && novoGrupo.nome.trim() === ''">
         Seguinte &rarr;
       </ion-button>
       

@@ -1,8 +1,9 @@
-<ion-header class="ion-no-border">
+<<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start">
+    <ion-buttons slot="start" *ngIf="passoAtual === 1">
       <ion-back-button defaultHref="/tabs/tab1" text="Cancelar"></ion-back-button>
     </ion-buttons>
+    
     <ion-title style="font-weight: bold;">EuGaranto</ion-title>
   </ion-toolbar>
 </ion-header>

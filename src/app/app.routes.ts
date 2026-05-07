@@ -6,19 +6,13 @@ export const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
   },
   {
-    path: 'garantia-detalhe/:id', // O :id é o parâmetro que vamos passar
-    loadComponent: () => import('./pages/garantia-detalhe/garantia-detalhe.page').then( m => m.GarantiaDetalhePage)
-  },
-  {
-    path: 'registar-garantia',
-    loadComponent: () => import('./pages/registar-garantia/registar-garantia.page').then( m => m.RegistarGarantiaPage)
-  },
-  {
-    path: 'registar-garantia',
-    loadComponent: () => import('./pages/registar-garantia/registar-garantia.page').then( m => m.RegistarGarantiaPage)
-  },  {
     path: 'criar-grupo',
     loadComponent: () => import('./pages/criar-grupo/criar-grupo.page').then( m => m.CriarGrupoPage)
   },
-
+  {
+    // A rota ':id' permite receber um parâmetro dinâmico na navegação,
+    // essencial para saber qual grupo mostrar na página de detalhes.
+    path: 'detalhe-grupo/:id',
+    loadComponent: () => import('./pages/detalhe-grupo/detalhe-grupo.page').then( m => m.DetalheGrupoPage)
+  },
 ];

@@ -3,15 +3,24 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { GruposService } from '../services/grupos';
 
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
+// 1. Importar aqui os componentes visuais do Ionic que faltavam
+import { 
+  IonHeader, IonToolbar, IonTitle, IonContent, IonButton, 
+  IonList, IonItem, IonLabel 
+} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   standalone: true,
-  imports: [CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton]
+  // 2. Adicionar os componentes à lista de imports do componente
+  imports: [
+    CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, 
+    IonContent, IonButton, IonList, IonItem, IonLabel
+  ]
 })
 export class Tab2Page implements OnInit {
+  // Variável que guarda o array de grupos a apresentar no ecrã
   grupos: any[] = [];
 
   constructor(private gruposService: GruposService) {}
@@ -19,12 +28,13 @@ export class Tab2Page implements OnInit {
   async ngOnInit() {
     this.carregarGrupos();
     
-    // Fica à escuta de novos grupos para atualizar a lista automaticamente
+    // Subscreve as alterações no serviço para atualizar a lista automaticamente
     this.gruposService.dadosAlterados.subscribe(() => {
       this.carregarGrupos();
     });
   }
-// Função para carregar a lista de grupos guardados
+
+  // Método que vai buscar os grupos à base de dados local
   async carregarGrupos() {
     this.grupos = await this.gruposService.getGrupos();
   }

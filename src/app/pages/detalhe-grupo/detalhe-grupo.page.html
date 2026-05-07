@@ -1,0 +1,44 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab2" text="Voltar"></ion-back-button>
+    </ion-buttons>
+    <ion-title style="font-weight: bold;">{{ grupo?.nome }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div *ngIf="grupo">
+    
+    <ion-list style="background: transparent; margin-bottom: 20px;">
+      <ion-list-header style="padding-left: 0;">
+        <ion-label style="font-weight: bold; font-size: 18px;">Membros do Grupo</ion-label>
+      </ion-list-header>
+      
+      <ion-item *ngFor="let membro of grupo.membros" 
+                style="--background: #e0e0e0; margin-bottom: 5px; border-radius: 4px;" 
+                lines="none">
+        <ion-label>{{ membro }}</ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-list style="background: transparent;">
+      <ion-list-header style="padding-left: 0;">
+        <ion-label style="font-weight: bold; font-size: 18px;">Garantias Partilhadas</ion-label>
+      </ion-list-header>
+      
+      <p *ngIf="grupo.garantiasPartilhadas.length === 0" style="color: gray; padding-left: 5px;">
+        Nenhuma garantia partilhada com este grupo.
+      </p>
+
+      <ion-item *ngFor="let garantia of grupo.garantiasPartilhadas" 
+                style="--background: #e0e0e0; margin-bottom: 5px; border-radius: 4px;" 
+                lines="none">
+        <ion-label>
+          <h2 style="font-weight: bold;">{{ garantia.nome }}</h2>
+          <p>Data de Expiração: {{ garantia.dataExpiracao }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

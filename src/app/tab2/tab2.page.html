@@ -1,27 +1,31 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title style="text-decoration: underline; font-weight: bold;">EuGaranto</ion-title>
+    <ion-title style="font-weight: bold;">Meus Grupos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <p style="margin-bottom: 20px; font-size: 16px;">Os meus grupos:</p>
-
-  <!-- Lista iterativa dos grupos criados (Preparação para a Issue #9) -->
-  <div *ngFor="let g of grupos"
-       style="background: #e0e0e0; padding: 15px; margin-bottom: 12px; color: black; border-radius: 4px;">
-    <div style="font-size: 16px; margin-bottom: 4px; font-weight: bold;">{{ g.nome }}</div>
-    <div style="font-size: 14px;">Membros: {{ g.membros?.length || 0 }} | Garantias partilhadas: {{ g.garantiasPartilhadas?.length || 0 }}</div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <h2 style="margin: 0; font-weight: bold;">Grupos de Partilha</h2>
+    <ion-button fill="clear" style="--color: #7CFC00;" [routerLink]="['/criar-grupo']">
+      Criar Novo
+    </ion-button>
   </div>
 
-  <!-- Mensagem de estado vazio (quando não há grupos) -->
-  <p *ngIf="!grupos || grupos.length === 0" style="text-align: center; color: gray; margin-top: 30px;">
-    Ainda não tens grupos criados.
+  <p *ngIf="grupos.length === 0" style="text-align: center; color: gray; margin-top: 50px;">
+    Ainda não criaste nenhum grupo.
   </p>
 
-  <!-- Ação de redirecionamento estático para o formulário de novo grupo (Issue #8) -->
-  <ion-button expand="block" routerLink="/criar-grupo"
-              style="--background: #7CFC00; --color: black; height: 70px; font-size: 22px; margin-top: 25px; font-weight: bold;">
-    Adicionar Grupo
-  </ion-button>
+  <ion-list style="background: transparent;">
+    <ion-item *ngFor="let grupo of grupos" 
+              [routerLink]="['/detalhe-grupo', grupo.id]" 
+              button 
+              style="--background: #e0e0e0; margin-bottom: 10px; border-radius: 4px;" 
+              lines="none">
+      <ion-label>
+        <h2 style="font-weight: bold;">{{ grupo.nome }}</h2>
+        <p>{{ grupo.membros.length }} membros</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
 </ion-content>

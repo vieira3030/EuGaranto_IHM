@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    // Rota inicial que carrega o sistema de tabs da aplicação
+   // Ficheiro principal de rotas da aplicação (EuGaranto)
     path: '',
     loadChildren: () => import('./tabs/tabs.routes').then((m) => m.routes),
   },

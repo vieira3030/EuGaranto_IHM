@@ -6,14 +6,14 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 // Importações corretas para Standalone
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonFooter } from '@ionic/angular/standalone';
+import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInput, IonButton, IonFooter, IonBackButton, IonButtons } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-registar-garantia',
   templateUrl: './registar-garantia.page.html',
   styleUrls: ['./registar-garantia.page.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonInput, IonButton, IonFooter]
+  imports: [IonButtons, IonBackButton, CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonInput, IonButton, IonFooter]
 })
 export class RegistarGarantiaPage {
   passoAtual: number = 1;

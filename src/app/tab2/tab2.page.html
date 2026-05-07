@@ -5,12 +5,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-    <h2 style="margin: 0; font-weight: bold;">Grupos de Partilha</h2>
-    <ion-button fill="clear" style="--color: #7CFC00;" [routerLink]="['/criar-grupo']">
-      Criar Novo
-    </ion-button>
-  </div>
+  <h2 style="margin-top: 0; margin-bottom: 20px; font-weight: bold;">Grupos de Partilha</h2>
 
   <p *ngIf="grupos.length === 0" style="text-align: center; color: gray; margin-top: 50px;">
     Ainda não criaste nenhum grupo.
@@ -20,7 +15,7 @@
     <ion-item *ngFor="let grupo of grupos" 
               [routerLink]="['/detalhe-grupo', grupo.id]" 
               button 
-              style="--background: #e0e0e0; margin-bottom: 10px; border-radius: 4px;" 
+              style="--background: #e0e0e0; margin-bottom: 10px; --border-radius: 4px;" 
               lines="none">
       <ion-label>
         <h2 style="font-weight: bold;">{{ grupo.nome }}</h2>
@@ -28,4 +23,10 @@
       </ion-label>
     </ion-item>
   </ion-list>
+
+  <ion-button expand="block" 
+              style="--background: #7CFC00; --color: black; font-weight: bold; margin-top: 30px; height: 65px; font-size: 20px; --border-radius: 12px; text-transform: none;" 
+              [routerLink]="['/criar-grupo']">
+    Criar grupo
+  </ion-button>
 </ion-content>

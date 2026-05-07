@@ -24,7 +24,7 @@ export class Tab2Page implements OnInit {
       this.carregarGrupos();
     });
   }
-
+// Função para carregar a lista de grupos guardados
   async carregarGrupos() {
     this.grupos = await this.gruposService.getGrupos();
   }

@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { GruposService } from '../services/grupos';
 
-// Importações Standalone
 import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/angular/standalone';
 
 @Component({
@@ -11,8 +11,26 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/a
   standalone: true,
   imports: [CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton]
 })
-export class Tab2Page {
-  grupos: any[] = []; // O Laurindo vai preencher isto na Issue #9
+export class Tab2Page implements OnInit {
+  grupos: any[] = [];
 
-  constructor() {}
+  constructor(private gruposService: GruposService) {}
+
+  async ngOnInit() {
+    this.carregarGrupos();
+    
+    // Fica à escuta de novos grupos para atualizar a lista automaticamente
+    this.gruposService.dadosAlterados.subscribe(() => {
+      this.carregarGrupos();
+    });
+  }
+
+  async carregarGrupos() {
+    this.grupos = await this.gruposService.getGrupos();
+  }
+
+  // Atualiza a lista sempre que o separador é aberto
+  async ionViewWillEnter() {
+    this.carregarGrupos();
+  }
 }

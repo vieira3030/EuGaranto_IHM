@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { GarantiasService } from '../../services/garantias';
+import { GruposService } from '../../services/grupos';
 
-// Importações corretas para Standalone Components
 import { 
   IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, 
   IonInput, IonButton, IonFooter, IonList, IonCheckbox, IonSelect, IonSelectOption, IonIcon 
@@ -32,18 +32,18 @@ export class CriarGrupoPage implements OnInit {
     nome: '',
     membros: [] as string[],
     garantiasPartilhadas: [] as any[],
-    alertasMembros: {} as any // Guarda as preferências de alerta de cada membro
+    alertasMembros: {} as any
   };
 
   constructor(
     private garantiasService: GarantiasService,
+    private gruposService: GruposService,
     private router: Router
   ) {
     addIcons({ closeCircle });
   }
 
   async ngOnInit() {
-    // Carrega as garantias do utilizador para ele poder escolher quais partilhar
     this.garantiasDisponiveis = await this.garantiasService.getGarantias();
   }
 
@@ -58,7 +58,7 @@ export class CriarGrupoPage implements OnInit {
   adicionarMembro() {
     if (this.novoMembroEmail.trim() !== '' && !this.novoGrupo.membros.includes(this.novoMembroEmail)) {
       this.novoGrupo.membros.push(this.novoMembroEmail);
-      this.novoGrupo.alertasMembros[this.novoMembroEmail] = '1 semana antes'; // Alerta por defeito
+      this.novoGrupo.alertasMembros[this.novoMembroEmail] = '1 semana antes';
       this.novoMembroEmail = '';
     }
   }
@@ -81,9 +81,9 @@ export class CriarGrupoPage implements OnInit {
     return this.novoGrupo.garantiasPartilhadas.some(g => g.id === id);
   }
 
-  concluirCriacao() {
-    // Aqui no futuro chamaremos o GruposService (Issue #9) para guardar o grupo.
-    console.log('Grupo criado:', this.novoGrupo);
-    this.router.navigate(['/tabs/tab2']); // Volta para a tab de Grupos
+  async concluirCriacao() {
+    // Guarda o grupo no Storage antes de navegar
+    await this.gruposService.adicionarGrupo(this.novoGrupo);
+    this.router.navigate(['/tabs/tab2']);
   }
 }

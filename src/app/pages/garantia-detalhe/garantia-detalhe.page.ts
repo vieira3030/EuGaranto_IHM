@@ -10,8 +10,8 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, Ion
 @Component({
   selector: 'app-garantia-detalhe',
   templateUrl: './garantia-detalhe.page.html',
-  standalone: true,
-  imports: [CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, IonBackButton]
+  standalone: false,
+ 
 })
 export class GarantiaDetalhePage implements OnInit {
   garantia: any;

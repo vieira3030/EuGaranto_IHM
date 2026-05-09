@@ -9,8 +9,8 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton } from '@ionic/a
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
-  standalone: true,
-  imports: [CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, IonContent, IonButton]
+  standalone: false,
+  
 })
 export class Tab1Page implements OnInit {
   garantias: any[] = [];

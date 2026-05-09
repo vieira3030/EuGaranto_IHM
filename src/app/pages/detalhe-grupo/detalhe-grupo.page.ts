@@ -10,11 +10,8 @@ import {
 @Component({
   selector: 'app-detalhe-grupo',
   templateUrl: './detalhe-grupo.page.html',
-  standalone: true,
-  imports: [
-    CommonModule, IonHeader, IonToolbar, IonTitle, IonContent, 
-    IonButtons, IonBackButton, IonList, IonItem, IonLabel, IonListHeader
-  ]
+  standalone: false,
+  
 })
 export class DetalheGrupoPage implements OnInit {
   // Variável para armazenar a informação do grupo selecionado

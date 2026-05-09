@@ -6,13 +6,13 @@ import { IonicModule } from '@ionic/angular';
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
-  standalone: true,
-  imports: [CommonModule, IonicModule]
+  standalone: false,
+  
 })
 export class Tab3Page {
   // Os dados do utilizador
   utilizador = {
-    nome: 'Rodrigo Vieira', // Podes alterar para o nome que quiseres
+    nome: 'Rodrigo Vieira', 
     email: 'rodrigo.vieira@estudante.pt',
     notificacoes: true,
     modoEscuro: false

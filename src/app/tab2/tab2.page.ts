@@ -12,12 +12,9 @@ import {
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
-  standalone: true,
-  // 2. Adicionar os componentes à lista de imports do componente
-  imports: [
-    CommonModule, RouterModule, IonHeader, IonToolbar, IonTitle, 
-    IonContent, IonButton, IonList, IonItem, IonLabel
-  ]
+  standalone: false,
+  
+
 })
 export class Tab2Page implements OnInit {
   // Variável que guarda o array de grupos a apresentar no ecrã

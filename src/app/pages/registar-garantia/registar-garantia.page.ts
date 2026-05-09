@@ -13,8 +13,8 @@ import { IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonLabel, IonInpu
   selector: 'app-registar-garantia',
   templateUrl: './registar-garantia.page.html',
   styleUrls: ['./registar-garantia.page.scss'],
-  standalone: true,
-  imports: [IonButtons, IonBackButton, CommonModule, FormsModule, IonHeader, IonToolbar, IonTitle, IonContent, IonItem, IonInput, IonButton, IonFooter]
+  standalone: false,
+  
 })
 export class RegistarGarantiaPage {
   passoAtual: number = 1;

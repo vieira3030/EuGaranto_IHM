@@ -1,0 +1,12 @@
+{
+  "utilizador": {
+    "nome": "Zaidu Sanusi",
+    "email": "zaidu.sanusi@porto.pt",
+    "foto": "/assets/img/avatar-zaidu.jpg",
+    "preferencias": {
+      "notificacoesEmail": true,
+      "notificacoesPush": true,
+      "modoEscuro": false
+    }
+  }
+}

@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ScreenOrientation } from '@capacitor/screen-orientation'; // Importar o plugin
 
 @Component({
   selector: 'app-root',
@@ -7,5 +8,16 @@ import { Component } from '@angular/core';
   standalone: false
 })
 export class AppComponent {
-  constructor() {}
+  constructor() {
+    this.lockOrientation();
+  }
+
+  async lockOrientation() {
+    // Bloqueia a orientação em modo vertical (retrato)
+    try {
+      await ScreenOrientation.lock({ orientation: 'portrait' });
+    } catch (err) {
+      console.log('Orientação não bloqueada no browser (apenas funciona em dispositivo físico)');
+    }
+  }
 }

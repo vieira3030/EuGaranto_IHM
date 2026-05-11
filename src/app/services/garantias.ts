@@ -66,4 +66,19 @@ export class GarantiasService {
       this.dadosAlterados.emit(); // Aciona a notificação de atualização
     }
   }
+
+  /** Recupera os dados do utilizador a partir do ficheiro JSON de perfil. */
+  async getPerfil() {
+    try {
+      // Faz o pedido para ler o ficheiro local de perfil
+      const res = await fetch('/assets/data/perfil.json');
+      const dados = await res.json();
+      
+      // Devolve apenas a secção do utilizador
+      return dados.utilizador;
+    } catch (error) {
+      console.error('Erro ao ler o ficheiro de perfil:', error);
+      return null;
+    }
+  }
 }

@@ -1,22 +1,25 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { IonicModule } from '@ionic/angular';
+import { GarantiasService } from '../services/garantias'; // Importa o serviço
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   standalone: false,
-  
 })
 export class Tab3Page {
-  // Os dados do utilizador
-  utilizador = {
-    nome: 'Rodrigo Vieira', 
-    email: 'rodrigo.vieira@estudante.pt',
-    notificacoes: true,
-    modoEscuro: false
-  };
+  // Variável para guardar os dados do utilizador
+  perfil: any = null;
 
-  constructor() {}
+  constructor(private garantiasService: GarantiasService) {}
+
+  // Carrega os dados sempre que o utilizador entra na tab
+  async ionViewWillEnter() {
+    this.perfil = await this.garantiasService.getPerfil();
+  }
+
+  // Função para o botão de sair
+  terminarSessao() {
+    console.log('Sessão terminada');
+  }
 }

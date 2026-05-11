@@ -1,31 +1,41 @@
-<ion-header>
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>Perfil</ion-title>
+    <ion-title>O meu perfil</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-  
-  <div style="text-align: center; margin-top: 20px;">
-    <ion-avatar style="margin: 0 auto; width: 100px; height: 100px; background-color: #3880ff; display: flex; align-items: center; justify-content: center;">
-      <span style="font-size: 40px; color: white; font-weight: bold;">RV</span>
+  <div *ngIf="perfil" class="ion-text-center">
+    
+    <ion-avatar style="margin: 20px auto; width: 100px; height: 100px;">
+      <img [src]="perfil.foto" alt="Avatar">
     </ion-avatar>
-    <h2 style="font-weight: bold; margin-top: 15px;">{{ utilizador.nome }}</h2>
-    <p style="color: gray; margin-top: -5px;">{{ utilizador.email }}</p>
+
+    <h2>{{ perfil.nome }}</h2>
+    <p>{{ perfil.email }}</p>
+
+    <ion-list lines="full" class="ion-margin-top">
+      <ion-list-header>
+        <ion-label>Preferências de notificação</ion-label>
+      </ion-list-header>
+
+      <ion-item>
+        <ion-label>Alertas por Email</ion-label>
+        <ion-toggle [(ngModel)]="perfil.preferencias.notificacoesEmail"></ion-toggle>
+      </ion-item>
+
+      <ion-item>
+        <ion-label>Notificações Push</ion-label>
+        <ion-toggle [(ngModel)]="perfil.preferencias.notificacoesPush"></ion-toggle>
+      </ion-item>
+    </ion-list>
+
+    <div class="ion-margin-top">
+      <ion-button expand="block" color="light">Editar Perfil</ion-button>
+      <ion-button expand="block" color="danger" (click)="terminarSessao()">
+        Terminar Sessão
+      </ion-button>
+    </div>
+
   </div>
-
-  <ion-list style="margin-top: 30px;">
-    <ion-list-header>
-      <ion-label style="font-size: 1.2em; font-weight: bold;">Preferências</ion-label>
-    </ion-list-header>
-
-    <ion-item>
-      <ion-toggle [checked]="utilizador.notificacoes">Receber Alertas de Expiração</ion-toggle>
-    </ion-item>
-
-    <ion-item>
-      <ion-toggle [checked]="utilizador.modoEscuro">Ativar Modo Escuro</ion-toggle>
-    </ion-item>
-  </ion-list>
-
 </ion-content>

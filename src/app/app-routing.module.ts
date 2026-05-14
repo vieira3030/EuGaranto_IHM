@@ -3,35 +3,40 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   {
-    // Rota inicial da app: carrega o módulo principal das tabs
+    // Rota inicial da aplicação
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    // Rota para o formulário de criar um novo grupo
+    // Rota para criar um novo grupo
     path: 'criar-grupo',
     loadChildren: () => import('./pages/criar-grupo/criar-grupo.module').then(m => m.CriarGrupoPageModule)
   },
   {
-    // Rota para ver um grupo: o "/:id" indica que precisa de receber o número do grupo
+    // Rota para detalhes do grupo (recebe o ID)
     path: 'detalhe-grupo/:id',
     loadChildren: () => import('./pages/detalhe-grupo/detalhe-grupo.module').then(m => m.DetalheGrupoPageModule)
   },
   {
-    // Rota corrigida: o "/:id" resolve o erro NG04002 para abrir a garantia certa
+    // Rota para detalhes da garantia (recebe o ID)
     path: 'garantia-detalhe/:id',
     loadChildren: () => import('./pages/garantia-detalhe/garantia-detalhe.module').then(m => m.GarantiaDetalhePageModule)
   },
   {
-    // Rota para o formulário de registar uma nova garantia
+    // Rota para registar uma nova garantia (vazia)
     path: 'registar-garantia',
+    loadChildren: () => import('./pages/registar-garantia/registar-garantia.module').then(m => m.RegistarGarantiaPageModule)
+  },
+  {
+    // NOVA ROTA: Rota para editar uma garantia (recebe o ID para preencher o formulário)
+    path: 'registar-garantia/:id',
     loadChildren: () => import('./pages/registar-garantia/registar-garantia.module').then(m => m.RegistarGarantiaPageModule)
   }
 ];
 
 @NgModule({
   imports: [
-    // Inicia as rotas e carrega as páginas em segundo plano (PreloadAllModules) para a app ser mais rápida
+    // PreloadAllModules torna o carregamento entre páginas mais rápido
     RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })
   ],
   exports: [RouterModule]

@@ -1,6 +1,5 @@
-// registar-garantia.page.ts
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core'; // Adicionado OnInit
+import { Router, ActivatedRoute } from '@angular/router'; // Adicionado ActivatedRoute
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { GarantiasService } from '../../services/garantias.service';
 
@@ -10,12 +9,15 @@ import { GarantiasService } from '../../services/garantias.service';
   styleUrls: ['./registar-garantia.page.scss'],
   standalone: false
 })
-export class RegistarGarantiaPage {
+export class RegistarGarantiaPage implements OnInit { // Implementa o OnInit
   // Controlo do wizard (passo atual do formulário)
   passoAtual: number = 1;
 
-  // Estrutura de dados temporária para guardar a garantia antes de a enviar
-  novaGarantia = {
+  // Variável para sabermos se estamos a editar ou a criar de raiz
+  emModoEdicao: boolean = false; 
+
+  // Estrutura de dados temporária (tem os valores por defeito para uma nova)
+  novaGarantia: any = {
     id: Date.now().toString(),
     nome: '',
     dataCompra: '',
@@ -27,7 +29,28 @@ export class RegistarGarantiaPage {
     diasRestantes: 0
   };
 
-  constructor(private garantiasService: GarantiasService, private router: Router) {}
+  constructor(
+    private garantiasService: GarantiasService, 
+    private router: Router,
+    private route: ActivatedRoute // Necessário para ler o ID que vem no URL
+  ) {}
+
+  // É executado logo que a página abre
+  async ngOnInit() {
+    // Tenta apanhar o ID que enviámos a partir do botão "Editar"
+    const id = this.route.snapshot.paramMap.get('id');
+    
+    if (id) {
+      this.emModoEdicao = true; // Avisa a app que é uma edição
+      const lista = await this.garantiasService.getGarantias();
+      const garantiaExistente = lista.find((g: any) => g.id === id);
+      
+      if (garantiaExistente) {
+        // Copia os dados da garantia guardada para o nosso formulário
+        this.novaGarantia = { ...garantiaExistente };
+      }
+    }
+  }
 
   // Avança para o ecrã seguinte e calcula os dias no último passo
   avancarPasso() {
@@ -58,16 +81,14 @@ export class RegistarGarantiaPage {
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.DataUrl, 
-        source: CameraSource.Prompt // Pergunta ao utilizador se quer usar a câmara ou a galeria
+        source: CameraSource.Prompt
       });
 
-      // Atribui a foto à variável correta consoante o passo em que estamos
       if (image.dataUrl) {
         if (tipo === 'talao') this.novaGarantia.fotoTalao = image.dataUrl;
         if (tipo === 'local') this.novaGarantia.fotoLocal = image.dataUrl;
       }
     } catch (error) {
-      // Impede que a app "crashe" caso o utilizador feche a câmara sem tirar foto
       console.log('Câmara cancelada pelo utilizador.');
     }
   }
@@ -82,9 +103,15 @@ export class RegistarGarantiaPage {
     }
   }
 
-  // Guarda os dados no serviço e redireciona para a página principal
+  // Guarda os dados e redireciona para a página principal
   async concluirRegisto() {
-    await this.garantiasService.adicionarGarantia(this.novaGarantia);
+    if (this.emModoEdicao) {
+      // Se for edição, chama a função de editar
+      await this.garantiasService.editarGarantia(this.novaGarantia);
+    } else {
+      // Se for nova, chama a função de adicionar
+      await this.garantiasService.adicionarGarantia(this.novaGarantia);
+    }
     this.router.navigate(['/tabs/tab1']);
   }
 }

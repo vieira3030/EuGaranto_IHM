@@ -4,14 +4,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GarantiasService } from '../../services/garantias.service';
 import { AlertController } from '@ionic/angular';
 
-// Importações corretas para Standalone
-import { IonHeader, IonToolbar, IonTitle, IonContent, IonButton, IonButtons, IonBackButton } from '@ionic/angular/standalone';
-
 @Component({
   selector: 'app-garantia-detalhe',
   templateUrl: './garantia-detalhe.page.html',
   standalone: false,
- 
 })
 export class GarantiaDetalhePage implements OnInit {
   garantia: any;
@@ -23,6 +19,7 @@ export class GarantiaDetalhePage implements OnInit {
     private garantiasService: GarantiasService
   ) { }
 
+  // Carrega os dados da garantia ao abrir a página
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
@@ -31,6 +28,7 @@ export class GarantiaDetalhePage implements OnInit {
     }
   }
 
+  // Mostra aviso e elimina a garantia se o utilizador confirmar
   async eliminar() {
     const alert = await this.alertController.create({
       header: 'Deseja mesmo eliminar esta garantia?',
@@ -40,7 +38,7 @@ export class GarantiaDetalhePage implements OnInit {
           text: 'Sim',
           handler: async () => {
             await this.garantiasService.removerGarantia(this.garantia.id);
-            this.router.navigate(['/tabs/tab1']);
+            this.router.navigate(['/tabs/tab1']); // Volta à lista principal
           }
         }
       ]
@@ -48,7 +46,10 @@ export class GarantiaDetalhePage implements OnInit {
     await alert.present();
   }
 
+  // Navega para a página de registo enviando o ID para modo de edição
   editar() { 
-    console.log('Método editar acionado.'); 
+    if (this.garantia && this.garantia.id) {
+      this.router.navigate(['/registar-garantia', this.garantia.id]);
+    }
   }
 }

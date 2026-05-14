@@ -1,22 +1,20 @@
-<ion-header class="ion-no-border">
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title style="text-decoration: underline; font-weight: bold;">EuGaranto</ion-title>
+    <ion-title>EuGaranto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <p style="margin-bottom: 20px; font-size: 16px;">As minhas garantias:</p>
+<ion-content [fullscreen]="true" class="ion-padding">
+  <p class="titulo-seccao">As minhas garantias:</p>
 
-  <!-- Lista iterativa dos registos de garantias com redirecionamento dinâmico para a página de detalhes -->
-  <div *ngFor="let g of garantias" [routerLink]="['/garantia-detalhe', g.id]" 
-       style="background: #e0e0e0; padding: 15px; margin-bottom: 12px; color: black; border-radius: 2px;">
-    <div style="font-size: 14px; margin-bottom: 4px;">Nome do produto: {{ g.nome }}</div>
-    <div style="font-size: 14px;">Dias restantes: <b>{{ g.diasRestantes }} dias restantes</b></div>
-  </div>
+  <ion-card *ngFor="let garantia of garantias" [routerLink]="['/garantia-detalhe', garantia.id]" color="light" class="garantia-card">
+    <ion-card-content>
+      Nome do produto: {{ garantia.nome }} <br>
+      Dias restantes: <strong>{{ garantia.diasRestantes }} dias restantes</strong>
+    </ion-card-content>
+  </ion-card>
 
-  <!-- Ação de redirecionamento estático para o formulário de novo registo (Tarefa 2) -->
-  <ion-button expand="block" routerLink="/registar-garantia"
-              style="--background: #7CFC00; --color: black; height: 70px; font-size: 22px; margin-top: 25px; font-weight: bold;">
+  <ion-button expand="block" color="primary" class="botao-principal" routerLink="/registar-garantia">
     Adicionar garantia
   </ion-button>
 </ion-content>

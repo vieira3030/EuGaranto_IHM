@@ -1,0 +1,41 @@
+/* Formatação do título principal */
+.titulo-seccao {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: var(--ion-text-color);
+}
+
+/* Estilo para a mensagem de ausência de grupos */
+.mensagem-vazia {
+  text-align: center;
+  color: gray;
+  margin-top: 50px;
+}
+
+/* Garante que o fundo da lista não se sobrepõe */
+.lista-grupos {
+  background: transparent;
+}
+
+/* Formatação do item do grupo com design flat (sem cantos arredondados) */
+.grupo-item {
+  margin-bottom: 10px;
+  --border-radius: 0px; 
+  --padding-start: 15px;
+
+  h3 {
+    font-weight: bold;
+    font-size: 18px;
+  }
+}
+
+/* Formatação padronizada do botão de ação */
+.botao-principal {
+  margin-top: 30px;
+  height: 65px;
+  font-size: 20px;
+  --border-radius: 0px; 
+  text-transform: none; 
+  color: var(--ion-color-primary-contrast);
+}

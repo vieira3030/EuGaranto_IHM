@@ -1,47 +1,37 @@
-<ion-header class="ion-no-border">
+<ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-back-button defaultHref="/" text="Voltar"></ion-back-button>
+      <ion-back-button defaultHref="/tabs/tab1" text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title style="font-weight: bold;">EuGaranto</ion-title>
+    <ion-title>Detalhe do Produto:</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
-  <!-- Apresentação condicional: renderiza apenas se os dados do registo existirem -->
-  <div *ngIf="garantia">
-    <p style="font-size: 16px; margin-bottom: 10px;">Detalhe do Produto:</p>
-    
-    <h2 style="text-align: center; font-weight: bold; margin-bottom: 15px;">{{ garantia.nome }}</h2>
+<ion-content [fullscreen]="true" class="ion-padding" *ngIf="garantia">
+  
+  <h2 class="produto-titulo">{{ garantia.nome }}</h2>
 
-    <!-- Exibição da fotografia do comprovativo de compra (Talão) -->
-    <div style="background: #e0e0e0; height: 160px; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; border-radius: 4px; overflow: hidden;">
-      <img *ngIf="garantia.fotoTalao" [src]="garantia.fotoTalao" style="width: 100%; height: 100%; object-fit: contain;" />
-      <span *ngIf="!garantia.fotoTalao" style="font-size: 16px; color: #444;">Sem foto do talão</span>
-    </div>
-
-    <!-- Metadados da garantia -->
-    <div style="line-height: 1.6; font-size: 15px; margin-bottom: 20px;">
-      <div>Data de compra: {{ garantia.dataCompra }}</div>
-      <div>Data de expiração: {{ garantia.dataExpiracao }}</div>
-      <div>Dias restantes: {{ garantia.diasRestantes }} dias</div>
-      <div>Alerta configurado: {{ garantia.alerta }}</div>
-    </div>
-
-    <!-- Exibição da fotografia do local de armazenamento físico -->
-    <div style="background: #e0e0e0; width: 120px; height: 120px; display: flex; align-items: center; justify-content: center; margin: 0 auto 30px auto; text-align: center; padding: 10px; border-radius: 4px; overflow: hidden;">
-      <img *ngIf="garantia.fotoLocal" [src]="garantia.fotoLocal" style="width: 100%; height: 100%; object-fit: cover;" />
-      <span *ngIf="!garantia.fotoLocal" style="font-size: 14px; color: #444;">Sem foto do<br>local físico</span>
-    </div>
-
-    <!-- Controlos de ação do registo -->
-    <div style="display: flex; justify-content: space-between;">
-      <ion-button style="--background: #7CFC00; --color: black; width: 48%; font-weight: bold;" (click)="editar()">
-        Editar
-      </ion-button>
-      <ion-button style="--background: #FF0000; --color: white; width: 48%; font-weight: bold;" (click)="eliminar()">
-        Eliminar
-      </ion-button>
-    </div>
+  <div class="foto-caixa talao-caixa">
+    <span *ngIf="!garantia.fotoTalao">Foto do talão</span>
+    <img *ngIf="garantia.fotoTalao" [src]="garantia.fotoTalao" alt="Talão da Garantia">
   </div>
+
+  <div class="detalhes-info">
+    <p>Data de compra: {{ garantia.dataCompra }}</p>
+    <p>Data de expiração: {{ garantia.dataExpiracao }}</p>
+    <p>Dias restantes: {{ garantia.diasRestantes }} dias</p>
+    <p>Alerta configurado: {{ garantia.alerta }}</p>
+  </div>
+
+  <div class="foto-caixa local-caixa">
+    <span *ngIf="!garantia.fotoLocal">Foto do local físico</span>
+    <img *ngIf="garantia.fotoLocal" [src]="garantia.fotoLocal" alt="Local Físico">
+  </div>
+
+  <div class="botoes-acao">
+    <ion-button color="primary" class="btn-acao">Editar</ion-button>
+    
+    <ion-button color="danger" class="btn-acao" (click)="eliminar()">Eliminar</ion-button>
+  </div>
+
 </ion-content>

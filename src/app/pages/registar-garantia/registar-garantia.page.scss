@@ -1,0 +1,43 @@
+/* Título do passo atual (ex: "Passo 1: Dados do Produto") */
+.passo-titulo {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--ion-text-color);
+}
+
+/* Área cinzenta grande para clicar e tirar fotografia */
+.upload-caixa {
+  background-color: var(--ion-color-light); 
+  color: var(--ion-color-light-contrast);
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin: 20px 0;
+  border-radius: 0px; 
+  font-size: 16px;
+}
+
+/* Informação de limite de tamanho e formato suportado */
+.upload-info {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Rodapé com os botões Anterior e Seguinte alinhados aos cantos */
+.navegacao-botoes {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+
+  /* Formatação base partilhada pelos dois botões */
+  ion-button {
+    width: 45%;
+    --border-radius: 0px;
+    text-transform: none; 
+    font-size: 16px;
+  }
+}

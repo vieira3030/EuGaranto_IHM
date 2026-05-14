@@ -1,0 +1,25 @@
+/* Define o tamanho do título */
+.titulo-seccao {
+  font-size: 16px;
+  margin-bottom: 20px;
+  color: var(--ion-text-color);
+}
+
+/* Formata o cartão para ficar liso e sem sombra (design Flat) */
+.garantia-card {
+  margin: 15px 0;
+  box-shadow: none; 
+  border-radius: 0px; 
+  color: var(--ion-color-light-contrast);
+  font-size: 16px;
+}
+
+/* Estilo padronizado do botão principal */
+.botao-principal {
+  margin-top: 40px;
+  height: 65px; 
+  font-size: 20px;
+  --border-radius: 0px; 
+  text-transform: none; /* Mantém o texto em minúsculas como no Figma */
+  color: var(--ion-color-primary-contrast);
+}

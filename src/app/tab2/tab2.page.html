@@ -1,31 +1,33 @@
-<ion-header class="ion-no-border">
+<ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title style="font-weight: bold;">Meus Grupos</ion-title>
+    <ion-title>Meus Grupos</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <h2 style="margin-top: 0; margin-bottom: 20px; font-weight: bold;">Grupos de Partilha</h2>
+  <h2 class="titulo-seccao">Grupos de Partilha</h2>
 
-  <p *ngIf="grupos.length === 0" style="text-align: center; color: gray; margin-top: 50px;">
+  <p *ngIf="grupos.length === 0" class="mensagem-vazia">
     Ainda não criaste nenhum grupo.
   </p>
 
-  <ion-list style="background: transparent;">
+  <ion-list class="lista-grupos">
     <ion-item *ngFor="let grupo of grupos" 
               [routerLink]="['/detalhe-grupo', grupo.id]" 
               button 
-              style="--background: #e0e0e0; margin-bottom: 10px; --border-radius: 4px;" 
+              color="light" 
+              class="grupo-item" 
               lines="none">
       <ion-label>
-        <h2 style="font-weight: bold;">{{ grupo.nome }}</h2>
+        <h3>{{ grupo.nome }}</h3>
         <p>{{ grupo.membros.length }} membros</p>
       </ion-label>
     </ion-item>
   </ion-list>
 
   <ion-button expand="block" 
-              style="--background: #7CFC00; --color: black; font-weight: bold; margin-top: 30px; height: 65px; font-size: 20px; --border-radius: 12px; text-transform: none;" 
+              color="primary" 
+              class="botao-principal" 
               [routerLink]="['/criar-grupo']">
     Criar grupo
   </ion-button>

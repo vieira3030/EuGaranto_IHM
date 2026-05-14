@@ -1,2 +1,42 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+/* src/theme/variables.scss */
+
+/* Definição das variáveis de cor na raiz (Light Mode por defeito) */
+:root {
+  /* Primary - Verde Principal */
+  --ion-color-primary: #84e119;
+  --ion-color-primary-rgb: 132, 225, 25;
+  --ion-color-primary-contrast: #000000;
+  --ion-color-primary-contrast-rgb: 0, 0, 0;
+  --ion-color-primary-shade: #74c616;
+  --ion-color-primary-tint: #90e430;
+
+  /* Danger - Vermelho para erros/eliminar */
+  --ion-color-danger: #cc0000;
+  --ion-color-danger-rgb: 204, 0, 0;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #b40000;
+  --ion-color-danger-tint: #d11a1a;
+
+  /* Light - Cinzento claro para fundos */
+  --ion-color-light: #e0e0e0;
+  --ion-color-light-rgb: 224, 224, 224;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #c5c5c5;
+  --ion-color-light-tint: #e3e3e3;
+}
+
+/* Regras aplicadas automaticamente quando o Modo Escuro está ativo */
+@media (prefers-color-scheme: dark) {
+  body {
+    /* Fundo principal escuro */
+    --ion-background-color: #121212;
+    /* Texto global a branco */
+    --ion-text-color: #ffffff;
+    
+    /* Cinzento mais escuro para os cartões no Dark Mode */
+    --ion-color-light: #2a2a2a;
+    --ion-color-light-contrast: #ffffff;
+  }
+}

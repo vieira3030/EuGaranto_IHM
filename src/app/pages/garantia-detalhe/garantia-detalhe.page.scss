@@ -1,0 +1,65 @@
+/* Título centrado e destacado */
+.produto-titulo {
+  text-align: center;
+  font-weight: bold;
+  font-size: 22px;
+  margin-bottom: 25px;
+  color: var(--ion-text-color);
+}
+
+/* Caixa genérica para as imagens com fundo cinzento claro */
+.foto-caixa {
+  background-color: var(--ion-color-light); /* Usa a tua cor global "light" */
+  color: var(--ion-color-light-contrast);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 25px;
+  font-size: 18px;
+  border-radius: 0px; /* Sem cantos redondos como no Figma */
+  overflow: hidden;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+/* Tamanho específico da caixa do talão */
+.talao-caixa {
+  width: 100%;
+  height: 220px;
+}
+
+/* Tamanho específico da caixa do local físico (mais pequena) */
+.local-caixa {
+  width: 150px;
+  height: 150px;
+}
+
+/* Formatação do texto dos detalhes */
+.detalhes-info {
+  margin-bottom: 25px;
+  
+  p {
+    margin: 8px 0;
+    font-size: 16px;
+    color: var(--ion-text-color);
+  }
+}
+
+/* Botões de Ação dispostos lado a lado */
+.botoes-acao {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 30px;
+
+  .btn-acao {
+    width: 45%;
+    height: 50px;
+    --border-radius: 0px; 
+    text-transform: none; /* Mantém o texto normal sem maiúsculas forçadas */
+    font-size: 18px;
+  }
+}

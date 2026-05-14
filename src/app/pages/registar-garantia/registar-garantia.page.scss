@@ -1,43 +1,93 @@
-/* Título do passo atual (ex: "Passo 1: Dados do Produto") */
-.passo-titulo {
-  font-size: 18px;
-  font-weight: bold;
+/* Bolas de progresso do formulário (1, 2, 3, 4, 5) */
+.wizard-indicador {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
+}
+
+.bola-passo {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: bold;
+  line-height: 25px;
+  /* Cor inativa (Cinzento) */
+  background: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
+}
+
+.bola-passo.ativo {
+  /* Cor ativa (Verde) */
+  background: var(--ion-color-primary);
+  color: var(--ion-color-primary-contrast);
+}
+
+/* Campos de preenchimento (Inputs) do Passo 1 */
+.input-item {
+  --border-radius: 0px;
+  margin-bottom: 10px;
+}
+
+.input-wrapper {
+  width: 100%;
+  padding: 5px 0;
+}
+
+.input-label {
+  font-size: 12px;
+  color: var(--ion-text-color);
+  opacity: 0.7;
+}
+
+/* Input nativo de data para evitar conflitos no telemóvel */
+.input-data {
+  width: 100%;
+  background: transparent;
+  border: none;
+  padding: 10px 0;
+  outline: none;
+  font-size: 16px;
+  font-family: inherit;
   color: var(--ion-text-color);
 }
 
-/* Área cinzenta grande para clicar e tirar fotografia */
+/* Caixa grande para clicar e tirar fotografia (Passos 2 e 3) */
 .upload-caixa {
-  background-color: var(--ion-color-light); 
-  color: var(--ion-color-light-contrast);
+  background-color: var(--ion-color-light);
+  color: var(--ion-text-color);
   height: 200px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   margin: 20px 0;
+  cursor: pointer;
+  /* Design flat (sem cantos redondos) */
   border-radius: 0px; 
-  font-size: 16px;
 }
 
-/* Informação de limite de tamanho e formato suportado */
-.upload-info {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 20px;
+/* Caixa de informação por baixo da foto (Tamanho/Formato) */
+.upload-info-caixa {
+  background-color: var(--ion-color-light);
+  color: var(--ion-color-light-contrast);
+  padding: 10px;
+  font-size: 12px;
+  text-align: center;
+  border-radius: 0px;
 }
 
-/* Rodapé com os botões Anterior e Seguinte alinhados aos cantos */
-.navegacao-botoes {
+/* Disposição dos botões de alerta (Passo 4) */
+.opcoes-alerta {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
   margin-top: 30px;
 
-  /* Formatação base partilhada pelos dois botões */
   ion-button {
-    width: 45%;
+    width: 60%;
     --border-radius: 0px;
-    text-transform: none; 
-    font-size: 16px;
+    text-transform: none;
   }
 }

@@ -1,5 +1,7 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
+// 1. Importar as ferramentas da base de dados Firestore
+import { Firestore, collection, addDoc } from '@angular/fire/firestore';
 
 @Injectable({ providedIn: 'root' })
 export class GarantiasService {
@@ -8,7 +10,8 @@ export class GarantiasService {
   /** Evento emitido para notificar os componentes sobre alterações na base de dados local. */
   public dadosAlterados = new EventEmitter<void>();
 
-  constructor(private storage: Storage) { 
+  // 2. Injetar o Firestore no construtor lado a lado com o Storage local
+  constructor(private storage: Storage, private firestore: Firestore) { 
     this.init(); 
   }
 
@@ -54,9 +57,30 @@ export class GarantiasService {
     }
   }
 
-  /** Insere um novo registo de garantia no armazenamento local. */
+  /** Insere um novo registo de garantia no Firebase e no armazenamento local. */
   async adicionarGarantia(novaGarantia: any) {
+    
+    // --- PARTE 1: Guardar na Base de Dados na Nuvem (Firebase Firestore) ---
+    try {
+      // Criar uma cópia para não alterar a variável original com as fotos
+      const garantiaParaNuvem = { ...novaGarantia };
+      
+      // Remover as fotos em Base64 para não ultrapassar o limite de 1MB do Firestore
+      garantiaParaNuvem.fotoTalao = '';
+      garantiaParaNuvem.fotoLocal = '';
+
+      // Guardar na coleção 'garantias'
+      const garantiasRef = collection(this.firestore, 'garantias');
+      await addDoc(garantiasRef, garantiaParaNuvem);
+      console.log('Sucesso: Garantia guardada na nuvem (Firebase)!');
+    } catch (error) {
+      console.error('Erro ao guardar garantia no Firebase:', error);
+    }
+
+    // --- PARTE 2: Guardar Localmente (Mantém a tua app atual a funcionar) ---
     let garantias = await this.getGarantias();
+    
+    // Guardar a versão ORIGINAL (com as fotos) na base de dados local
     garantias.push(novaGarantia);
 
     const dadosAtuais = await this._storage?.get('dados_app');
@@ -70,11 +94,8 @@ export class GarantiasService {
   /** Recupera os dados do utilizador a partir do ficheiro JSON de perfil. */
   async getPerfil() {
     try {
-      // Faz o pedido para ler o ficheiro local de perfil
       const res = await fetch('/assets/data/perfil.json');
       const dados = await res.json();
-      
-      // Devolve apenas a secção do utilizador
       return dados.utilizador;
     } catch (error) {
       console.error('Erro ao ler o ficheiro de perfil:', error);

@@ -1,15 +1,15 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tab1" text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title>Detalhe do Produto:</ion-title>
+    <ion-title style="font-weight: bold;">Detalhe do Produto</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding" *ngIf="garantia">
   
-  <h2 class="produto-titulo">{{ garantia.nome }}</h2>
+  <h2 class="produto-titulo">{{ garantia.nomeProduto || garantia.nome }}</h2>
 
   <div class="foto-caixa talao-caixa">
     <span *ngIf="!garantia.fotoTalao">Foto do talão</span>
@@ -17,10 +17,10 @@
   </div>
 
   <div class="detalhes-info">
-    <p>Data de compra: {{ garantia.dataCompra }}</p>
-    <p>Data de expiração: {{ garantia.dataExpiracao }}</p>
-    <p>Dias restantes: {{ garantia.diasRestantes }} dias</p>
-    <p>Alerta configurado: {{ garantia.alerta }}</p>
+    <p><strong>Data de compra:</strong> {{ garantia.dataCompra }}</p>
+    <p><strong>Data de expiração:</strong> {{ garantia.dataExpiracao }}</p>
+    <p><strong>Dias restantes:</strong> {{ garantia.diasRestantes }} dias</p>
+    <p><strong>Alerta:</strong> {{ garantia.alerta }}</p>
   </div>
 
   <div class="foto-caixa local-caixa">
@@ -28,10 +28,22 @@
     <img *ngIf="garantia.fotoLocal" [src]="garantia.fotoLocal" alt="Local Físico">
   </div>
 
-  <div class="botoes-acao">
-    <ion-button color="primary" class="btn-acao">Editar</ion-button>
+  <div class="botoes-acao" style="display: flex; gap: 10px; margin-top: 20px;">
     
-    <ion-button color="danger" class="btn-acao" (click)="eliminar()">Eliminar</ion-button>
+    <ion-button color="danger" 
+                class="btn-acao btn-grande" 
+                style="flex: 1;" 
+                (click)="eliminar()">
+      Eliminar
+    </ion-button>
+    
+    <ion-button color="primary" 
+                class="btn-acao btn-grande" 
+                style="flex: 1;" 
+                (click)="editar()">
+      Editar
+    </ion-button>
+
   </div>
 
 </ion-content>

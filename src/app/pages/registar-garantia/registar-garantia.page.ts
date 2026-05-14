@@ -2,7 +2,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-import { GarantiasService } from '../../services/garantias';
+import { GarantiasService } from '../../services/garantias.service';
 
 @Component({
   selector: 'app-registar-garantia',

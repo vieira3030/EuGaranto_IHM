@@ -9,14 +9,14 @@
 
 /* Caixa genérica para as imagens com fundo cinzento claro */
 .foto-caixa {
-  background-color: var(--ion-color-light); /* Usa a tua cor global "light" */
+  background-color: var(--ion-color-light); 
   color: var(--ion-color-light-contrast);
   display: flex;
   justify-content: center;
   align-items: center;
   margin: 0 auto 25px;
   font-size: 18px;
-  border-radius: 0px; /* Sem cantos redondos como no Figma */
+  border-radius: 0px; /* Sem cantos redondos para manter a fidelidade ao Figma */
   overflow: hidden;
 
   img {
@@ -49,17 +49,19 @@
   }
 }
 
-/* Botões de Ação dispostos lado a lado */
+/* --- BOTÕES DE AÇÃO (ATUALIZADO) --- */
 .botoes-acao {
   display: flex;
-  justify-content: space-between;
+  gap: 15px; /* Cria um espaço fixo perfeito entre o botão vermelho e o verde */
   margin-top: 30px;
 
   .btn-acao {
-    width: 45%;
-    height: 50px;
-    --border-radius: 0px; 
-    text-transform: none; /* Mantém o texto normal sem maiúsculas forçadas */
-    font-size: 18px;
+    flex: 1; /* Obriga ambos os botões a ocuparem exatamente metade do espaço disponível */
+    height: 65px; /* Aumentado para 65px para o botão ficar bem alto e largo */
+    --border-radius: 0px; /* Mantém os cantos quadrados */
+    text-transform: none; /* Mantém o texto normal sem estar todo em maiúsculas */
+    font-size: 20px; /* Aumentado para 20px para melhor leitura */
+    font-weight: bold; /* Destaca bem a ação */
+    margin: 0; /* Remove margens padrão do Ionic que possam desalinhar */
   }
 }

@@ -10,35 +10,52 @@
 <ion-content class="ion-padding">
   <div *ngIf="grupo">
     
-    <ion-list style="background: transparent; margin-bottom: 20px;">
-      <ion-list-header style="padding-left: 0;">
+    <ion-list style="background: transparent; margin-bottom: 30px;" lines="none">
+      <ion-list-header style="padding-left: 0; margin-bottom: 10px;">
         <ion-label style="font-weight: bold; font-size: 18px;">Membros do Grupo</ion-label>
       </ion-list-header>
       
       <ion-item *ngFor="let membro of grupo.membros" 
-                style="--background: #e0e0e0; margin-bottom: 5px; border-radius: 4px;" 
-                lines="none">
+                class="item-card"
+                style="--background: #f4f5f8; margin-bottom: 8px; border-radius: 8px;">
+        <ion-icon name="person-circle-outline" slot="start" color="medium"></ion-icon>
         <ion-label>{{ membro }}</ion-label>
       </ion-item>
     </ion-list>
 
-    <ion-list style="background: transparent;">
-      <ion-list-header style="padding-left: 0;">
+    <ion-list style="background: transparent;" lines="none">
+      <ion-list-header style="padding-left: 0; margin-bottom: 10px;">
         <ion-label style="font-weight: bold; font-size: 18px;">Garantias Partilhadas</ion-label>
       </ion-list-header>
       
-      <p *ngIf="grupo.garantiasPartilhadas.length === 0" style="color: gray; padding-left: 5px;">
-        Nenhuma garantia partilhada com este grupo.
+      <p *ngIf="garantiasCompletas.length === 0" style="color: gray; padding: 10px;">
+        Nenhuma garantia partilhada neste grupo.
       </p>
 
-      <ion-item *ngFor="let garantia of grupo.garantiasPartilhadas" 
-                style="--background: #e0e0e0; margin-bottom: 5px; border-radius: 4px;" 
-                lines="none">
-        <ion-label>
-          <h2 style="font-weight: bold;">{{ garantia.nome }}</h2>
-          <p>Data de Expiração: {{ garantia.dataExpiracao }}</p>
-        </ion-label>
-      </ion-item>
+      <ion-card *ngFor="let garantia of garantiasCompletas" 
+                [routerLink]="['/garantia-detalhe', garantia.id]"
+                button 
+                color="light" 
+                style="margin: 0 0 12px 0; border-radius: 8px; box-shadow: none;">
+        <ion-card-content style="padding: 15px;">
+          <ion-label>
+            <h2 style="font-weight: bold; font-size: 16px; color: black;">
+              {{ garantia.nomeProduto || garantia.nome }}
+            </h2>
+            <p style="margin-top: 5px;">Expira a: {{ garantia.dataExpiracao }}</p>
+          </ion-label>
+          <ion-icon name="chevron-forward-outline" slot="end" 
+                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666;">
+          </ion-icon>
+        </ion-card-content>
+      </ion-card>
     </ion-list>
+
+    <div style="margin-top: 30px; padding-bottom: 20px;">
+      <ion-button expand="block" color="danger" (click)="sairDoGrupo()" style="font-weight: bold;">
+        SAIR DO GRUPO
+      </ion-button>
+    </div>
+
   </div>
 </ion-content>

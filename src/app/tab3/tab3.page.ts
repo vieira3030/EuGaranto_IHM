@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { GarantiasService } from '../services/garantias'; // Importa o serviço
+import { GarantiasService } from '../services/garantias.service'; // Importa o serviço
 
 @Component({
   selector: 'app-tab3',

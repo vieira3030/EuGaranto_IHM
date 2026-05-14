@@ -1,13 +1,20 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
-// Registo de ícones
+// Registo de ícones do Ionic para a interface
 import { addIcons } from 'ionicons';
-import { closeCircle } from 'ionicons/icons';
+import { 
+  closeCircle, 
+  peopleOutline, 
+  shieldCheckmarkOutline, 
+  notificationsOutline, 
+  archiveOutline 
+} from 'ionicons/icons';
 
-// Serviços (Atenção: garante que o caminho e o nome do teu serviço de garantias estão corretos)
-import { GruposService } from '../../services/grupos';
-import { GarantiasService } from '../../services/garantias';
+// Serviços e Interfaces para gestão de dados
+import { GruposService, Grupo } from '../../services/grupos';
+import { GarantiasService } from '../../services/garantias.service';
+
 @Component({
   selector: 'app-criar-grupo',
   templateUrl: './criar-grupo.page.html',
@@ -16,92 +23,112 @@ import { GarantiasService } from '../../services/garantias';
 })
 export class CriarGrupoPage {
   
-  // Controlo do formulário
+  // Controla o passo visível no formulário (1 a 4)
   passoAtual: number = 1;
 
-  // Estrutura base do novo grupo
-  novoGrupo: any = {
-    id: Date.now().toString(),
+  // Dados do novo grupo a enviar para o Firebase
+  novoGrupo: Grupo = {
     nome: '',
+    adminEmail: '',
     membros: [],
-    garantiasPartilhadas: [],
-    alertasMembros: {}
+    garantiasIds: [], // Apenas os IDs das garantias para otimização
+    alertaConfig: '1 semana antes'
   };
 
-  // Variável para o campo de input
+  // Variáveis auxiliares para o formulário
   novoMembroEmail: string = '';
-
-  // Lista dinâmica (agora começa vazia)
-  garantiasDisponiveis: any[] = [];
+  garantiasDisponiveis: any[] = []; 
 
   constructor(
     private router: Router, 
     private gruposService: GruposService,
-    private garantiasService: GarantiasService // Injeção do serviço das garantias
+    private garantiasService: GarantiasService 
   ) {
-    addIcons({ closeCircle });
+    // Registo obrigatório dos ícones utilizados no HTML
+    addIcons({ 
+      closeCircle, 
+      peopleOutline, 
+      shieldCheckmarkOutline, 
+      notificationsOutline, 
+      archiveOutline 
+    });
   }
 
-  // Executa sempre que a página fica visível, garantindo dados atualizados
+  // Executado sempre que a página fica visível
   async ionViewWillEnter() {
+    const perfil = await this.garantiasService.getPerfil();
+    if (perfil) {
+      this.novoGrupo.adminEmail = perfil.email;
+      // Garante que o criador faz parte da lista de membros
+      if (!this.novoGrupo.membros.includes(perfil.email)) {
+        this.novoGrupo.membros.push(perfil.email);
+      }
+    }
     await this.carregarGarantias();
   }
 
-  // Vai buscar as garantias à base de dados através do serviço
+  // Obtém a lista de garantias pessoais do utilizador
   async carregarGarantias() {
-    // Substitui 'obterGarantias()' pelo nome exato do método que tens no teu serviço
-   const garantiasGuardadas = await this.garantiasService.getGarantias()
-    
-    // Se houver garantias guarda-as, se não, fica array vazio
-    this.garantiasDisponiveis = garantiasGuardadas ? garantiasGuardadas : [];
+    this.garantiasDisponiveis = await this.garantiasService.getGarantias();
   }
 
-  // --- LÓGICA DO PASSO 1: MEMBROS ---
+  // --- PASSO 1: GESTÃO DE MEMBROS ---
   
+  // Adiciona um novo email à lista de membros do grupo
   adicionarMembro() {
     if (this.novoMembroEmail.trim() !== '' && !this.novoGrupo.membros.includes(this.novoMembroEmail)) {
       this.novoGrupo.membros.push(this.novoMembroEmail);
-      this.novoGrupo.alertasMembros[this.novoMembroEmail] = '1 semana antes';
-      this.novoMembroEmail = '';
+      this.novoMembroEmail = ''; // Limpa o campo após adicionar
     }
   }
 
+  // Remove um membro da lista
   removerMembro(email: string) {
-    this.novoGrupo.membros = this.novoGrupo.membros.filter((m: string) => m !== email);
-    delete this.novoGrupo.alertasMembros[email];
+    this.novoGrupo.membros = this.novoGrupo.membros.filter(m => m !== email);
   }
 
-  // --- LÓGICA DO PASSO 2: GARANTIAS ---
+  // --- PASSO 2: SELEÇÃO DE GARANTIAS ---
 
-  toggleGarantia(garantia: any) {
-    const index = this.novoGrupo.garantiasPartilhadas.findIndex((g: any) => g.id === garantia.id);
+  // Alterna a seleção de uma garantia (adiciona ou remove ID)
+  toggleGarantia(id: string) {
+    const index = this.novoGrupo.garantiasIds.indexOf(id);
     if (index === -1) {
-      this.novoGrupo.garantiasPartilhadas.push(garantia);
+      this.novoGrupo.garantiasIds.push(id); 
     } else {
-      this.novoGrupo.garantiasPartilhadas.splice(index, 1);
+      this.novoGrupo.garantiasIds.splice(index, 1); 
     }
   }
 
-  isGarantiaSelecionada(id: number): boolean {
-    return this.novoGrupo.garantiasPartilhadas.some((g: any) => g.id === id);
+  // Verifica se uma garantia está selecionada para atualizar a checkbox
+  isGarantiaSelecionada(id: string): boolean {
+    return this.novoGrupo.garantiasIds.includes(id);
   }
 
-  // --- LÓGICA DE NAVEGAÇÃO E GRAVAÇÃO ---
+  // --- NAVEGAÇÃO ---
 
+  // Avança para o próximo passo do wizard
   avancarPasso() {
-    if (this.passoAtual < 4) {
-      this.passoAtual++;
-    }
+    if (this.passoAtual < 4) this.passoAtual++;
   }
 
+  // Retrocede para o passo anterior
   recuarPasso() {
-    if (this.passoAtual > 1) {
-      this.passoAtual--;
-    }
+    if (this.passoAtual > 1) this.passoAtual--;
   }
 
+  // Finaliza a criação, grava no Firebase e regressa à lista de grupos
   async concluirCriacao() {
-    await this.gruposService.adicionarGrupo(this.novoGrupo);
-    this.router.navigateByUrl('/tabs/tab2');
+    const idSucesso = await this.gruposService.criarGrupoRemote(this.novoGrupo);
+    
+    if (idSucesso) {
+      console.log('Sucesso: Grupo criado no Firebase');
+      
+      // Reset do formulário antes de navegar
+      this.passoAtual = 1;
+      this.novoGrupo.nome = '';
+      this.novoGrupo.garantiasIds = [];
+      
+      this.router.navigateByUrl('/tabs/tab2'); 
+    }
   }
 }

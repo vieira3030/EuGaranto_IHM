@@ -50,20 +50,28 @@ export class DetalheGrupoPage implements OnInit {
   // Mantido para compatibilidade, mas a lógica real passou para o ionViewWillEnter
   ngOnInit() {}
 
-  /** Executado sempre que a página entra em foco (resolve problemas de cache). */
- async ionViewWillEnter() {
-  const id = this.route.snapshot.paramMap.get('id');
-  
-  if (id) {
-    console.log('A carregar dados atualizados do grupo...');
-    // Força a procura do grupo novamente para vir com os novos emails
-    this.grupo = await this.gruposService.getGrupo(id);
+ /** Executado sempre que a página entra em foco. */
+  async ionViewWillEnter() {
+    const id = this.route.snapshot.paramMap.get('id');
     
-    if (this.grupo && this.grupo.garantiasIds) {
-      await this.carregarDadosDasGarantias();
+    if (id) {
+      // 1. Vai buscar o perfil para saber qual o email do utilizador
+      const perfil = await this.garantiasService.getPerfil();
+      
+      if (perfil) {
+        // 2. Força uma ida ao Firebase para buscar a lista ATUALIZADA de grupos
+        const gruposAtualizados = await this.garantiasService.getGruposRemotos(perfil.email);
+        
+        // 3. Encontra o grupo exato nesta lista fresca
+        this.grupo = gruposAtualizados.find(g => g.id === id);
+        
+        // 4. Carrega as garantias
+        if (this.grupo && this.grupo.garantiasIds) {
+          await this.carregarDadosDasGarantias();
+        }
+      }
     }
   }
-}
   /** Cruza os IDs do grupo com as garantias locais para mostrar os detalhes. */
   async carregarDadosDasGarantias() {
     const todasGarantias = await this.garantiasService.getGarantias();

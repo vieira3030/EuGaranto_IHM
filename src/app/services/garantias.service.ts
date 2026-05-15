@@ -125,14 +125,20 @@ export class GarantiasService {
     }
   }
 
-  /** Cria novo grupo no Firebase. */
+  /** Cria um novo grupo de partilha no Firebase. */
   async criarGrupo(novoGrupo: Grupo) {
     try {
       const gruposRef = collection(this.firestore, 'grupos');
       const docRef = await addDoc(gruposRef, novoGrupo);
+      
+      console.log('Firebase: Grupo criado com sucesso. ID:', docRef.id);
+      
+      // ADICIONA ESTA LINHA: Avisa a aplicação (e a Tab 2) que há dados novos!
+      this.dadosAlterados.emit();
+      
       return docRef.id;
     } catch (error) {
-      console.error('Erro Firebase:', error);
+      console.error('Erro ao criar grupo no Firebase:', error);
       return null;
     }
   }

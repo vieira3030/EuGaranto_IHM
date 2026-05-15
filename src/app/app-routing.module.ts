@@ -8,8 +8,13 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    // Rota para criar um novo grupo
+    // Rota para criar um novo grupo (vazio)
     path: 'criar-grupo',
+    loadChildren: () => import('./pages/criar-grupo/criar-grupo.module').then(m => m.CriarGrupoPageModule)
+  },
+  {
+    // NOVA ROTA: Rota para editar um grupo (recebe o ID para preencher o formulário)
+    path: 'criar-grupo/:id',
     loadChildren: () => import('./pages/criar-grupo/criar-grupo.module').then(m => m.CriarGrupoPageModule)
   },
   {
@@ -28,7 +33,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/registar-garantia/registar-garantia.module').then(m => m.RegistarGarantiaPageModule)
   },
   {
-    // NOVA ROTA: Rota para editar uma garantia (recebe o ID para preencher o formulário)
+    // Rota para editar uma garantia (recebe o ID para preencher o formulário)
     path: 'registar-garantia/:id',
     loadChildren: () => import('./pages/registar-garantia/registar-garantia.module').then(m => m.RegistarGarantiaPageModule)
   }

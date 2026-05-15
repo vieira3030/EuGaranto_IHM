@@ -1,10 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router'; // Router para navegação
-import { AlertController } from '@ionic/angular'; // AlertController para confirmação
+import { ActivatedRoute, Router } from '@angular/router';
+import { AlertController } from '@ionic/angular';
 import { GruposService } from '../../services/grupos';
 import { GarantiasService } from '../../services/garantias.service';
 import { addIcons } from 'ionicons';
-import { logOutOutline, personCircleOutline, chevronForwardOutline } from 'ionicons/icons';
+
+// Ícones utilizados na interface
+import { 
+  logOutOutline, 
+  personCircleOutline, 
+  chevronForwardOutline, 
+  createOutline,
+  calendarOutline,
+  shieldCheckmarkOutline
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-detalhe-grupo',
@@ -13,43 +22,66 @@ import { logOutOutline, personCircleOutline, chevronForwardOutline } from 'ionic
   standalone: false,
 })
 export class DetalheGrupoPage implements OnInit {
+  
+  // Informações do grupo selecionado
   grupo: any;
+  
+  // Lista detalhada das garantias deste grupo
   garantiasCompletas: any[] = [];
   
-constructor(
-  private route: ActivatedRoute,
-  private router: Router,
-  private alertController: AlertController,
-  private gruposService: GruposService,
-  private garantiasService: GarantiasService 
-) {
-  // Adiciona esta linha para registar os ícones que estás a usar no HTML
-  addIcons({ logOutOutline, personCircleOutline, chevronForwardOutline });
-}
-
-  async ngOnInit() {
-    const id = this.route.snapshot.paramMap.get('id');
-    
-    if (id) {
-      this.grupo = await this.gruposService.getGrupo(id);
-      
-      if (this.grupo && this.grupo.garantiasIds) {
-        await this.carregarDadosDasGarantias();
-      }
-    }
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private alertController: AlertController,
+    private gruposService: GruposService,
+    private garantiasService: GarantiasService 
+  ) {
+    // Registo de ícones para a interface
+    addIcons({ 
+      logOutOutline, 
+      personCircleOutline, 
+      chevronForwardOutline, 
+      createOutline,
+      calendarOutline,
+      shieldCheckmarkOutline
+    });
   }
 
-  // Vai buscar os dados completos das garantias partilhadas
+  // Mantido para compatibilidade, mas a lógica real passou para o ionViewWillEnter
+  ngOnInit() {}
+
+  /** Executado sempre que a página entra em foco (resolve problemas de cache). */
+ async ionViewWillEnter() {
+  const id = this.route.snapshot.paramMap.get('id');
+  
+  if (id) {
+    console.log('A carregar dados atualizados do grupo...');
+    // Força a procura do grupo novamente para vir com os novos emails
+    this.grupo = await this.gruposService.getGrupo(id);
+    
+    if (this.grupo && this.grupo.garantiasIds) {
+      await this.carregarDadosDasGarantias();
+    }
+  }
+}
+  /** Cruza os IDs do grupo com as garantias locais para mostrar os detalhes. */
   async carregarDadosDasGarantias() {
     const todasGarantias = await this.garantiasService.getGarantias();
+    
+    // Filtra apenas as garantias que pertencem a este grupo
     this.garantiasCompletas = todasGarantias.filter((g: { id: any; }) => 
       this.grupo.garantiasIds.includes(g.id)
     );
   }
 
-  /** --- FUNCIONALIDADE DE SAÍDA --- **/
+  /** Abre o formulário de criação em modo de edição usando o ID atual. */
+  editar() {
+    if (this.grupo && this.grupo.id) {
+      this.router.navigate(['/criar-grupo', this.grupo.id]);
+    }
+  }
 
-  // Exibe um aviso e, se confirmado, remove o utilizador do grupo
+  /** Remove o utilizador do grupo após confirmação visual. */
   async sairDoGrupo() {
     const alert = await this.alertController.create({
       header: 'Sair do Grupo',
@@ -62,11 +94,11 @@ constructor(
             const perfil = await this.garantiasService.getPerfil();
             
             if (perfil && this.grupo?.id) {
-              // Chama o serviço para remover o email do Firebase e Storage
+              // Remove o email do utilizador da lista de membros remota
               const sucesso = await this.gruposService.sairDoGrupo(this.grupo.id, perfil.email);
               
+              // Se removido com sucesso, volta para a lista de grupos
               if (sucesso) {
-                // Redireciona para a lista de grupos (Tab 2)
                 this.router.navigateByUrl('/tabs/tab2');
               }
             }

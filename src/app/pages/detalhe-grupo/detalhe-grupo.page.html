@@ -51,11 +51,20 @@
       </ion-card>
     </ion-list>
 
-    <div style="margin-top: 30px; padding-bottom: 20px;">
-      <ion-button expand="block" color="danger" (click)="sairDoGrupo()" style="font-weight: bold;">
-        SAIR DO GRUPO
-      </ion-button>
-    </div>
+    <ion-grid style="margin-top: 40px; padding: 0;">
+      <ion-row>
+        <ion-col size="6">
+          <ion-button expand="block" color="danger" (click)="sairDoGrupo()" style="font-weight: bold;">
+            SAIR
+          </ion-button>
+        </ion-col>
+        <ion-col size="6">
+          <ion-button expand="block" (click)="editar()" style="font-weight: bold;">
+            EDITAR
+          </ion-button>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
 
   </div>
 </ion-content>

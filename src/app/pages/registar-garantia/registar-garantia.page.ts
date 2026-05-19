@@ -1,22 +1,26 @@
-import { Component, OnInit } from '@angular/core'; // Adicionado OnInit
-import { Router, ActivatedRoute } from '@angular/router'; // Adicionado ActivatedRoute
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router'; 
+
+// Plugin nativo da Câmara 
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { GarantiasService } from '../../services/garantias.service';
 
+// Registo de ícones para o novo design (Adicionada a arrowForwardOutline)
+import { addIcons } from 'ionicons';
+import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline } from 'ionicons/icons';
+
 @Component({
   selector: 'app-registar-garantia',
-  templateUrl: './registar-garantia.page.html',
-  styleUrls: ['./registar-garantia.page.scss'],
-  standalone: false
+  templateUrl: 'registar-garantia.page.html',
+  styleUrls: ['registar-garantia.page.scss'],
+  standalone: false,
 })
-export class RegistarGarantiaPage implements OnInit { // Implementa o OnInit
-  // Controlo do wizard (passo atual do formulário)
+export class RegistarGarantiaPage implements OnInit {
+  
   passoAtual: number = 1;
-
-  // Variável para sabermos se estamos a editar ou a criar de raiz
   emModoEdicao: boolean = false; 
 
-  // Estrutura de dados temporária (tem os valores por defeito para uma nova)
+  // Estrutura de dados onde guardamos tudo o que o utilizador preenche
   novaGarantia: any = {
     id: Date.now().toString(),
     nome: '',
@@ -32,27 +36,30 @@ export class RegistarGarantiaPage implements OnInit { // Implementa o OnInit
   constructor(
     private garantiasService: GarantiasService, 
     private router: Router,
-    private route: ActivatedRoute // Necessário para ler o ID que vem no URL
-  ) {}
+    private route: ActivatedRoute
+  ) {
+    // Registo de todos os ícones necessários no HTML
+    addIcons({ checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline });
+  }
 
-  // É executado logo que a página abre
+  // Verifica se estamos a editar uma garantia existente ao iniciar a página
   async ngOnInit() {
-    // Tenta apanhar o ID que enviámos a partir do botão "Editar"
     const id = this.route.snapshot.paramMap.get('id');
     
     if (id) {
-      this.emModoEdicao = true; // Avisa a app que é uma edição
+      this.emModoEdicao = true;
       const lista = await this.garantiasService.getGarantias();
       const garantiaExistente = lista.find((g: any) => g.id === id);
       
       if (garantiaExistente) {
-        // Copia os dados da garantia guardada para o nosso formulário
         this.novaGarantia = { ...garantiaExistente };
       }
     }
   }
 
-  // Avança para o ecrã seguinte e calcula os dias no último passo
+  // --- NAVEGAÇÃO E LÓGICA DE DADOS ---
+
+  // Avança para o próximo passo e calcula os dias no passo final
   avancarPasso() {
     if (this.passoAtual < 5) {
       this.passoAtual++;
@@ -62,34 +69,10 @@ export class RegistarGarantiaPage implements OnInit { // Implementa o OnInit
     }
   }
 
-  // Recua para o ecrã anterior do formulário
+  // Recua para o passo anterior
   recuarPasso() {
     if (this.passoAtual > 1) {
       this.passoAtual--;
-    }
-  }
-
-  // Atualiza o alerta selecionado pelo utilizador
-  setAlerta(alerta: string) {
-    this.novaGarantia.alerta = alerta;
-  }
-
-  // Aciona a câmara nativa e guarda a foto em formato Base64 (DataUrl)
-  async tirarFoto(tipo: 'talao' | 'local') {
-    try {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.DataUrl, 
-        source: CameraSource.Prompt
-      });
-
-      if (image.dataUrl) {
-        if (tipo === 'talao') this.novaGarantia.fotoTalao = image.dataUrl;
-        if (tipo === 'local') this.novaGarantia.fotoLocal = image.dataUrl;
-      }
-    } catch (error) {
-      console.log('Câmara cancelada pelo utilizador.');
     }
   }
 
@@ -103,15 +86,41 @@ export class RegistarGarantiaPage implements OnInit { // Implementa o OnInit
     }
   }
 
-  // Guarda os dados e redireciona para a página principal
+  // Conclui o registo, guarda na base de dados e volta à página inicial
   async concluirRegisto() {
     if (this.emModoEdicao) {
-      // Se for edição, chama a função de editar
       await this.garantiasService.editarGarantia(this.novaGarantia);
     } else {
-      // Se for nova, chama a função de adicionar
       await this.garantiasService.adicionarGarantia(this.novaGarantia);
     }
     this.router.navigate(['/tabs/tab1']);
+  }
+
+  // --- LÓGICA DO UPLOAD DE FOTOS (NATIVA) ---
+
+  // Aciona a câmara ou a galeria do telemóvel
+  async tirarFoto(tipo: 'talao' | 'local') {
+    try {
+      const image = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl, 
+        source: CameraSource.Prompt // Pergunta ao utilizador se quer Câmara ou Galeria
+      });
+
+      if (image.dataUrl) {
+        if (tipo === 'talao') this.novaGarantia.fotoTalao = image.dataUrl;
+        if (tipo === 'local') this.novaGarantia.fotoLocal = image.dataUrl;
+      }
+    } catch (error) {
+      console.log('Operação da câmara cancelada.');
+    }
+  }
+
+  // Remove a foto guardada e impede que a câmara abra acidentalmente
+  removerFoto(tipo: 'talao' | 'local', event: Event) {
+    event.stopPropagation(); 
+    if (tipo === 'talao') this.novaGarantia.fotoTalao = '';
+    if (tipo === 'local') this.novaGarantia.fotoLocal = '';
   }
 }

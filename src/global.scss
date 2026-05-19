@@ -37,9 +37,7 @@
 @import '@ionic/angular/css/palettes/dark.system.css';
 
 
-/* ==========================================
-   LAYOUT, ESPAÇAMENTOS E SOMBRAS (Issue #13.5)
-   ========================================== */
+
 
 /* 1. CARTÕES (Cards): Sombras suaves e cantos arredondados (16px) */
 ion-card {
@@ -73,9 +71,7 @@ ion-item {
 }
 
 
-/* ==========================================
-   TIPOGRAFIA E BOTÕES (Issue #13.6)
-   ========================================== */
+
 
 /* 1. TIPOGRAFIA: Hierarquia e cores suaves */
 ion-title {
@@ -103,9 +99,6 @@ ion-button {
 }
 
 
-/* ==========================================
-   ESTADOS VAZIOS E CONSISTÊNCIA (Issue #13.7)
-   ========================================== */
 
 /* Layout centrado para quando não há dados (Garantias ou Grupos) */
 .empty-state {

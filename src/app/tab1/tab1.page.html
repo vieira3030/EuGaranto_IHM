@@ -1,32 +1,69 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title style="font-weight: bold;">As Minhas Garantias</ion-title>
+    <ion-title style="font-weight: 800; font-size: 22px; overflow: visible;">
+      <ion-icon name="document-text-outline" style="vertical-align: sub; margin-right: 6px; color: var(--ion-color-medium);"></ion-icon>
+      As Minhas Garantias
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div class="empty-state" *ngIf="garantias.length === 0">
-    <ion-icon name="document-text-outline"></ion-icon>
-    <h3>Nenhuma garantia</h3>
-    <p>Ainda não registaste nenhuma compra. Adiciona o teu primeiro talão para começares a organizar!</p>
-    <ion-button routerLink="/criar-garantia">
-      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
-      Criar Garantia
-    </ion-button>
+
+  <div class="summary-banner">
+    <div class="summary-info">
+      <span class="summary-label">Garantias Ativas</span>
+      <h1 class="summary-number">{{ totalAtivas }}</h1>
+    </div>
+    <div class="summary-icon">
+      <ion-icon name="shield-checkmark-outline"></ion-icon>
+    </div>
+  </div>
+  
+  <div class="filters-container">
+    <ion-segment [(ngModel)]="filtroAtual" (ionChange)="mudouFiltro($event)" mode="ios" class="custom-segment">
+      <ion-segment-button value="todas">
+        <ion-label>Todas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ativas">
+        <ion-label>Ativas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="expiradas">
+        <ion-label>Expiradas</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </div>
 
-  <ion-list style="background: transparent;" lines="none" *ngIf="garantias.length > 0">
-    <ion-card *ngFor="let garantia of garantias" 
+  <div class="empty-state" *ngIf="garantiasFiltradas.length === 0">
+    <div class="icon-box">
+      <ion-icon name="document-text-outline"></ion-icon>
+    </div>
+    <h3>Nenhuma garantia</h3>
+    <p>Ainda não registaste nenhuma compra neste filtro. Adiciona os teus talões para os começares a proteger!</p>
+  </div>
+
+  <div class="lista-garantias" *ngIf="garantiasFiltradas.length > 0">
+    <ion-card *ngFor="let garantia of garantiasFiltradas" 
               [routerLink]="['/garantia-detalhe', garantia.id]" 
-              button 
-              color="light">
-      <ion-card-content style="position: relative;">
-        <h2 style="margin: 0 0 5px 0;">{{ garantia.nomeProduto || garantia.nome }}</h2>
-        <p style="margin: 0;">Expira a: {{ garantia.dataExpiracao }}</p>
-        <ion-icon name="chevron-forward-outline" 
-                  style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--ion-color-medium);">
-        </ion-icon>
+              button
+              class="garantia-card">
+      <ion-card-content class="card-content-flex">
+        
+        <div class="info-text">
+          <h2>{{ garantia.nomeProduto || garantia.nome }}</h2>
+          <p>Expira a: <strong>{{ garantia.dataExpiracao }}</strong></p>
+        </div>
+        
+        <div class="icon-arrow">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+        
       </ion-card-content>
     </ion-card>
-  </ion-list>
+  </div>
+
+  <ion-button expand="block" class="btn-primary" routerLink="/registar-garantia">
+    <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+    Adicionar Garantia
+  </ion-button>
+
 </ion-content>

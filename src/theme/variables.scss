@@ -1,42 +1,114 @@
-/* src/theme/variables.scss */
+/* --- DESIGN SYSTEM: SECURE ASSURANCE --- */
 
-/* Definição das variáveis de cor na raiz (Light Mode por defeito) */
+/* Importação da nova tipografia premium */
+@import url('https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap');
+
 :root {
-  /* Primary - Verde Principal */
-  --ion-color-primary: #84e119;
-  --ion-color-primary-rgb: 132, 225, 25;
-  --ion-color-primary-contrast: #000000;
-  --ion-color-primary-contrast-rgb: 0, 0, 0;
-  --ion-color-primary-shade: #74c616;
-  --ion-color-primary-tint: #90e430;
+  /* Fonte Global da Aplicação */
+  --ion-font-family: 'Hanken Grotesk', sans-serif;
 
-  /* Danger - Vermelho para erros/eliminar */
-  --ion-color-danger: #cc0000;
-  --ion-color-danger-rgb: 204, 0, 0;
+  /* Fundo da App e Cor do Texto (Modo Claro) */
+  --ion-background-color: #f8f9fa;
+  --ion-background-color-rgb: 248, 249, 250;
+  --ion-text-color: #191c1d;
+  --ion-text-color-rgb: 25, 28, 29;
+
+  /* Cor Primária Base (Verde Corporativo Escuro) */
+  --ion-color-primary: #3d6a00;
+  --ion-color-primary-rgb: 61, 106, 0;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #365d00;
+  --ion-color-primary-tint: #507e1a;
+
+  /* Cor de Destaque Vibrante (O teu Verde Lima para Ações e Botões) */
+  --ion-color-success: #8de61a;
+  --ion-color-success-rgb: 141, 230, 26;
+  --ion-color-success-contrast: #1a1c1e;
+  --ion-color-success-contrast-rgb: 26, 28, 30;
+  --ion-color-success-shade: #7ccb17;
+  --ion-color-success-tint: #98e831;
+
+  /* Cor Secundária (Cinza Neutro) */
+  --ion-color-secondary: #5d5e61;
+  --ion-color-secondary-rgb: 93, 94, 97;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #525355;
+  --ion-color-secondary-tint: #6d6e71;
+
+  /* Cor de Alerta e Erro */
+  --ion-color-danger: #ba1a1a;
+  --ion-color-danger-rgb: 186, 26, 26;
   --ion-color-danger-contrast: #ffffff;
   --ion-color-danger-contrast-rgb: 255, 255, 255;
-  --ion-color-danger-shade: #b40000;
-  --ion-color-danger-tint: #d11a1a;
 
-  /* Light - Cinzento claro para fundos */
-  --ion-color-light: #e0e0e0;
-  --ion-color-light-rgb: 224, 224, 224;
-  --ion-color-light-contrast: #000000;
-  --ion-color-light-contrast-rgb: 0, 0, 0;
-  --ion-color-light-shade: #c5c5c5;
-  --ion-color-light-tint: #e3e3e3;
+  /* Tons de Cinza para Linhas e Elementos Médios */
+  --ion-color-medium: #5d5e61;
+  --ion-color-medium-rgb: 93, 94, 97;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #525355;
+  --ion-color-medium-tint: #6d6e71;
+
+  /* Fundo Padrão para Elementos Claros Fixos */
+  --ion-color-light: #edeeef;
+  --ion-color-light-rgb: 237, 238, 239;
+  --ion-color-light-contrast: #191c1d;
+  --ion-color-light-contrast-rgb: 25, 28, 29;
+  --ion-color-light-shade: #d1d1d2;
+  --ion-color-light-tint: #f0f1f2;
+
+  /* Definição de Fundo dos Cartões e Contentores */
+  --ion-card-background: #ffffff;
+  --ion-item-background: #ffffff;
 }
 
-/* Regras aplicadas automaticamente quando o Modo Escuro está ativo */
+/* ======================================= */
+/* === CONFIGURAÇÃO GLOBAL DO MODO ESCURO === */
+/* ======================================= */
 @media (prefers-color-scheme: dark) {
-  body {
-    /* Fundo principal escuro */
+  :root {
+    /* Fundo da App e Cor do Texto no Escuro */
     --ion-background-color: #121212;
-    /* Texto global a branco */
+    --ion-background-color-rgb: 18, 18, 18;
     --ion-text-color: #ffffff;
-    
-    /* Cinzento mais escuro para os cartões no Dark Mode */
+    --ion-text-color-rgb: 255, 255, 255;
+
+    /* Ajuste dos Contentores no Escuro */
+    --ion-card-background: #1e1e1e;
+    --ion-item-background: #1e1e1e;
     --ion-color-light: #2a2a2a;
     --ion-color-light-contrast: #ffffff;
+    --ion-color-medium: #a0a0a0;
+
+    /* Manter a Primária Legível no Escuro */
+    --ion-color-primary: #85dd06;
+    --ion-color-primary-contrast: #111111;
   }
+}
+
+/* ======================================= */
+/* === COMPONENTES GLOBAIS REUTILIZÁVEIS === */
+/* ======================================= */
+
+/* Cartões Estilo Premium (Soft UI) usados na App */
+.garantia-card, .item-card, .summary-box {
+  border-radius: 16px !important; /* Arredondamento de 1rem do Design System */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05) !important; /* Sombra muito suave */
+  border: none !important;
+  background: var(--ion-card-background) !important;
+}
+
+/* Forçar a remoção de sombras nos cartões em modo escuro (substituído por contorno leve) */
+@media (prefers-color-scheme: dark) {
+  .garantia-card, .item-card, .summary-box {
+    box-shadow: none !important;
+    border: 1px solid #2a2a2a !important;
+  }
+}
+
+/* Inputs arredondados suaves */
+ion-input, ion-select {
+  --border-radius: 8px !important;
 }

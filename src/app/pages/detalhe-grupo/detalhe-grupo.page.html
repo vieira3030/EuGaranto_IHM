@@ -15,9 +15,7 @@
         <ion-label style="font-weight: bold; font-size: 18px;">Membros do Grupo</ion-label>
       </ion-list-header>
       
-      <ion-item *ngFor="let membro of grupo.membros" 
-                class="item-card"
-                style="--background: #f4f5f8; margin-bottom: 8px; border-radius: 8px;">
+      <ion-item *ngFor="let membro of grupo.membros" class="item-card">
         <ion-icon name="person-circle-outline" slot="start" color="medium"></ion-icon>
         <ion-label>{{ membro }}</ion-label>
       </ion-item>
@@ -28,25 +26,23 @@
         <ion-label style="font-weight: bold; font-size: 18px;">Garantias Partilhadas</ion-label>
       </ion-list-header>
       
-      <p *ngIf="garantiasCompletas.length === 0" style="color: gray; padding: 10px;">
+      <p *ngIf="garantiasCompletas.length === 0" class="texto-vazio">
         Nenhuma garantia partilhada neste grupo.
       </p>
 
       <ion-card *ngFor="let garantia of garantiasCompletas" 
                 [routerLink]="['/garantia-detalhe', garantia.id]"
                 button 
-                color="light" 
-                style="margin: 0 0 12px 0; border-radius: 8px; box-shadow: none;">
-        <ion-card-content style="padding: 15px;">
+                class="garantia-card">
+        
+        <ion-card-content class="garantia-content">
           <ion-label>
-            <h2 style="font-weight: bold; font-size: 16px; color: black;">
+            <h2 class="garantia-titulo">
               {{ garantia.nomeProduto || garantia.nome }}
             </h2>
             <p style="margin-top: 5px;">Expira a: {{ garantia.dataExpiracao }}</p>
           </ion-label>
-          <ion-icon name="chevron-forward-outline" slot="end" 
-                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666;">
-          </ion-icon>
+          <ion-icon name="chevron-forward-outline" slot="end" class="seta-icon"></ion-icon>
         </ion-card-content>
       </ion-card>
     </ion-list>
@@ -59,7 +55,7 @@
           </ion-button>
         </ion-col>
         <ion-col size="6">
-          <ion-button expand="block" (click)="editar()" style="font-weight: bold;">
+          <ion-button expand="block" color="primary" (click)="editar()" style="font-weight: bold;">
             EDITAR
           </ion-button>
         </ion-col>

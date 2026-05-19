@@ -1,25 +1,149 @@
-/* Define o tamanho do título */
-.titulo-seccao {
-  font-size: 16px;
-  margin-bottom: 20px;
-  color: var(--ion-text-color);
+/* --- PAINEL SUPERIOR (DASHBOARD) --- */
+.summary-banner {
+  /* Alterada cor de fundo para o verde 'success' (igual ao botão de ação) */
+  background: var(--ion-color-success); 
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  /* Sombra leve para efeito Soft UI contra o fundo suave da app */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
+
+  .summary-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .summary-label {
+    /* Cor escura contra fundo verde para legibilidade */
+    color: rgba(26, 28, 30, 0.7); 
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+
+  .summary-number {
+    /* Cor preta/escura contra fundo verde */
+    color: #1a1c1e; 
+    font-size: 42px;
+    font-weight: 800;
+    margin: 4px 0 0 0;
+  }
+
+  .summary-icon ion-icon {
+    font-size: 46px;
+    /* Ícone escuro em baixa opacidade no fundo */
+    color: rgba(26, 28, 30, 0.2); 
+  }
 }
 
-/* Formata o cartão para ficar liso e sem sombra (design Flat) */
+/* --- FILTROS DE SEGMENTO --- */
+.filters-container {
+  margin-bottom: 24px;
+}
+
+.custom-segment {
+  background: var(--ion-color-light); /* Fundo cinza suave do design system */
+  border-radius: 12px;
+  padding: 4px;
+
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: #1a1c1e;
+    --background-checked: var(--ion-color-success); /* Fundo verde ao selecionar */
+    --border-radius: 8px;
+    font-weight: 700;
+    text-transform: capitalize;
+    min-height: 38px;
+    font-size: 14px;
+  }
+}
+
+/* --- ESTADO VAZIO --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 20px;
+
+  .icon-box {
+    background: rgba(141, 230, 26, 0.12);
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    ion-icon { font-size: 36px; color: var(--ion-color-primary); }
+  }
+
+  h3 { font-weight: 700; font-size: 19px; color: var(--ion-text-color); margin-bottom: 8px; }
+  p { color: var(--ion-color-medium); line-height: 1.5; font-size: 14px; margin: 0; }
+}
+
+/* --- CARTÕES DE GARANTIA (SOFT UI) --- */
+.lista-garantias {
+  margin-bottom: 24px;
+}
+
 .garantia-card {
-  margin: 15px 0;
-  box-shadow: none; 
-  border-radius: 0px; 
-  color: var(--ion-color-light-contrast);
-  font-size: 16px;
+  margin: 0 0 12px 0;
+  /* Classes de elevação e fundo geridas globalmente no variables.scss */
 }
 
-/* Estilo padronizado do botão principal */
-.botao-principal {
-  margin-top: 40px;
-  height: 65px; 
-  font-size: 20px;
-  --border-radius: 0px; 
-  text-transform: none; /* Mantém o texto em minúsculas como no Figma */
-  color: var(--ion-color-primary-contrast);
+.card-content-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+}
+
+.info-text {
+  h2 { margin: 0 0 4px 0; font-weight: 700; font-size: 16px; color: var(--ion-text-color); }
+  p { margin: 0; font-size: 13px; color: var(--ion-color-medium); }
+  strong { color: var(--ion-text-color); font-weight: 600; }
+}
+
+.icon-arrow ion-icon {
+  font-size: 18px;
+  color: var(--ion-color-medium);
+}
+
+/* --- BOTÃO DE AÇÃO PRINCIPAL --- */
+.btn-primary {
+  --background: var(--ion-color-success);
+  --color: #1a1c1e;
+  --border-radius: 14px;
+  font-weight: 700;
+  height: 54px;
+  text-transform: none;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* --- AJUSTES ESPECÍFICOS MODO ESCURO --- */
+@media (prefers-color-scheme: dark) {
+  .summary-banner {
+    /* Mantém o fundo verde vibrante corporativo, mas remove a sombra */
+    box-shadow: none;
+    border: 1px solid rgba(26, 28, 30, 0.1); /* Borda leve para integração */
+    
+    /* Garante que os textos continuam escuros contra o fundo verde */
+    .summary-label { color: rgba(26, 28, 30, 0.7); }
+    .summary-number { color: #1a1c1e; }
+    .summary-icon ion-icon { color: rgba(26, 28, 30, 0.2); }
+  }
+  
+  .custom-segment ion-segment-button {
+    --color-checked: #ffffff;
+    --background-checked: var(--ion-color-primary); /* Fundo verde mais escuro no dark mode */
+  }
 }

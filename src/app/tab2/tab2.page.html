@@ -21,7 +21,7 @@
           {{ grupo.nome }}
         </h2>
         <p style="margin: 0; color: var(--ion-color-medium);">
-          {{ grupo.membros.length }} membros · {{ grupo.garantiasIds?.length || 0 }} garantias
+          {{ grupo.membros.length }} membros · {{ grupo.garantiasIds.length || 0 }} garantias
         </p>
         <ion-icon name="chevron-forward-outline" 
                   style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--ion-color-medium);">
@@ -30,10 +30,9 @@
     </ion-card>
   </ion-list>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button routerLink="/criar-grupo">
-      <ion-icon name="add"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+  <ion-button expand="block" size="large" routerLink="/criar-grupo" style="margin-top: 16px; margin-bottom: 32px;">
+    <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+    Criar Grupo
+  </ion-button>
 
 </ion-content>

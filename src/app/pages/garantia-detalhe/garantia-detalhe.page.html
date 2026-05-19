@@ -1,49 +1,117 @@
-<ion-header [translucent]="true" class="ion-no-border">
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tab1" text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title style="font-weight: bold;">Detalhe do Produto</ion-title>
+    <ion-title style="font-weight: 800; font-size: 20px;">Detalhe do Produto</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding" *ngIf="garantia">
+<ion-content class="ion-padding">
   
-  <h2 class="produto-titulo">{{ garantia.nomeProduto || garantia.nome }}</h2>
-
-  <div class="foto-caixa talao-caixa">
-    <span *ngIf="!garantia.fotoTalao">Foto do talão</span>
-    <img *ngIf="garantia.fotoTalao" [src]="garantia.fotoTalao" alt="Talão da Garantia">
+  <div class="product-hero-card animate-fade-in">
+    <div class="hero-icon">
+      <ion-icon name="cube-outline"></ion-icon>
+    </div>
+    <h2>{{ garantia?.nome }}</h2>
+    <div class="status-badge" [class.expiring]="garantia?.diasRestantes <= 30">
+      Faltam {{ garantia?.diasRestantes }} dias
+    </div>
   </div>
 
-  <div class="detalhes-info">
-    <p><strong>Data de compra:</strong> {{ garantia.dataCompra }}</p>
-    <p><strong>Data de expiração:</strong> {{ garantia.dataExpiracao }}</p>
-    <p><strong>Dias restantes:</strong> {{ garantia.diasRestantes }} dias</p>
-    <p><strong>Alerta:</strong> {{ garantia.alerta }}</p>
-  </div>
-
-  <div class="foto-caixa local-caixa">
-    <span *ngIf="!garantia.fotoLocal">Foto do local físico</span>
-    <img *ngIf="garantia.fotoLocal" [src]="garantia.fotoLocal" alt="Local Físico">
-  </div>
-
-  <div class="botoes-acao" style="display: flex; gap: 10px; margin-top: 20px;">
+  <div class="section-container animate-fade-in" style="animation-delay: 0.1s;">
+    <h3 class="section-title">Informações</h3>
     
-    <ion-button color="danger" 
-                class="btn-acao btn-grande" 
-                style="flex: 1;" 
-                (click)="eliminar()">
-      Eliminar
-    </ion-button>
-    
-    <ion-button color="primary" 
-                class="btn-acao btn-grande" 
-                style="flex: 1;" 
-                (click)="editar()">
-      Editar
-    </ion-button>
+    <div class="info-list">
+      <div class="info-item">
+        <div class="info-label">Data de Compra</div>
+        <div class="info-value">{{ garantia?.dataCompra | date: 'dd/MM/yyyy' }}</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">Fim da Garantia</div>
+        <div class="info-value text-success">{{ garantia?.dataExpiracao | date: 'dd/MM/yyyy' }}</div>
+      </div>
+      
+      <div class="info-item">
+        <div class="info-label">Alerta</div>
+        <div class="info-value">{{ garantia?.alerta }}</div>
+      </div>
+    </div>
+  </div>
 
+  <div class="section-container animate-fade-in" style="animation-delay: 0.2s;">
+    <h3 class="section-title">Documentos</h3>
+    
+    <div class="documents-grid">
+      
+      <div class="doc-card" (click)="verDocumento('talao')">
+        <div class="doc-image" *ngIf="garantia?.fotoTalao">
+          <img [src]="garantia.fotoTalao" alt="Miniatura Talão">
+        </div>
+        <div class="doc-icon" *ngIf="!garantia?.fotoTalao">
+          <ion-icon name="receipt-outline"></ion-icon>
+        </div>
+        
+        <div class="doc-text">Foto do Talão</div>
+        <ion-icon name="eye-outline" class="view-icon"></ion-icon>
+      </div>
+      
+      <div class="doc-card" (click)="verDocumento('local')">
+        <div class="doc-image" *ngIf="garantia?.fotoLocal">
+          <img [src]="garantia.fotoLocal" alt="Miniatura Local">
+        </div>
+        <div class="doc-icon" *ngIf="!garantia?.fotoLocal">
+          <ion-icon name="storefront-outline"></ion-icon>
+        </div>
+        
+        <div class="doc-text">Foto do Local</div>
+        <ion-icon name="eye-outline" class="view-icon"></ion-icon>
+      </div>
+
+    </div>
   </div>
 
 </ion-content>
+
+<ion-footer class="ion-no-border">
+  <div class="footer-container">
+    <ion-row class="ion-no-padding">
+      
+      <ion-col size="3" class="ion-no-padding" style="padding-right: 8px;">
+        <ion-button expand="block" class="btn-danger-outline" (click)="apagarProduto()">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </ion-col>
+      
+      <ion-col size="9" class="ion-no-padding" style="padding-left: 8px;">
+        <ion-button expand="block" class="btn-primary" (click)="editarProduto()">
+          <ion-icon slot="start" name="pencil-outline"></ion-icon>
+          Editar Produto
+        </ion-button>
+      </ion-col>
+
+    </ion-row>
+  </div>
+</ion-footer>
+
+
+<ion-modal [isOpen]="modalAberto" (didDismiss)="fecharModal()" class="photo-viewer-modal">
+  <ng-template>
+    <ion-content>
+      
+      <div class="overlay-close-container animate-fade-in" style="animation-delay: 0.1s;">
+        <ion-button (click)="fecharModal()" fill="clear" class="btn-fechar-moderno">
+          <ion-icon name="close-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="modal-image-view-wrapper">
+        <img [src]="fotoEmDestaque" alt="Documento Ampliado" />
+      </div>
+
+    </ion-content>
+  </ng-template>
+</ion-modal>
+
+

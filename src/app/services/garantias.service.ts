@@ -15,6 +15,9 @@ export interface Grupo {
 
 @Injectable({ providedIn: 'root' })
 export class GarantiasService {
+  apagarGarantia(id: any) {
+    throw new Error('Method not implemented.');
+  }
   private _storage: Storage | null = null;
   
   /** Evento para notificar a interface sobre mudanças nos dados. */

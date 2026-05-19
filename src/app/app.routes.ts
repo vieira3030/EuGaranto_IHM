@@ -25,5 +25,9 @@ export const routes: Routes = [
     // Rota de detalhe da garantia que recebe o ID do produto para consulta
     path: 'garantia-detalhe/:id',
     loadComponent: () => import('./pages/garantia-detalhe/garantia-detalhe.page').then( m => m.GarantiaDetalhePage)
+  },  {
+    path: 'editar-perfil',
+    loadComponent: () => import('./editar-perfil/editar-perfil.page').then( m => m.EditarPerfilPage)
   },
+
 ];

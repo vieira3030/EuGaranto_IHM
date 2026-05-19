@@ -1,92 +1,347 @@
-/* Indicador de progresso (Bolinhas 1 a 5) */
-.wizard-indicador {
+/* --- INDICADOR DE PASSOS (Com Linhas) --- */
+.stepper-wrapper {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin-bottom: 20px;
+  margin: 10px 0 35px 0;
 }
 
-.bola-passo {
-  width: 25px;
-  height: 25px;
+.step-circle {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
   border-radius: 50%;
-  text-align: center;
-  font-weight: bold;
-  line-height: 25px;
-  background: var(--ion-color-light);
-  color: var(--ion-color-light-contrast);
-
-  /* Cor verde para o passo atual */
-  &.ativo {
-    background: #7CFC00; 
-    color: black;
-  }
-}
-
-/* Remove a barra verde de todos os títulos desta página */
-h2, h3, h4 {
-  border-left: none !important;
-  padding-left: 0 !important;
-  margin-left: 0 !important;
-}
-
-/* Estilo dos campos de texto (Passo 1) */
-.input-item {
-  --border-radius: 4px;
-  --background: #f4f5f8;
-  margin-bottom: 10px;
-}
-
-.input-wrapper {
-  width: 100%;
-  padding: 5px 0;
-}
-
-.input-label {
-  font-size: 12px;
-  opacity: 0.7;
-}
-
-/* Seletor de data nativo */
-.input-data {
-  width: 100%;
-  background: transparent;
-  border: none;
-  padding: 10px 0;
-  font-size: 16px;
-  color: var(--ion-text-color);
-}
-
-/* Área de clique para tirar foto (Passos 2 e 3) */
-.upload-caixa {
-  background-color: #f4f5f8;
-  height: 200px;
+  background: var(--ion-color-light); 
+  color: var(--ion-color-medium);
   display: flex;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  margin: 20px 0;
-  border: 2px dashed #ccc;
-  border-radius: 8px;
-
-  ion-icon {
-    font-size: 40px;
-    color: #666;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  
+  &.active, &.completed {
+    background: var(--ion-color-success);
+    color: #1a1c1e;
   }
 }
 
-/* Botões de alerta (Passo 4) */
-.opcoes-alerta {
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--ion-color-light);
+  margin: 0 6px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+
+  &.completed {
+    background: var(--ion-color-success);
+  }
+}
+
+/* --- TÍTULO DA SECÇÃO --- */
+.section-header {
+  margin-bottom: 24px;
+  
+  h2 { 
+    font-size: 22px; 
+    font-weight: 800; 
+    color: var(--ion-text-color); 
+    margin: 0 0 6px 0; 
+  }
+  
+  p { 
+    font-size: 14px; 
+    color: var(--ion-color-medium); 
+    margin: 0; 
+  }
+}
+
+/* --- INPUTS PREMIUM (Soft UI) --- */
+.custom-input-group { margin-bottom: 20px; }
+
+.input-label { 
+  font-size: 14px; 
+  font-weight: 700; 
+  color: var(--ion-text-color); 
+  margin-bottom: 8px; 
+  display: block; 
+}
+
+.optional-text {
+  font-weight: 400;
+  color: var(--ion-color-medium);
+  font-size: 13px;
+}
+
+.soft-input {
+  --background: #f1f3f5; 
+  --padding-start: 16px; 
+  --padding-end: 16px; 
+  --padding-top: 16px; 
+  --padding-bottom: 16px;
+  --border-radius: 12px;
+  --color: var(--ion-text-color);
+  font-size: 16px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+
+  &.ion-focused {
+    border: 1px solid var(--ion-color-success);
+    --background: #ffffff;
+  }
+}
+
+.soft-textarea {
+  min-height: 120px;
+}
+
+/* --- ÁREA DE UPLOAD (Passo 2) --- */
+.upload-area {
+  background: var(--ion-color-light);
+  border: 2px dashed #b0b4b8;
+  border-radius: 16px;
+  padding: 40px 20px;
+  text-align: center;
   display: flex;
   flex-direction: column;
-  gap: 15px;
   align-items: center;
-  margin-top: 30px;
+  justify-content: center;
+  cursor: pointer;
+  
+  .upload-icon-circle {
+    width: 64px;
+    height: 64px;
+    background: rgba(0,0,0,0.05); 
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
 
-  ion-button {
-    width: 80%;
-    --background: #7CFC00;
-    --color: black;
-    font-weight: bold;
-    text-transform: none;
+    ion-icon { 
+      font-size: 32px; 
+      color: var(--ion-color-primary); 
+    }
+  }
+
+  h3 { font-size: 17px; font-weight: 700; color: var(--ion-text-color); margin: 0 0 8px 0; }
+  p { font-size: 13px; color: var(--ion-color-medium); margin: 0; }
+}
+
+/* --- BOTÃO NO RODAPÉ --- */
+.footer-toolbar {
+  --background: var(--ion-background-color);
+  padding: 10px 20px 36px 20px; 
+}
+
+.footer-buttons { width: 100%; }
+
+.footer-buttons-split {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  
+  /* Ajuste seguro de tamanho nos botões duplos */
+  .btn-primary { flex: 2; }
+  .btn-secondary { flex: 1; }
+}
+
+.btn-primary, .btn-secondary {
+  --border-radius: 14px;
+  font-weight: 700;
+  height: 54px;
+  text-transform: none;
+  font-size: 16px;
+  margin: 0;
+}
+
+.btn-primary {
+  --background: var(--ion-color-success);
+  --color: #1a1c1e;
+}
+
+.btn-secondary {
+  --background: var(--ion-color-light);
+  --color: var(--ion-text-color);
+}
+
+/* --- ANIMAÇÃO DE TRANSIÇÃO --- */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+@keyframes fadeIn { 
+  from { opacity: 0; transform: translateY(10px); } 
+  to { opacity: 1; transform: translateY(0); } 
+}
+
+/* --- MODO ESCURO --- */
+@media (prefers-color-scheme: dark) {
+  .soft-input { 
+    --background: #1e1e1e; 
+    &.ion-focused { --background: #121212; } 
+  }
+  
+  .step-circle:not(.active):not(.completed) { 
+    background: #2a2a2a; 
+    color: #888; 
+  }
+
+  .step-line:not(.completed) {
+    background: #2a2a2a;
+  }
+
+  .upload-area {
+    background: #1e1e1e;
+    border-color: #333;
+    .upload-icon-circle { background: #2a2a2a; }
+  }
+
+  .btn-secondary {
+    --background: #2a2a2a;
+  }
+}
+
+/* Miniatura da foto carregada no Passo 2 */
+.image-preview-talao {
+  width: 100%;
+  max-height: 180px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+
+
+/* --- CARTÕES DE OPÇÕES DE ALERTA (Passo 4) --- */
+.alert-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-card {
+  background: var(--ion-card-background, #ffffff);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ion-text-color);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  /* Estado selecionado (Fica verde) */
+  &.selected {
+    background: var(--ion-color-success);
+    color: #1a1c1e;
+    box-shadow: 0 8px 25px rgba(141, 230, 26, 0.25);
+  }
+}
+
+/* Modo escuro para os cartões */
+@media (prefers-color-scheme: dark) {
+  .option-card {
+    background: #1e1e1e;
+    border: 1px solid #2a2a2a;
+    box-shadow: none;
+    
+    &.selected {
+      background: var(--ion-color-success);
+      border-color: var(--ion-color-success);
+      color: #1a1c1e;
+    }
+  }
+}
+
+
+/* --- CARTÃO DE RESUMO REFINADO (Passo 5) --- */
+.summary-card {
+  background: var(--ion-card-background, #ffffff);
+  border-radius: 16px; // Cantos arredondados de 16px conforme o design
+  padding: 32px 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+  margin-top: 10px;
+}
+
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; // Centraliza os elementos
+  text-align: center;
+}
+
+.success-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  background: rgba(141, 230, 26, 0.15); // Fundo verde suave de baixa opacidade
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  ion-icon {
+    font-size: 40px;
+    color: var(--ion-color-success); // Ícone em Verde Lima
+  }
+}
+
+.product-title {
+  margin: 0 0 16px 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ion-text-color);
+  letter-spacing: -0.5px;
+}
+
+.summary-dates {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  width: 100%;
+}
+
+.date-chip {
+  background: #f1f3f5; // Fundo neutro suave
+  padding: 10px 20px;
+  border-radius: 12px; // Alinhado com a geometria suave da interface
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
+  
+  &.text-success {
+    color: var(--ion-color-primary); // Destaque na data de expiração
+  }
+}
+
+.arrow-icon {
+  color: var(--ion-color-medium);
+  font-size: 20px;
+}
+
+.summary-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+/* Ajustes de Modo Escuro */
+@media (prefers-color-scheme: dark) {
+  .summary-card {
+    background: #1e1e1e;
+    box-shadow: none;
+    border: 1px solid #2a2a2a;
+  }
+  
+  .date-chip {
+    background: #2a2a2a;
   }
 }

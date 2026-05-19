@@ -1,67 +1,280 @@
-/* Título centrado e destacado */
-.produto-titulo {
-  text-align: center;
-  font-weight: bold;
-  font-size: 22px;
-  margin-bottom: 25px;
-  color: var(--ion-text-color);
+/* --- FUNDO DA PÁGINA --- */
+ion-content {
+  --background: #f8f9fa; /* Fundo ligeiramente cinza para destacar os cartões brancos */
 }
 
-/* Caixa genérica para as imagens com fundo cinzento claro */
-.foto-caixa {
-  background-color: var(--ion-color-light); 
-  color: var(--ion-color-light-contrast);
+/* --- CARTÃO DE DESTAQUE NO TOPO --- */
+.product-hero-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px 20px;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
-  margin: 0 auto 25px;
-  font-size: 18px;
-  border-radius: 0px; /* Sem cantos redondos para manter a fidelidade ao Figma */
-  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  margin-bottom: 30px;
+  border: 1px solid rgba(0,0,0,0.02);
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+  .hero-icon {
+    width: 64px;
+    height: 64px;
+    background: rgba(141, 230, 26, 0.15); /* Fundo verde transparente */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    ion-icon {
+      font-size: 32px;
+      color: var(--ion-color-success);
+    }
   }
-}
 
-/* Tamanho específico da caixa do talão */
-.talao-caixa {
-  width: 100%;
-  height: 220px;
-}
-
-/* Tamanho específico da caixa do local físico (mais pequena) */
-.local-caixa {
-  width: 150px;
-  height: 150px;
-}
-
-/* Formatação do texto dos detalhes */
-.detalhes-info {
-  margin-bottom: 25px;
-  
-  p {
-    margin: 8px 0;
-    font-size: 16px;
+  h2 {
+    margin: 0 0 12px 0;
+    font-size: 24px;
+    font-weight: 800;
     color: var(--ion-text-color);
   }
+
+  .status-badge {
+    background: #f1f3f5;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ion-color-medium);
+
+    /* Fica vermelho se faltarem poucos dias */
+    &.expiring {
+      background: rgba(255, 73, 97, 0.1);
+      color: var(--ion-color-danger);
+    }
+  }
 }
 
-/* --- BOTÕES DE AÇÃO (ATUALIZADO) --- */
-.botoes-acao {
-  display: flex;
-  gap: 15px; /* Cria um espaço fixo perfeito entre o botão vermelho e o verde */
-  margin-top: 30px;
+/* --- TÍTULOS DAS SECÇÕES --- */
+.section-container { margin-bottom: 30px; }
 
-  .btn-acao {
-    flex: 1; /* Obriga ambos os botões a ocuparem exatamente metade do espaço disponível */
-    height: 65px; /* Aumentado para 65px para o botão ficar bem alto e largo */
-    --border-radius: 0px; /* Mantém os cantos quadrados */
-    text-transform: none; /* Mantém o texto normal sem estar todo em maiúsculas */
-    font-size: 20px; /* Aumentado para 20px para melhor leitura */
-    font-weight: bold; /* Destaca bem a ação */
-    margin: 0; /* Remove margens padrão do Ionic que possam desalinhar */
+.section-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--ion-text-color);
+  margin: 0 0 15px 0;
+}
+
+/* --- LISTA DE INFORMAÇÕES --- */
+.info-list {
+  background: white;
+  border-radius: 16px;
+  padding: 5px 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.02);
+
+  .info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+
+    &:last-child { border-bottom: none; }
+
+    .info-label {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--ion-color-medium);
+    }
+
+    .info-value {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ion-text-color);
+
+      &.text-success { color: var(--ion-color-success); }
+    }
+  }
+}
+
+/* --- GRELHA DE DOCUMENTOS --- */
+.documents-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+
+  .doc-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.02);
+    cursor: pointer;
+    transition: transform 0.2s ease;
+
+    &:active { transform: scale(0.96); } 
+
+    /* Ícone Original (Caso não haja foto) */
+    .doc-icon {
+      width: 48px;
+      height: 48px;
+      background: #f1f3f5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+
+      ion-icon { font-size: 24px; color: var(--ion-color-medium); }
+    }
+
+/* NOVA IMAGEM: Miniatura da foto carregada */
+    .doc-image {
+      width: 100px;  
+      height: 100px; 
+      border-radius: 14px; 
+      margin-bottom: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.05); /* Borda suave */
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Garante que a foto não fica distorcida ou esticada */
+      }
+    }
+
+    .doc-text {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ion-text-color);
+      margin-bottom: 10px;
+    }
+
+    .view-icon {
+      font-size: 22px;
+      color: var(--ion-color-success);
+    }
+  }
+}
+
+/* --- BOTÕES DO RODAPÉ --- */
+.footer-container {
+  padding: 16px;
+  background: var(--ion-background-color);
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+.btn-primary, .btn-danger-outline {
+  --border-radius: 14px;
+  font-weight: 700;
+  height: 54px;
+  text-transform: none;
+  font-size: 16px;
+  margin: 0;
+}
+
+.btn-primary {
+  --background: var(--ion-color-success);
+  --color: #1a1c1e;
+}
+
+.btn-danger-outline {
+  --background: #f1f3f5;
+  --color: var(--ion-color-danger);
+  
+  ion-icon { font-size: 24px; }
+}
+
+/* --- ANIMAÇÃO SUAVE AO ABRIR --- */
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out backwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- MODO ESCURO --- */
+@media (prefers-color-scheme: dark) {
+  ion-content { --background: #121212; }
+
+  .product-hero-card, .info-list, .doc-card {
+    background: #1e1e1e;
+    border-color: #2a2a2a;
+    box-shadow: none;
+  }
+
+  .product-hero-card .status-badge { background: #2a2a2a; }
+  .info-list .info-item { border-bottom-color: #2a2a2a; }
+  .doc-card .doc-icon { background: #2a2a2a; }
+  .btn-danger-outline { --background: #2a2a2a; }
+}
+
+
+/* --- MODAL DA FOTO (Ecrã Inteiro - Design Premium) --- */
+.photo-viewer-modal {
+  /* Fundo preto intenso e sem sombras do modal */
+  --background: #000000;
+  --box-shadow: none;
+  --border-radius: 0; /* Ocupa o ecrã inteiro sem cantos redondos */
+  
+  ion-content {
+    --background: #000000;
+    --overflow: hidden; /* Evita scrolls indesejados */
+  }
+
+  /* Centralização total da imagem */
+  .modal-image-view-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain; /* Mostra a foto inteira sem cortar nada */
+      box-shadow: 0 0 60px rgba(0, 0, 0, 0.9); /* Profundidade à imagem */
+    }
+  }
+
+  /* CONTAINER DO BOTÃO (Posicionado no topo à esquerda como overlay) */
+  .overlay-close-container {
+    position: absolute;
+    top: max(16px, env(safe-area-inset-top)); /* Respeita a área segura do topo */
+    left: 16px;
+    z-index: 1000; /* Fica por cima da imagem */
+    
+    .btn-fechar-moderno {
+      /* Botão circular, Translúcido (Estilo Apple/Instagram Photos) */
+      --background: rgba(255, 255, 255, 0.15); /* Fundo branco meio transparente */
+      --color: white; /* Ícone Branco */
+      --border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      --padding-start: 0;
+      --padding-end: 0;
+      backdrop-filter: blur(10px); /* Efeito de vidro desfocado */
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+      
+      &:active {
+        transform: scale(0.92); /* Efeito ao clicar */
+        --background: rgba(255, 255, 255, 0.25);
+      }
+      
+      ion-icon {
+        font-size: 28px;
+      }
+    }
   }
 }

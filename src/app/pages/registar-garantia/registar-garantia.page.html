@@ -1,127 +1,221 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons slot="start" *ngIf="passoAtual === 1">
-      <ion-back-button defaultHref="/tabs/tab1" text="Cancelar"></ion-back-button>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/tab1" text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title>EuGaranto</ion-title>
+    <ion-title style="font-weight: 800; font-size: 20px;">Nova Garantia</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  
-  <div class="wizard-indicador">
-    <div [class.ativo]="passoAtual >= 1" class="bola-passo">1</div>
-    <div [class.ativo]="passoAtual >= 2" class="bola-passo">2</div>
-    <div [class.ativo]="passoAtual >= 3" class="bola-passo">3</div>
-    <div [class.ativo]="passoAtual >= 4" class="bola-passo">4</div>
-    <div [class.ativo]="passoAtual >= 5" class="bola-passo">5</div>
+
+  <div class="stepper-wrapper">
+    <div class="step-circle" [class.active]="passoAtual === 1" [class.completed]="passoAtual > 1">
+      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 1"></ion-icon>
+      <span *ngIf="passoAtual <= 1">1</span>
+    </div>
+    <div class="step-line" [class.completed]="passoAtual > 1"></div>
+    
+    <div class="step-circle" [class.active]="passoAtual === 2" [class.completed]="passoAtual > 2">
+      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 2"></ion-icon>
+      <span *ngIf="passoAtual <= 2">2</span>
+    </div>
+    <div class="step-line" [class.completed]="passoAtual > 2"></div>
+    
+    <div class="step-circle" [class.active]="passoAtual === 3" [class.completed]="passoAtual > 3">
+      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 3"></ion-icon>
+      <span *ngIf="passoAtual <= 3">3</span>
+    </div>
+    <div class="step-line" [class.completed]="passoAtual > 3"></div>
+    
+    <div class="step-circle" [class.active]="passoAtual === 4" [class.completed]="passoAtual > 4">
+      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 4"></ion-icon>
+      <span *ngIf="passoAtual <= 4">4</span>
+    </div>
+    <div class="step-line" [class.completed]="passoAtual > 4"></div>
+
+    <div class="step-circle" [class.active]="passoAtual === 5">
+      <span>5</span>
+    </div>
   </div>
 
-  <div *ngIf="passoAtual === 1">
-    <h3 class="passo-titulo" style="text-align: center;">Passo 1: Dados do Produto</h3>
-    <p>Adicionar Nova Garantia</p>
-    <p class="upload-info">Preencha os dados do produto para iniciar o registo</p>
-
-    <ion-item color="light" lines="none" class="input-item">
-      <div class="input-wrapper">
-        <div class="input-label">Nome do produto:</div>
-        <ion-input type="text" [(ngModel)]="novaGarantia.nome"></ion-input>
+  <div *ngIf="passoAtual === 1" class="step-content animate-fade-in">
+    <div class="section-header">
+      <h2>Passo 1: Dados do Produto</h2>
+      <p>Adicionar Nova Garantia - Preencha os dados do produto para iniciar o registo</p>
+    </div>
+    
+    <div class="form-wrapper">
+      <div class="custom-input-group">
+        <ion-label class="input-label">Nome do Produto</ion-label>
+        <ion-input type="text" placeholder="Ex: Smartphone Samsung" class="soft-input" [(ngModel)]="novaGarantia.nome"></ion-input>
       </div>
-    </ion-item>
-
-    <ion-item color="light" lines="none" class="input-item">
-      <div class="input-wrapper">
-        <div class="input-label">Data de compra:</div>
-        <input type="date" [(ngModel)]="novaGarantia.dataCompra" class="input-data">
+      
+      <div class="custom-input-group">
+        <ion-label class="input-label">Data de compra</ion-label>
+        <ion-input type="date" class="soft-input" [(ngModel)]="novaGarantia.dataCompra"></ion-input>
       </div>
-    </ion-item>
-
-    <ion-item color="light" lines="none" class="input-item">
-      <div class="input-wrapper">
-        <div class="input-label">Data de expiração:</div>
-        <input type="date" [(ngModel)]="novaGarantia.dataExpiracao" class="input-data">
+      
+      <div class="custom-input-group">
+        <ion-label class="input-label">Data de Expiração</ion-label>
+        <ion-input type="date" class="soft-input" [(ngModel)]="novaGarantia.dataExpiracao"></ion-input>
       </div>
-    </ion-item>
 
-    <ion-item color="light" lines="none" class="input-item">
-      <div class="input-wrapper">
-        <div class="input-label">Descrição (opcional):</div>
-        <ion-input type="text" [(ngModel)]="novaGarantia.descricao"></ion-input>
+      <div class="custom-input-group">
+        <ion-label class="input-label">
+          Descrição da garantia <span class="optional-text">(Opcional)</span>
+        </ion-label>
+        <ion-textarea rows="4" placeholder="Ex: Informações adicionais..." class="soft-input soft-textarea" [(ngModel)]="novaGarantia.descricao"></ion-textarea>
       </div>
-    </ion-item>
-  </div>
-
-  <div *ngIf="passoAtual === 2">
-    <h3 class="passo-titulo" style="text-align: center;">Passo 2: Upload da foto do talão</h3>
-    
-    <div class="upload-caixa" (click)="tirarFoto('talao')">
-      <img *ngIf="novaGarantia.fotoTalao" [src]="novaGarantia.fotoTalao" alt="Talão capturado" />
-      <span *ngIf="!novaGarantia.fotoTalao">Clique para<br>fotografar o talão</span>
-    </div>
-    
-    <div class="upload-info-caixa">
-      <b>Formatos suportados:</b> JPEG, PNG<br>
-      <b>Tamanho máximo:</b> 10MB
     </div>
   </div>
 
-  <div *ngIf="passoAtual === 3">
-    <h3 class="passo-titulo" style="text-align: center;">Passo 3: Upload da foto do local físico</h3>
+  <div *ngIf="passoAtual === 2" class="step-content animate-fade-in">
+    <div class="section-header">
+      <h2>Passo 2: Upload da foto do talão</h2>
+      <p>Capture ou faça o upload da foto do talão de compra.</p>
+    </div>
     
-    <div class="upload-caixa" (click)="tirarFoto('local')">
-      <img *ngIf="novaGarantia.fotoLocal" [src]="novaGarantia.fotoLocal" alt="Local capturado" />
-      <span *ngIf="!novaGarantia.fotoLocal">Clique para<br>fotografar o local<br>onde guardou o talão</span>
+    <div class="upload-area" (click)="tirarFoto('talao')" *ngIf="!novaGarantia.fotoTalao">
+      <div class="upload-icon-circle">
+        <ion-icon name="camera-outline"></ion-icon>
+      </div>
+      <h3>Tirar ou carregar foto</h3>
+      <p>Formatos: JPG, PNG ou PDF</p>
     </div>
 
-    <div class="upload-info-caixa">
-      <b>Formatos suportados:</b> JPEG, PNG<br>
-      <b>Tamanho máximo:</b> 10MB
-    </div>
-  </div>
-
-  <div *ngIf="passoAtual === 4">
-    <h3 class="passo-titulo" style="text-align: center;">Passo 4: Configurar Alerta de Expiração</h3>
-    <p style="text-align: center;">Com que antecedência deseja receber o alerta?</p>
-    
-    <div class="opcoes-alerta">
-      <ion-button [color]="novaGarantia.alerta === '1 dia antes' ? 'primary' : 'light'" expand="block" (click)="setAlerta('1 dia antes')">1 dia antes</ion-button>
-      <ion-button [color]="novaGarantia.alerta === '1 semana antes' ? 'primary' : 'light'" expand="block" (click)="setAlerta('1 semana antes')">1 semana antes</ion-button>
-      <ion-button [color]="novaGarantia.alerta === '1 mes antes' ? 'primary' : 'light'" expand="block" (click)="setAlerta('1 mes antes')">1 mes antes</ion-button>
-      <ion-button [color]="novaGarantia.alerta === 'Não quero alertas' ? 'primary' : 'light'" expand="block" (click)="setAlerta('Não quero alertas')">Não quero alertas</ion-button>
+    <div class="upload-area preview-mode" *ngIf="novaGarantia.fotoTalao" style="border-color: var(--ion-color-success);">
+       <img [src]="novaGarantia.fotoTalao" alt="Preview Talão" class="image-preview">
+       <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
+       
+       <ion-button fill="clear" color="medium" (click)="removerFoto('talao', $event)" style="text-transform: none; text-decoration: underline;">
+         Alterar foto
+       </ion-button>
     </div>
   </div>
 
-  <div *ngIf="passoAtual === 5">
-    <h2 class="passo-titulo">Garantia registada com sucesso!</h2>
-    <p>O teu produto foi adicionado à lista de garantias</p>
+  <div *ngIf="passoAtual === 3" class="step-content animate-fade-in">
+    <div class="section-header">
+      <h2>Passo 3: Upload do local físico</h2>
+      <p>Capture ou faça o upload da foto onde guardou o talão.</p>
+    </div>
     
-    <ion-card color="light" class="garantia-card" style="margin: 20px 0;">
-      <ion-card-content>
-        Nome do produto: {{ novaGarantia.nome }} <br><br>
-        <strong>Dias restantes: {{ novaGarantia.diasRestantes }} dias</strong>
-      </ion-card-content>
-    </ion-card>
+    <div class="upload-area" (click)="tirarFoto('local')" *ngIf="!novaGarantia.fotoLocal">
+      <div class="upload-icon-circle">
+        <ion-icon name="camera-outline"></ion-icon>
+      </div>
+      <h3>Tirar ou carregar foto</h3>
+      <p>Formatos: JPG, PNG ou PDF</p>
+    </div>
+
+    <div class="upload-area preview-mode" *ngIf="novaGarantia.fotoLocal" style="border-color: var(--ion-color-success);">
+       <img [src]="novaGarantia.fotoLocal" alt="Preview Local" class="image-preview">
+       <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
+       
+       <ion-button fill="clear" color="medium" (click)="removerFoto('local', $event)" style="text-transform: none; text-decoration: underline;">
+         Alterar foto
+       </ion-button>
+    </div>
+  </div>
+
+  <div *ngIf="passoAtual === 4" class="step-content animate-fade-in">
+    <div class="section-header">
+      <h2>Passo 4: Configurar Alerta</h2>
+      <p>Escolha quando deseja ser avisado antes que a garantia expire.</p>
+    </div>
+    
+    <div class="alert-options">
+      <div class="option-card" 
+           [class.selected]="novaGarantia.alerta === '1 dia antes'" 
+           (click)="novaGarantia.alerta = '1 dia antes'">
+        <span>1 dia antes</span>
+      </div>
+      
+      <div class="option-card" 
+           [class.selected]="novaGarantia.alerta === '1 semana antes'" 
+           (click)="novaGarantia.alerta = '1 semana antes'">
+        <span>1 semana antes</span>
+      </div>
+      
+      <div class="option-card" 
+           [class.selected]="novaGarantia.alerta === '1 mês antes'" 
+           (click)="novaGarantia.alerta = '1 mês antes'">
+        <span>1 mês antes</span>
+      </div>
+
+      <div class="option-card" 
+           [class.selected]="novaGarantia.alerta === 'Nenhum'" 
+           (click)="novaGarantia.alerta = 'Nenhum'">
+        <span>Não quero alertas</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="passoAtual === 5" class="step-content animate-fade-in">
+    <div class="section-header">
+      <h2>Confirmação</h2>
+      <p>Revise os dados inseridos e conclua o registo.</p>
+    </div>
+
+    <div class="summary-card">
+      <div class="summary-container">
+        <div class="success-icon-wrapper">
+          <ion-icon name="checkmark-circle-outline"></ion-icon>
+        </div>
+        
+        <h3 class="product-title">{{ novaGarantia.nome || 'Produto sem nome' }}</h3>
+        
+        <div class="summary-dates">
+          <div class="date-chip text-muted">
+            {{ (novaGarantia.dataCompra | date: 'dd/MM/yyyy') || '--/--/----' }}
+          </div>
+          
+          <ion-icon name="arrow-forward-outline" class="arrow-icon"></ion-icon>
+          
+          <div class="date-chip text-success">
+            {{ (novaGarantia.dataExpiracao | date: 'dd/MM/yyyy') || '--/--/----' }}
+          </div>
+        </div>
+
+        <p class="summary-text">
+          Garantia registada com sucesso! Enviaremos um aviso quando estiver perto do fim para que não se esqueça.
+        </p>
+      </div>
+    </div>
   </div>
 
 </ion-content>
 
 <ion-footer class="ion-no-border">
-  <ion-toolbar class="ion-padding-horizontal">
-    <div class="navegacao-botoes" style="display: flex; justify-content: space-between; margin-top: 10px; margin-bottom: 10px;">
-      
-      <ion-button *ngIf="passoAtual > 1 && passoAtual < 5" color="light" style="width: 45%; --border-radius: 0;" (click)="recuarPasso()">
-        Anterior
-      </ion-button>
-      
-      <div *ngIf="passoAtual === 1 || passoAtual === 5" style="width: 45%;"></div>
+  <div style="padding: 16px; background: var(--ion-background-color); padding-bottom: max(16px, env(safe-area-inset-bottom));">
+    
+    <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" style="margin: 0; min-height: 54px;">
+      Seguinte
+      <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+    </ion-button>
 
-      <ion-button *ngIf="passoAtual < 5" color="primary" style="width: 45%; --border-radius: 0;" (click)="avancarPasso()">
-        Seguinte
-      </ion-button>
+    <ion-row *ngIf="passoAtual > 1" class="ion-no-padding">
       
-      <ion-button *ngIf="passoAtual === 5" color="primary" style="width: 45%; --border-radius: 0;" (click)="concluirRegisto()">
-        Concluir
-      </ion-button>
-    </div>
-  </ion-toolbar>
+      <ion-col size="4" class="ion-no-padding" style="padding-right: 8px;">
+        <ion-button expand="block" class="btn-secondary" (click)="recuarPasso()" style="margin: 0; min-height: 54px;">
+          Anterior
+        </ion-button>
+      </ion-col>
+
+      <ion-col size="8" class="ion-no-padding" style="padding-left: 8px;">
+        
+        <ion-button *ngIf="passoAtual < 5" expand="block" class="btn-primary" (click)="avancarPasso()" style="margin: 0; min-height: 54px;">
+          Seguinte
+          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+        </ion-button>
+
+        <ion-button *ngIf="passoAtual === 5" expand="block" class="btn-primary" (click)="concluirRegisto()" style="margin: 0; min-height: 54px;">
+          Concluir
+          <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
+        </ion-button>
+
+      </ion-col>
+    </ion-row>
+
+  </div>
 </ion-footer>

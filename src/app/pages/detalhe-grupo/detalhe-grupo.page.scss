@@ -1,0 +1,67 @@
+/* --- ESTILOS GERAIS (Modo Claro) --- */
+
+/* Cartões de Membros */
+.item-card {
+  --background: var(--ion-color-step-50, #f4f5f8);
+  border: 1px solid var(--ion-color-medium, #92949c);
+  margin-bottom: 8px;
+  border-radius: 8px;
+  color: var(--ion-text-color);
+}
+
+/* Cartões de Garantias */
+.garantia-card {
+  background: var(--ion-color-step-50, #f4f5f8);
+  border: 1px solid var(--ion-color-medium, #92949c);
+  margin: 0 0 12px 0;
+  border-radius: 8px;
+  box-shadow: none;
+}
+
+.garantia-content {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Títulos das Garantias */
+.garantia-titulo {
+  font-weight: bold;
+  font-size: 16px;
+  color: var(--ion-text-color, #000); 
+}
+
+/* Seta dos Cartões */
+.seta-icon {
+  font-size: 20px;
+  color: var(--ion-color-medium, #666);
+}
+
+/* Texto de lista vazia */
+.texto-vazio {
+  color: var(--ion-color-medium, gray);
+  padding: 10px;
+}
+
+/* ======================================= */
+/* === CORREÇÃO EXCLUSIVA MODO ESCURO === */
+/* ======================================= */
+@media (prefers-color-scheme: dark) {
+  
+  /* Força as caixas a ficarem cinza escuro para melhor contraste */
+  .item-card,
+  .garantia-card {
+    --background: #2a2a2a !important;
+    background: #2a2a2a !important;
+  }
+
+  /* Garante que todos os textos (títulos e descrições) ficam brancos */
+  ion-label, 
+  ion-list-header ion-label,
+  .garantia-titulo,
+  .garantia-content p,
+  .texto-vazio {
+    color: #ffffff !important;
+  }
+}

@@ -35,3 +35,38 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+
+
+
+
+/* 1. CARTÕES (Cards): Sombras suaves e cantos arredondados (16px) */
+ion-card {
+  --background: #ffffff; /* Fundo branco limpo */
+  --color: #333333;
+  border-radius: 16px; /* Cantos bem redondos */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important; /* Sombra suave e profunda */
+  margin-bottom: 16px; /* Espaço entre cartões */
+  border: none !important; /* Remove as bordas feias padrão */
+}
+
+/* Ajusta o espaçamento interno do conteúdo do cartão */
+ion-card-content {
+  padding: 20px !important; 
+}
+
+/* 2. ITENS DE LISTA (como os membros do grupo): Aspeto de cartão */
+ion-item.item-card {
+  --background: #f8f9fa; /* Fundo ligeiramente cinza para destacar */
+  --border-radius: 12px;
+  --padding-start: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Sombra muito subtil */
+  border: 1px solid #eeeeee; /* Borda fininha e clara */
+}
+
+/* 3. ALINHAMENTOS: Centrar conteúdo verticalmente em listas */
+ion-item {
+  --min-height: 56px; /* Garante uma altura mínima confortável para o toque */
+  align-items: center; 
+}

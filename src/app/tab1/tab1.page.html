@@ -1,20 +1,32 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>EuGaranto</ion-title>
+    <ion-title style="font-weight: bold;">As Minhas Garantias</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <p class="titulo-seccao">As minhas garantias:</p>
+<ion-content class="ion-padding">
+  <div class="empty-state" *ngIf="garantias.length === 0">
+    <ion-icon name="document-text-outline"></ion-icon>
+    <h3>Nenhuma garantia</h3>
+    <p>Ainda não registaste nenhuma compra. Adiciona o teu primeiro talão para começares a organizar!</p>
+    <ion-button routerLink="/criar-garantia">
+      <ion-icon slot="start" name="add-circle-outline"></ion-icon>
+      Criar Garantia
+    </ion-button>
+  </div>
 
-  <ion-card *ngFor="let garantia of garantias" [routerLink]="['/garantia-detalhe', garantia.id]" color="light" class="garantia-card">
-    <ion-card-content>
-      Nome do produto: {{ garantia.nome }} <br>
-      Dias restantes: <strong>{{ garantia.diasRestantes }} dias restantes</strong>
-    </ion-card-content>
-  </ion-card>
-
-<ion-button expand="block" color="primary" class="botao-principal" routerLink="/registar-garantia">
-  <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-  Adicionar garantia
-</ion-button>
+  <ion-list style="background: transparent;" lines="none" *ngIf="garantias.length > 0">
+    <ion-card *ngFor="let garantia of garantias" 
+              [routerLink]="['/garantia-detalhe', garantia.id]" 
+              button 
+              color="light">
+      <ion-card-content style="position: relative;">
+        <h2 style="margin: 0 0 5px 0;">{{ garantia.nomeProduto || garantia.nome }}</h2>
+        <p style="margin: 0;">Expira a: {{ garantia.dataExpiracao }}</p>
+        <ion-icon name="chevron-forward-outline" 
+                  style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--ion-color-medium);">
+        </ion-icon>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+</ion-content>

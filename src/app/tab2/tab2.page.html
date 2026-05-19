@@ -1,33 +1,39 @@
-<ion-header [translucent]="true">
+<ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title>Meus Grupos</ion-title>
+    <ion-title style="font-weight: bold;">Grupos de Partilha</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <h2 class="titulo-seccao">Grupos de Partilha</h2>
-
-  <p *ngIf="grupos.length === 0" class="mensagem-vazia">
-    Ainda não criaste nenhum grupo.
-  </p>
-
-  <div class="lista-grupos">
-    <ion-card *ngFor="let grupo of grupos" 
-              [routerLink]="['/detalhe-grupo', grupo.id]" 
-              button 
-              color="light" 
-              class="garantia-card">
-      <ion-card-content>
-        <ion-label>
-          <h3 style="font-weight: bold; font-size: 18px; margin: 0;">{{ grupo.nome }}</h3>
-          <p style="margin-top: 5px;">{{ grupo.membros?.length || 0 }} membros</p>
-        </ion-label>
-      </ion-card-content>
-    </ion-card>
+  
+  <div class="empty-state" *ngIf="grupos.length === 0">
+    <ion-icon name="people-outline"></ion-icon>
+    <h3>Nenhum grupo</h3>
+    <p>Não pertences a nenhum grupo de partilha. Cria um grupo para partilhares as tuas garantias com familiares ou amigos!</p>
   </div>
 
-  <ion-button expand="block" color="primary" class="botao-principal" [routerLink]="['/criar-grupo']" style="margin-top: 20px;">
-    <ion-icon name="add-circle-outline" slot="start"></ion-icon>
-    Criar grupo
-  </ion-button>
+  <ion-list style="background: transparent;" lines="none" *ngIf="grupos.length > 0">
+    <ion-card *ngFor="let grupo of grupos" 
+              [routerLink]="['/detalhe-grupo', grupo.id]" 
+              button>
+      <ion-card-content style="position: relative;">
+        <h2 style="margin: 0 0 5px 0; color: var(--ion-text-color);">
+          {{ grupo.nome }}
+        </h2>
+        <p style="margin: 0; color: var(--ion-color-medium);">
+          {{ grupo.membros.length }} membros · {{ grupo.garantiasIds?.length || 0 }} garantias
+        </p>
+        <ion-icon name="chevron-forward-outline" 
+                  style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--ion-color-medium);">
+        </ion-icon>
+      </ion-card-content>
+    </ion-card>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/criar-grupo">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+
 </ion-content>

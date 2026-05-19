@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-// Substituímos o GruposService pelo GarantiasService para ler direto do Firebase
+// Serviço unificado para ler dados direto do Firebase
 import { GarantiasService, Grupo } from '../services/garantias.service';
+
+// Importar a função de registo de ícones e os respetivos ícones
+import { addIcons } from 'ionicons';
+import { peopleOutline, chevronForwardOutline, add } from 'ionicons/icons';
 
 @Component({
   selector: 'app-tab2',
@@ -10,30 +14,34 @@ import { GarantiasService, Grupo } from '../services/garantias.service';
 })
 export class Tab2Page implements OnInit {
   
-  // Variável que guarda o array de grupos a apresentar no ecrã
+  // Array de grupos a apresentar na interface
   grupos: Grupo[] = [];
 
-  constructor(private garantiasService: GarantiasService) {}
+  constructor(private garantiasService: GarantiasService) {
+    // Regista os ícones para ficarem visíveis no HTML
+    addIcons({ peopleOutline, chevronForwardOutline, add });
+  }
 
+  // Corre na primeira vez que a página é inicializada
   async ngOnInit() {
-    // Subscreve as alterações no serviço para atualizar a lista se algo mudar
+    // Subscreve alterações para atualizar a lista automaticamente
     this.garantiasService.dadosAlterados.subscribe(() => {
       this.carregarGrupos();
     });
   }
 
-  /** Atualiza a lista SEMPRE que o separador é aberto (mata o problema de cache) */
+  // Atualiza a lista SEMPRE que o separador é aberto (evita cache)
   async ionViewWillEnter() {
     await this.carregarGrupos();
   }
 
-  /** Método que vai buscar os grupos DIRETAMENTE à base de dados na Nuvem */
+  // Vai buscar os grupos DIRETAMENTE à base de dados na Nuvem
   async carregarGrupos() {
-    // 1. Vai buscar o email do utilizador atual
+    // 1. Obtém o email do utilizador atual
     const perfil = await this.garantiasService.getPerfil();
     
     if (perfil) {
-      // 2. Vai ao Firebase buscar apenas os grupos onde este email está inserido
+      // 2. Vai ao Firebase buscar apenas os grupos deste utilizador
       this.grupos = await this.garantiasService.getGruposRemotos(perfil.email);
       console.log('Grupos carregados do Firebase:', this.grupos);
     }

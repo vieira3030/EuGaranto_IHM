@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core'; // Adicionado OnInit
-import { Router, ActivatedRoute } from '@angular/router'; // Adicionado ActivatedRoute
+import { Component, OnInit } from '@angular/core'; 
+import { Router, ActivatedRoute } from '@angular/router'; 
+import { ToastController } from '@ionic/angular'; // Importação do ToastController
 
 // Registo de ícones do Ionic para a interface
 import { addIcons } from 'ionicons';
@@ -8,7 +9,8 @@ import {
   peopleOutline, 
   shieldCheckmarkOutline, 
   notificationsOutline, 
-  archiveOutline 
+  archiveOutline,
+  checkmarkCircleOutline // Adicionado para o balão de sucesso
 } from 'ionicons/icons';
 
 // Serviço e Interface para gestão de dados
@@ -43,13 +45,22 @@ export class CriarGrupoPage implements OnInit {
 
   constructor(
     private router: Router, 
-    private route: ActivatedRoute, // Para ler o ID na edição
-    private garantiasService: GarantiasService 
+    private route: ActivatedRoute, 
+    private garantiasService: GarantiasService,
+    private toastController: ToastController // Injeção no construtor
   ) {
-    addIcons({ closeCircle, peopleOutline, shieldCheckmarkOutline, notificationsOutline, archiveOutline });
+    // Registo de todos os ícones usados nesta página
+    addIcons({ 
+      closeCircle, 
+      peopleOutline, 
+      shieldCheckmarkOutline, 
+      notificationsOutline, 
+      archiveOutline,
+      checkmarkCircleOutline 
+    });
   }
 
-  // Lógica executada ao iniciar a página
+  /** Lógica executada ao iniciar a página. */
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     
@@ -67,7 +78,7 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
-  // Atualiza dados sempre que a página entra em foco
+  /** Atualiza dados sempre que a página entra em foco. */
   async ionViewWillEnter() {
     const perfil = await this.garantiasService.getPerfil();
     if (perfil && !this.emModoEdicao) {
@@ -80,13 +91,14 @@ export class CriarGrupoPage implements OnInit {
     await this.carregarGarantias();
   }
 
-  // Carrega as garantias pessoais para seleção
+  /** Carrega as garantias pessoais para seleção. */
   async carregarGarantias() {
     this.garantiasDisponiveis = await this.garantiasService.getGarantias();
   }
 
   // --- GESTÃO DE MEMBROS ---
   
+  /** Adiciona um membro à lista se for válido e não repetido. */
   adicionarMembro() {
     if (this.novoMembroEmail.trim() !== '' && !this.novoGrupo.membros.includes(this.novoMembroEmail)) {
       this.novoGrupo.membros.push(this.novoMembroEmail);
@@ -94,12 +106,14 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
+  /** Remove um membro específico da lista. */
   removerMembro(email: string) {
     this.novoGrupo.membros = this.novoGrupo.membros.filter(m => m !== email);
   }
 
   // --- SELEÇÃO DE GARANTIAS ---
 
+  /** Adiciona ou remove o ID de uma garantia selecionada. */
   toggleGarantia(id: string) {
     const index = this.novoGrupo.garantiasIds.indexOf(id);
     if (index === -1) {
@@ -109,26 +123,41 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
+  /** Verifica se a garantia está selecionada para apresentar na interface. */
   isGarantiaSelecionada(id: string): boolean {
     return this.novoGrupo.garantiasIds.includes(id);
   }
 
-  // --- NAVEGAÇÃO ---
+  // --- NAVEGAÇÃO E FEEDBACK ---
 
+  /** Avança para o passo seguinte do formulário. */
   avancarPasso() {
     if (this.passoAtual < 4) this.passoAtual++;
   }
 
+  /** Recua para o passo anterior do formulário. */
   recuarPasso() {
     if (this.passoAtual > 1) this.passoAtual--;
   }
 
-  // Grava as alterações ou cria o grupo novo no Firebase
+  /** Mostra uma notificação visual (Toast) no topo do ecrã. */
+  async mostrarSucesso(mensagem: string) {
+    const toast = await this.toastController.create({
+      message: mensagem,
+      duration: 2500,
+      position: 'top',
+      color: 'success',
+      icon: 'checkmark-circle-outline'
+    });
+    await toast.present();
+  }
+
+  /** Grava as alterações ou cria o grupo novo no Firebase. */
   async concluirCriacao() {
     let sucesso = false;
 
     if (this.emModoEdicao) {
-      // Chama a função de edição que criámos no serviço
+      // Chama a função de edição no serviço
       await this.garantiasService.editarGrupo(this.novoGrupo);
       sucesso = true;
     } else {
@@ -138,6 +167,10 @@ export class CriarGrupoPage implements OnInit {
     }
     
     if (sucesso) {
+      // Apresenta o feedback consoante a ação realizada
+      const msg = this.emModoEdicao ? 'Grupo atualizado com sucesso!' : 'Grupo criado com sucesso!';
+      await this.mostrarSucesso(msg);
+      
       this.router.navigateByUrl('/tabs/tab2'); 
     }
   }

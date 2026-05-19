@@ -70,3 +70,28 @@ ion-item {
   --min-height: 56px; /* Garante uma altura mínima confortável para o toque */
   align-items: center; 
 }
+
+/* 1. TIPOGRAFIA: Hierarquia e cores suaves */
+ion-title {
+  font-weight: 700;
+  letter-spacing: -0.02em; /* Dá um ar mais moderno e unido às letras */
+}
+
+h2 {
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--ion-color-dark); /* Cor escura e forte para títulos */
+}
+
+p, ion-note {
+  color: var(--ion-color-medium); /* Cinza suave para datas de expiração e detalhes */
+  font-size: 14px;
+}
+
+/* 2. BOTÕES: Formato uniforme e moderno */
+ion-button {
+  --border-radius: 24px; /* Arredonda todos os botões automaticamente */
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: none; /* Retira o texto todo em maiúsculas (fica mais elegante) */
+}

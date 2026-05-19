@@ -1,36 +1,67 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title style="font-weight: bold;">Grupos de Partilha</ion-title>
+    <ion-title style="font-weight: 800; font-size: 22px; overflow: visible;">
+      <ion-icon name="people-outline" style="vertical-align: sub; margin-right: 6px; color: var(--ion-color-medium);"></ion-icon>
+      Grupos de Partilha
+    </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
+
+  <div class="summary-banner">
+    <div class="summary-info">
+      <span class="summary-label">Grupos Ativos</span>
+      <h1 class="summary-number">{{ totalAtivos }}</h1>
+    </div>
+    <div class="summary-icon">
+      <ion-icon name="people"></ion-icon>
+    </div>
+  </div>
   
-  <div class="empty-state" *ngIf="grupos.length === 0">
-    <ion-icon name="people-outline"></ion-icon>
-    <h3>Nenhum grupo</h3>
-    <p>Não pertences a nenhum grupo de partilha. Cria um grupo para partilhares as tuas garantias com familiares ou amigos!</p>
+  <div class="filters-container">
+    <ion-segment [(ngModel)]="filtroAtual" (ionChange)="mudouFiltro($event)" mode="ios" class="custom-segment">
+      <ion-segment-button value="todos">
+        <ion-label>Todos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="ativos">
+        <ion-label>Ativos</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="antigos">
+        <ion-label>Antigos</ion-label>
+      </ion-segment-button>
+    </ion-segment>
   </div>
 
-  <ion-list style="background: transparent;" lines="none" *ngIf="grupos.length > 0">
-    <ion-card *ngFor="let grupo of grupos" 
+  <div class="empty-state" *ngIf="gruposFiltrados.length === 0">
+    <div class="icon-box">
+      <ion-icon name="people-outline"></ion-icon>
+    </div>
+    <h3>Nenhum grupo</h3>
+    <p>Não existem grupos para o filtro selecionado.</p>
+  </div>
+
+  <div class="lista-garantias" *ngIf="gruposFiltrados.length > 0">
+    <ion-card *ngFor="let grupo of gruposFiltrados" 
               [routerLink]="['/detalhe-grupo', grupo.id]" 
-              button>
-      <ion-card-content style="position: relative;">
-        <h2 style="margin: 0 0 5px 0; color: var(--ion-text-color);">
-          {{ grupo.nome }}
-        </h2>
-        <p style="margin: 0; color: var(--ion-color-medium);">
-          {{ grupo.membros.length }} membros · {{ grupo.garantiasIds.length || 0 }} garantias
-        </p>
-        <ion-icon name="chevron-forward-outline" 
-                  style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); font-size: 20px; color: var(--ion-color-medium);">
-        </ion-icon>
+              button
+              class="garantia-card">
+      <ion-card-content class="card-content-flex">
+        
+        <div class="info-text">
+          <h2>{{ grupo.nome }}</h2>
+          <p><strong>{{ grupo.membros.length }}</strong> membros · <strong>{{ grupo.garantiasIds.length || 0 }}</strong> garantias</p>
+        </div>
+        
+        <div class="icon-arrow">
+          <ion-icon name="chevron-forward-outline"></ion-icon>
+        </div>
+        
       </ion-card-content>
     </ion-card>
-  </ion-list>
+  </div>
 
-  <ion-button expand="block" size="large" routerLink="/criar-grupo" style="margin-top: 16px; margin-bottom: 32px;">
+  <ion-button expand="block" class="btn-primary" routerLink="/criar-grupo">
     <ion-icon slot="start" name="add-circle-outline"></ion-icon>
     Criar Grupo
   </ion-button>

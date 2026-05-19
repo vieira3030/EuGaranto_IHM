@@ -1,131 +1,337 @@
-// Contentor dos círculos de passo (indicador visual)
+/* --- INDICADOR DE PASSOS (Com Linhas) --- */
 .stepper-wrapper {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin: 20px 0;
+  margin: 10px 0 35px 0;
+}
+
+.step-circle {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ion-color-light); 
+  color: var(--ion-color-medium);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  transition: all 0.3s ease;
   
-  .step-circle {
-    width: 30px;
-    height: 30px;
+  &.active, &.completed {
+    background: var(--ion-color-success);
+    color: #1a1c1e;
+  }
+}
+
+.step-line {
+  flex: 1;
+  height: 2px;
+  background: var(--ion-color-light);
+  margin: 0 6px;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+
+  &.completed {
+    background: var(--ion-color-success);
+  }
+}
+
+/* --- TÍTULO DA SECÇÃO --- */
+.section-header {
+  margin-bottom: 24px;
+  
+  h2 { 
+    font-size: 22px; 
+    font-weight: 800; 
+    color: var(--ion-text-color); 
+    margin: 0 0 6px 0; 
+  }
+  
+  p { 
+    font-size: 14px; 
+    color: var(--ion-color-medium); 
+    margin: 0; 
+  }
+}
+
+/* --- INPUTS PREMIUM (Soft UI) --- */
+.custom-input-group { margin-bottom: 20px; }
+
+.input-label { 
+  font-size: 14px; 
+  font-weight: 700; 
+  color: var(--ion-text-color); 
+  margin-bottom: 8px; 
+  display: block; 
+}
+
+.soft-input {
+  --background: #f1f3f5; 
+  --padding-start: 16px; 
+  --padding-end: 16px; 
+  --padding-top: 16px; 
+  --padding-bottom: 16px;
+  --border-radius: 12px;
+  --color: var(--ion-text-color);
+  font-size: 16px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+
+  &.ion-focused {
+    border: 1px solid var(--ion-color-success);
+    --background: #ffffff;
+  }
+}
+
+/* --- ESPECÍFICO DO CRIAR GRUPO (MEMBROS E CHIPS) --- */
+.add-member-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  
+  .member-input { flex: 1; margin: 0; }
+  
+  .btn-add-member {
+    margin: 0;
+    --border-radius: 12px;
+    --background: var(--ion-color-success);
+    --color: #1a1c1e;
+    width: 56px;
+    ion-icon { font-size: 24px; }
+  }
+}
+
+.chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.custom-chip {
+  background: white;
+  border: 1px solid rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  border-radius: 20px;
+  padding: 8px 12px;
+  font-weight: 600;
+  color: var(--ion-text-color);
+  ion-icon { color: var(--ion-color-danger, #eb445a); }
+}
+
+/* --- CARTÕES DE OPÇÕES DE ALERTA (Passos 2 e 3) --- */
+.alert-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.option-card {
+  background: var(--ion-card-background, #ffffff);
+  border: 2px solid transparent;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--ion-text-color);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  
+  &.selected {
+    background: var(--ion-color-success);
+    color: #1a1c1e;
+    box-shadow: 0 8px 25px rgba(141, 230, 26, 0.25);
+  }
+}
+
+/* --- CARTÃO DE RESUMO (Passo 4) --- */
+.summary-card {
+  background: var(--ion-card-background, #ffffff);
+  border-radius: 16px;
+  padding: 32px 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.success-icon-wrapper {
+  width: 72px;
+  height: 72px;
+  background: rgba(141, 230, 26, 0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+
+  ion-icon {
+    font-size: 36px;
+    color: var(--ion-color-success);
+  }
+}
+
+.product-title {
+  margin: 0 0 16px 0;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--ion-text-color);
+}
+
+.summary-dates {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  width: 100%;
+}
+
+.date-chip {
+  background: #f1f3f5;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ion-text-color);
+  
+  &.text-success { color: var(--ion-color-primary); }
+}
+
+.summary-text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--ion-color-medium);
+  line-height: 1.6;
+}
+
+/* --- BOTÃO NO RODAPÉ --- */
+.footer-toolbar {
+  --background: var(--ion-background-color);
+  padding: 10px 20px 36px 20px; 
+}
+
+.footer-buttons-split {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  .btn-primary { flex: 2; }
+  .btn-secondary { flex: 1; }
+}
+
+.btn-primary, .btn-secondary {
+  --border-radius: 14px;
+  font-weight: 700;
+  height: 54px;
+  text-transform: none;
+  font-size: 16px;
+  margin: 0;
+}
+
+.btn-primary {
+  --background: var(--ion-color-success);
+  --color: #1a1c1e;
+}
+
+.btn-secondary {
+  --background: var(--ion-color-light);
+  --color: var(--ion-text-color);
+}
+
+/* --- ANIMAÇÃO DE TRANSIÇÃO --- */
+.animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* --- CARTÕES DE SELEÇÃO DE GARANTIAS (Passo 2) --- */
+.garantia-select-card {
+  background: var(--ion-card-background, #ffffff);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+
+  &:active { transform: scale(0.98); }
+
+  /* Estado Selecionado: Ganha uma borda verde fina e fundo super suave */
+  &.selected {
+    border-color: var(--ion-color-success);
+    background: rgba(141, 230, 26, 0.05); 
+  }
+
+  /* Checkbox Circular Customizada */
+  .custom-checkbox {
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
-    background: var(--ion-color-step-150, #e0e0e0); // Fundo cinza neutro
+    border: 2px solid var(--ion-color-medium); /* Círculo cinzento por defeito */
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: bold;
-    color: var(--ion-text-color);
-    
-    // Cor de destaque para o passo ativo (Verde Lima)
-    &.active {
-      background: #7CFC00; 
-      color: black;
+    transition: all 0.2s ease;
+
+    ion-icon {
+      color: #1a1c1e; /* Visto a Preto para contraste */
+      font-size: 18px;
+      font-weight: 900;
+    }
+  }
+
+  /* Quando o cartão é selecionado, a checkbox pinta-se de Verde Lima */
+  &.selected .custom-checkbox {
+    background: var(--ion-color-success);
+    border-color: var(--ion-color-success);
+  }
+
+  /* Textos */
+  .garantia-info {
+    flex: 1;
+    .nome {
+      display: block;
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--ion-text-color);
+      margin-bottom: 4px;
+    }
+    .marca {
+      display: block;
+      font-size: 13px;
+      color: var(--ion-color-medium);
     }
   }
 }
 
-// Garante a remoção de barras laterais em qualquer título desta página
-h2, h3, h4, .section-title {
-  border-left: none !important;
-  padding-left: 0 !important;
-}
 
-.section-title { 
-  font-weight: bold; 
-  text-align: center; 
-  margin-bottom: 20px; 
-  color: var(--ion-text-color);
-}
 
-// Estilo dos cartões para membros e garantias (com borda de contraste)
-.item-card {
-  --background: var(--ion-color-step-50, #f4f5f8);
-  border: 1px solid var(--ion-color-medium, #92949c);
-  margin-bottom: 8px;
-  border-radius: 8px;
-  --padding-start: 10px;
-  color: var(--ion-text-color);
-}
 
-// Contentor de inputs com fundo adaptável e borda
-.custom-input-box {
-  background: var(--ion-color-step-50, #f4f5f8);
-  border: 1px solid var(--ion-color-medium, #92949c);
-  padding: 10px;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  
-  small { color: var(--ion-color-medium); }
-  ion-input, ion-select { color: var(--ion-text-color); }
-}
-
-// Alinhamento do campo de email com o botão adicionar
-.add-member-row {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 15px;
-  
-  .member-input {
-    background: var(--ion-color-step-50, #f4f5f8);
-    border: 1px solid var(--ion-color-medium, #92949c);
-    border-radius: 8px;
-    padding-left: 10px;
-    color: var(--ion-text-color);
-  }
-}
-
-// Estilo para botões de ação (Verde Lima)
-.btn-add, .btn-next {
-  --background: #7CFC00;
-  --color: #000;
-  font-weight: bold;
-}
-
-// Caixa de resumo do passo 4 (Adaptável aos dois modos)
-.summary-box {
-  background: var(--ion-color-step-50, #f4f5f8);
-  border: 1px solid var(--ion-color-medium, #92949c);
-  color: var(--ion-text-color);
-  padding: 20px;
-  border-radius: 12px;
-  border-left: none !important; 
-}
-
-// Posicionamento dos botões no rodapé
-.footer-buttons {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-}
-
-// Lista sem fundo
-.transparent-list { 
-  background: transparent; 
-}
-
-/* ======================================= */
-/* === CORREÇÃO EXCLUSIVA MODO ESCURO === */
-/* ======================================= */
+/* --- MODO ESCURO --- */
 @media (prefers-color-scheme: dark) {
+  .soft-input { 
+    --background: #1e1e1e; 
+    &.ion-focused { --background: #121212; } 
+  }
   
-  // Bolinhas inativas com fundo cinza escuro e número branco
-  .stepper-wrapper .step-circle:not(.active) {
-    background: #2a2a2a !important;
-    color: #ffffff !important;
+  .step-circle:not(.active):not(.completed), .step-line:not(.completed) { background: #2a2a2a; }
+  .step-circle:not(.active):not(.completed) { color: #888; }
+  .btn-secondary, .date-chip { background: #2a2a2a; }
+
+  .option-card {
+    background: #1e1e1e; border: 1px solid #2a2a2a; box-shadow: none;
+    &.selected { background: var(--ion-color-success); border-color: var(--ion-color-success); color: #1a1c1e; }
   }
 
-  // Inputs, cartões e resumo com fundo escuro ideal (#2a2a2a)
-  .custom-input-box,
-  .add-member-row .member-input,
-  .item-card,
-  .summary-box {
-    background: #2a2a2a !important;
-    --background: #2a2a2a !important;
-  }
-
-  // Força a cor do texto para branco em todos os títulos, descrições e labels
-  h2, h3, h4, .section-title, 
-  .summary-box, .summary-box p,
-  ion-label, ion-label h2, ion-label p {
-    color: #ffffff !important;
-  }
+  .summary-card, .custom-chip { background: #1e1e1e; border-color: #2a2a2a; box-shadow: none; }
 }

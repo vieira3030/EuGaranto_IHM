@@ -3,64 +3,84 @@
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/tabs/tab2" text="Voltar"></ion-back-button>
     </ion-buttons>
-    <ion-title style="font-weight: bold;">{{ grupo?.nome }}</ion-title>
+    <ion-title style="font-weight: 800; font-size: 20px;">Detalhes</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <div *ngIf="grupo">
+  <div *ngIf="grupo" class="animate-fade-in">
     
-    <ion-list style="background: transparent; margin-bottom: 30px;" lines="none">
-      <ion-list-header style="padding-left: 0; margin-bottom: 10px;">
-        <ion-label style="font-weight: bold; font-size: 18px;">Membros do Grupo</ion-label>
-      </ion-list-header>
+    <div class="hero-card">
+      <div class="hero-icon">
+        <ion-icon name="people"></ion-icon>
+      </div>
+      <h1 class="hero-title">{{ grupo.nome }}</h1>
+      <div class="hero-stats">
+        <span class="badge"><ion-icon name="person-outline"></ion-icon> {{ grupo.membros.length }} Membros</span>
+        <span class="badge"><ion-icon name="shield-checkmark-outline"></ion-icon> {{ garantiasCompletas.length }} Garantias</span>
+      </div>
+    </div>
+
+    <div class="section-container">
+      <h2 class="section-title">Membros</h2>
       
-      <ion-item *ngFor="let membro of grupo.membros" class="item-card">
-        <ion-icon name="person-circle-outline" slot="start" color="medium"></ion-icon>
-        <ion-label>{{ membro }}</ion-label>
-      </ion-item>
-    </ion-list>
+      <div class="members-list">
+        <div *ngFor="let membro of grupo.membros" class="member-card">
+          <div class="avatar-circle">
+            <ion-icon name="person"></ion-icon>
+          </div>
+          <span class="member-email">{{ membro }}</span>
+        </div>
+      </div>
+    </div>
 
-    <ion-list style="background: transparent;" lines="none">
-      <ion-list-header style="padding-left: 0; margin-bottom: 10px;">
-        <ion-label style="font-weight: bold; font-size: 18px;">Garantias Partilhadas</ion-label>
-      </ion-list-header>
+    <div class="section-container" style="margin-top: 30px;">
+      <h2 class="section-title">Garantias Partilhadas</h2>
       
-      <p *ngIf="garantiasCompletas.length === 0" class="texto-vazio">
-        Nenhuma garantia partilhada neste grupo.
-      </p>
+      <div *ngIf="garantiasCompletas.length === 0" class="empty-box">
+        <ion-icon name="folder-open-outline"></ion-icon>
+        <p>Nenhuma garantia partilhada.</p>
+      </div>
 
-      <ion-card *ngFor="let garantia of garantiasCompletas" 
-                [routerLink]="['/garantia-detalhe', garantia.id]"
-                button 
-                class="garantia-card">
-        
-        <ion-card-content class="garantia-content">
-          <ion-label>
-            <h2 class="garantia-titulo">
-              {{ garantia.nomeProduto || garantia.nome }}
-            </h2>
-            <p style="margin-top: 5px;">Expira a: {{ garantia.dataExpiracao }}</p>
-          </ion-label>
-          <ion-icon name="chevron-forward-outline" slot="end" class="seta-icon"></ion-icon>
-        </ion-card-content>
-      </ion-card>
-    </ion-list>
-
-    <ion-grid style="margin-top: 40px; padding: 0;">
-      <ion-row>
-        <ion-col size="6">
-          <ion-button expand="block" color="danger" (click)="sairDoGrupo()" style="font-weight: bold;">
-            SAIR
-          </ion-button>
-        </ion-col>
-        <ion-col size="6">
-          <ion-button expand="block" color="primary" (click)="editar()" style="font-weight: bold;">
-            EDITAR
-          </ion-button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+      <div class="lista-garantias" *ngIf="garantiasCompletas.length > 0">
+        <div *ngFor="let garantia of garantiasCompletas" 
+             [routerLink]="['/garantia-detalhe', garantia.id]"
+             class="garantia-card-premium">
+          
+          <div class="icon-box-left">
+            <ion-icon name="document-text-outline"></ion-icon>
+          </div>
+          
+          <div class="garantia-info">
+            <h3>{{ garantia.nomeProduto || garantia.nome }}</h3>
+            <p>Expira a: <strong>{{ garantia.dataExpiracao }}</strong></p>
+          </div>
+          
+          <ion-icon name="chevron-forward-outline" class="seta-icon"></ion-icon>
+        </div>
+      </div>
+    </div>
 
   </div>
 </ion-content>
+
+<ion-footer class="ion-no-border" *ngIf="grupo">
+  <div class="footer-actions-container">
+    <ion-row class="ion-no-padding">
+      
+      <ion-col size="5" style="padding-right: 6px;">
+        <ion-button expand="block" class="btn-ghost-danger" (click)="sairDoGrupo()">
+          Sair
+        </ion-button>
+      </ion-col>
+      
+      <ion-col size="7" style="padding-left: 6px;">
+        <ion-button expand="block" class="btn-action-primary" (click)="editar()">
+          <ion-icon slot="start" name="create-outline"></ion-icon>
+          Editar
+        </ion-button>
+      </ion-col>
+      
+    </ion-row>
+  </div>
+</ion-footer>

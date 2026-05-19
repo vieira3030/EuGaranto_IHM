@@ -1,67 +1,197 @@
-/* --- ESTILOS GERAIS (Modo Claro) --- */
-
-/* Cartões de Membros */
-.item-card {
-  --background: var(--ion-color-step-50, #f4f5f8);
-  border: 1px solid var(--ion-color-medium, #92949c);
-  margin-bottom: 8px;
-  border-radius: 8px;
-  color: var(--ion-text-color);
-}
-
-/* Cartões de Garantias */
-.garantia-card {
-  background: var(--ion-color-step-50, #f4f5f8);
-  border: 1px solid var(--ion-color-medium, #92949c);
-  margin: 0 0 12px 0;
-  border-radius: 8px;
-  box-shadow: none;
-}
-
-.garantia-content {
-  padding: 15px;
+/* --- HERO CARD PREMIUM --- */
+.hero-card {
+  background: white;
+  border-radius: 24px;
+  padding: 30px 20px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+  margin-bottom: 30px;
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
+
+  .hero-icon {
+    width: 72px;
+    height: 72px;
+    background: rgba(141, 230, 26, 0.15); /* Fundo verde translúcido */
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    ion-icon {
+      font-size: 38px;
+      color: #7ab814; /* Verde escuro */
+    }
+  }
+
+  .hero-title {
+    font-size: 24px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    color: var(--ion-text-color);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    .badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f3f5;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--ion-color-medium);
+
+      ion-icon { font-size: 16px; margin-bottom: 2px; }
+    }
+  }
 }
 
-/* Títulos das Garantias */
-.garantia-titulo {
-  font-weight: bold;
-  font-size: 16px;
-  color: var(--ion-text-color, #000); 
+/* --- SECÇÕES E TÍTULOS --- */
+.section-container {
+  .section-title {
+    font-size: 18px;
+    font-weight: 800;
+    margin: 0 0 16px 0;
+    color: var(--ion-text-color);
+  }
 }
 
-/* Seta dos Cartões */
-.seta-icon {
-  font-size: 20px;
-  color: var(--ion-color-medium, #666);
+/* --- LISTA DE MEMBROS (Cartões Individuais) --- */
+.members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  .member-card {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.03);
+
+    .avatar-circle {
+      width: 42px;
+      height: 42px;
+      background: #f1f3f5;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      ion-icon { font-size: 20px; color: var(--ion-color-medium); }
+    }
+
+    .member-email {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--ion-text-color);
+    }
+  }
 }
 
-/* Texto de lista vazia */
-.texto-vazio {
-  color: var(--ion-color-medium, gray);
-  padding: 10px;
-}
-
-/* ======================================= */
-/* === CORREÇÃO EXCLUSIVA MODO ESCURO === */
-/* ======================================= */
-@media (prefers-color-scheme: dark) {
+/* --- GARANTIAS PARTILHADAS (Premium) --- */
+.empty-box {
+  background: #f1f3f5;
+  border-radius: 16px;
+  padding: 30px;
+  text-align: center;
+  color: var(--ion-color-medium);
   
-  /* Força as caixas a ficarem cinza escuro para melhor contraste */
-  .item-card,
-  .garantia-card {
-    --background: #2a2a2a !important;
-    background: #2a2a2a !important;
+  ion-icon { font-size: 40px; margin-bottom: 10px; opacity: 0.5; }
+  p { margin: 0; font-weight: 600; font-size: 14px; }
+}
+
+.garantia-card-premium {
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  &:active { transform: scale(0.97); }
+
+  .icon-box-left {
+    width: 48px;
+    height: 48px;
+    background: #f4f5f8;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    ion-icon { font-size: 24px; color: var(--ion-color-medium); }
   }
 
-  /* Garante que todos os textos (títulos e descrições) ficam brancos */
-  ion-label, 
-  ion-list-header ion-label,
-  .garantia-titulo,
-  .garantia-content p,
-  .texto-vazio {
-    color: #ffffff !important;
+  .garantia-info {
+    flex: 1;
+    h3 { margin: 0 0 4px 0; font-weight: 800; font-size: 16px; color: var(--ion-text-color); }
+    p { margin: 0; font-size: 13px; color: var(--ion-color-medium); }
+    strong { color: var(--ion-text-color); font-weight: 700; }
   }
+  
+  .seta-icon { font-size: 20px; color: var(--ion-color-medium); }
+}
+
+/* --- RODAPÉ DE AÇÕES --- */
+.footer-actions-container {
+  padding: 16px;
+  background: var(--ion-background-color);
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+  
+  ion-button {
+    margin: 0;
+    min-height: 52px;
+    font-weight: 700;
+    font-size: 15px;
+    text-transform: none;
+  }
+
+  /* Botão Primário (Verde Lima) */
+  .btn-action-primary {
+    --background: #8DE61A;
+    --color: #000000;
+    --border-radius: 14px;
+    box-shadow: 0 4px 12px rgba(141, 230, 26, 0.25);
+  }
+
+  /* Botão Sair (Outline Danger) */
+  .btn-ghost-danger {
+    --background: transparent;
+    --color: var(--ion-color-danger, #eb445a);
+    --border-radius: 14px;
+    --border-width: 2px;
+    --border-color: rgba(235, 68, 90, 0.2);
+    --border-style: solid;
+  }
+}
+
+/* --- ANIMAÇÕES --- */
+.animate-fade-in { animation: fadeIn 0.3s ease-out backwards; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- MODO ESCURO --- */
+@media (prefers-color-scheme: dark) {
+  .hero-card, .member-card, .garantia-card-premium { background: #1e1e1e; border-color: #2a2a2a; }
+  .hero-card .hero-stats .badge, .member-card .avatar-circle, .empty-box, .garantia-card-premium .icon-box-left { background: #2a2a2a; }
+  .footer-actions-container .btn-ghost-danger { --border-color: rgba(235, 68, 90, 0.3); }
 }

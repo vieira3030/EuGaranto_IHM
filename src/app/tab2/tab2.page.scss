@@ -1,41 +1,141 @@
-/* Formatação do título principal */
-.titulo-seccao {
-  margin-top: 0;
-  margin-bottom: 20px;
-  font-weight: bold;
-  color: var(--ion-text-color);
-}
+/* --- PAINEL SUPERIOR (DASHBOARD) --- */
+.summary-banner {
+  background: var(--ion-color-success); 
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1); 
 
-/* Estilo para a mensagem de ausência de grupos */
-.mensagem-vazia {
-  text-align: center;
-  color: gray;
-  margin-top: 50px;
-}
+  .summary-info {
+    display: flex;
+    flex-direction: column;
+  }
 
-/* Garante que o fundo da lista não se sobrepõe */
-.lista-grupos {
-  background: transparent;
-}
+  .summary-label {
+    color: rgba(26, 28, 30, 0.7); 
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
 
-/* Formatação do item do grupo com design flat (sem cantos arredondados) */
-.grupo-item {
-  margin-bottom: 10px;
-  --border-radius: 0px; 
-  --padding-start: 15px;
+  .summary-number {
+    color: #1a1c1e; 
+    font-size: 42px;
+    font-weight: 800;
+    margin: 4px 0 0 0;
+  }
 
-  h3 {
-    font-weight: bold;
-    font-size: 18px;
+  .summary-icon ion-icon {
+    font-size: 46px;
+    color: rgba(26, 28, 30, 0.2); 
   }
 }
 
-/* Formatação padronizada do botão de ação */
-.botao-principal {
-  margin-top: 30px;
-  height: 65px;
-  font-size: 20px;
-  --border-radius: 0px; 
-  text-transform: none; 
-  color: var(--ion-color-primary-contrast);
+/* --- FILTROS DE SEGMENTO --- */
+.filters-container {
+  margin-bottom: 24px;
+}
+
+.custom-segment {
+  background: var(--ion-color-light); 
+  border-radius: 12px;
+  padding: 4px;
+
+  ion-segment-button {
+    --color: var(--ion-color-medium);
+    --color-checked: #1a1c1e;
+    --background-checked: var(--ion-color-success); 
+    --border-radius: 8px;
+    font-weight: 700;
+    text-transform: capitalize;
+    min-height: 38px;
+    font-size: 14px;
+  }
+}
+
+/* --- ESTADO VAZIO --- */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 50px 20px;
+
+  .icon-box {
+    background: rgba(141, 230, 26, 0.12);
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+
+    ion-icon { font-size: 36px; color: var(--ion-color-primary); }
+  }
+
+  h3 { font-weight: 700; font-size: 19px; color: var(--ion-text-color); margin-bottom: 8px; }
+  p { color: var(--ion-color-medium); line-height: 1.5; font-size: 14px; margin: 0; }
+}
+
+/* --- CARTÕES DE GRUPO (SOFT UI) --- */
+.lista-garantias {
+  margin-bottom: 24px;
+}
+
+.garantia-card {
+  margin: 0 0 12px 0;
+}
+
+.card-content-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px;
+}
+
+.info-text {
+  h2 { margin: 0 0 4px 0; font-weight: 700; font-size: 16px; color: var(--ion-text-color); }
+  p { margin: 0; font-size: 13px; color: var(--ion-color-medium); }
+  strong { color: var(--ion-text-color); font-weight: 600; }
+}
+
+.icon-arrow ion-icon {
+  font-size: 18px;
+  color: var(--ion-color-medium);
+}
+
+/* --- BOTÃO DE AÇÃO PRINCIPAL --- */
+.btn-primary {
+  --background: var(--ion-color-success);
+  --color: #1a1c1e;
+  --border-radius: 14px;
+  font-weight: 700;
+  height: 54px;
+  text-transform: none;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+/* --- AJUSTES ESPECÍFICOS MODO ESCURO --- */
+@media (prefers-color-scheme: dark) {
+  .summary-banner {
+    box-shadow: none;
+    border: 1px solid rgba(26, 28, 30, 0.1); 
+    
+    .summary-label { color: rgba(26, 28, 30, 0.7); }
+    .summary-number { color: #1a1c1e; }
+    .summary-icon ion-icon { color: rgba(26, 28, 30, 0.2); }
+  }
+  
+  .custom-segment ion-segment-button {
+    --color-checked: #ffffff;
+    --background-checked: var(--ion-color-primary); 
+  }
 }

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router'; // Necessário para navegar ao clicar no grupo
 // Serviço unificado para ler dados direto do Firebase
 import { GarantiasService, Grupo } from '../services/garantias.service';
 
@@ -14,15 +15,20 @@ import { peopleOutline, chevronForwardOutline, addCircleOutline, people } from '
 })
 export class Tab2Page implements OnInit {
   
-  // Arrays para gerir os dados
-  grupos: Grupo[] = [];
-  gruposFiltrados: Grupo[] = [];
+  // Arrays separados para gerir os diferentes estados dos dados
+  gruposAtivos: Grupo[] = [];
+  gruposAntigos: Grupo[] = [];
+  gruposFiltrados: Grupo[] = []; // Esta é a lista que aparece efetivamente no ecrã
   
   // Variáveis para a interface
   totalAtivos: number = 0;
-  filtroAtual: string = 'todos';
+  // O ecrã arranca agora diretamente nos grupos ativos
+  filtroAtual: string = 'ativos';
 
-  constructor(private garantiasService: GarantiasService) {
+  constructor(
+    private garantiasService: GarantiasService,
+    private router: Router
+  ) {
     // Regista os ícones para ficarem visíveis no HTML
     addIcons({ peopleOutline, chevronForwardOutline, addCircleOutline, people });
   }
@@ -41,30 +47,45 @@ export class Tab2Page implements OnInit {
     const perfil = await this.garantiasService.getPerfil();
     
     if (perfil) {
-      this.grupos = await this.garantiasService.getGruposRemotos(perfil.email);
-      this.aplicarFiltro(); // Aplica o filtro assim que os dados carregam
+      // 1. Vai buscar TODOS os grupos ao Firebase
+      const todosRemotos = await this.garantiasService.getGruposRemotos(perfil.email);
+      
+      // 2. Vai buscar o histórico de Antigos à memória local do telemóvel
+      this.gruposAntigos = JSON.parse(localStorage.getItem('gruposAntigos') || '[]');
+
+      // 3. A MAGIA: Cria uma lista só com os IDs dos grupos antigos
+      const idsAntigos = this.gruposAntigos.map((g: Grupo) => g.id);
+
+      // 4. Filtra os Ativos: só entram os grupos que NÃO estão nos antigos
+      this.gruposAtivos = todosRemotos.filter((g: Grupo) => !idsAntigos.includes(g.id));
+
+      // 5. Aplica o filtro para desenhar o ecrã
+      this.aplicarFiltro(); 
     }
   }
-
+  
   // É chamado sempre que o utilizador clica num botão do filtro
   mudouFiltro(event: any) {
     this.filtroAtual = event.detail.value;
     this.aplicarFiltro();
   }
 
-  // Lógica para filtrar a lista apresentada no ecrã
+  // Lógica de filtragem limpa e reduzida apenas aos dois estados
   aplicarFiltro() {
-    if (this.filtroAtual === 'todos') {
-      this.gruposFiltrados = this.grupos;
-    } else if (this.filtroAtual === 'ativos') {
-      // Exemplo: mostrar apenas os grupos em que ainda estás ativo
-      this.gruposFiltrados = this.grupos; 
+    if (this.filtroAtual === 'ativos') {
+      // Mostra apenas os ativos
+      this.gruposFiltrados = this.gruposAtivos; 
     } else if (this.filtroAtual === 'antigos') {
-      // Exemplo: mostrar grupos de onde saíste
-      this.gruposFiltrados = []; 
+      // Mostra o histórico
+      this.gruposFiltrados = this.gruposAntigos; 
     }
     
-    // Atualiza o número do banner verde
-    this.totalAtivos = this.grupos.length; 
+    // Atualiza o número do banner verde (deve contar apenas os ativos reais)
+    this.totalAtivos = this.gruposAtivos.length; 
+  }
+
+  // Navega para a página de detalhes ao clicar num cartão
+  verGrupo(id: string) {
+    this.router.navigate(['/detalhe-grupo', id]);
   }
 }

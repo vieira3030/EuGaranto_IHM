@@ -68,6 +68,30 @@
   display: block; 
 }
 
+/* A caixa forçada para o Nome do Grupo */
+.input-box-wrapper {
+  background: #f1f3f5;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  min-height: 52px;
+  transition: all 0.2s ease;
+
+  &:focus-within {
+    border-color: var(--ion-color-success);
+    background: #ffffff;
+  }
+
+  .clean-input {
+    --background: transparent;
+    --padding-start: 16px;
+    --padding-end: 16px;
+    margin: 0;
+    width: 100%;
+  }
+}
+
 .soft-input {
   --background: #f1f3f5; 
   --padding-start: 16px; 
@@ -77,7 +101,7 @@
   --border-radius: 12px;
   --color: var(--ion-text-color);
   font-size: 16px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(0, 0, 0, 0.1); 
   transition: all 0.2s ease;
   margin-top: 4px;
 
@@ -95,13 +119,14 @@
   
   .member-input { flex: 1; margin: 0; }
   
-  .btn-add-member {
+  .btn-add {
     margin: 0;
     --border-radius: 12px;
-    --background: var(--ion-color-success);
+    --background: var(--ion-color-success); 
     --color: #1a1c1e;
-    width: 56px;
-    ion-icon { font-size: 24px; }
+    --padding-start: 0;
+    --padding-end: 0;
+    width: 56px; 
   }
 }
 
@@ -246,6 +271,25 @@
   --color: var(--ion-text-color);
 }
 
+/* --- AVISO DE VALIDAÇÃO --- */
+.aviso-validacao {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  color: var(--ion-color-danger, #eb445a);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  background: rgba(235, 68, 90, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+
+  ion-icon {
+    font-size: 18px;
+  }
+}
+
 /* --- ANIMAÇÃO DE TRANSIÇÃO --- */
 .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -266,37 +310,33 @@
 
   &:active { transform: scale(0.98); }
 
-  /* Estado Selecionado: Ganha uma borda verde fina e fundo super suave */
   &.selected {
     border-color: var(--ion-color-success);
     background: rgba(141, 230, 26, 0.05); 
   }
 
-  /* Checkbox Circular Customizada */
   .custom-checkbox {
     width: 26px;
     height: 26px;
     border-radius: 50%;
-    border: 2px solid var(--ion-color-medium); /* Círculo cinzento por defeito */
+    border: 2px solid var(--ion-color-medium); 
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
 
     ion-icon {
-      color: #1a1c1e; /* Visto a Preto para contraste */
+      color: #1a1c1e; 
       font-size: 18px;
       font-weight: 900;
     }
   }
 
-  /* Quando o cartão é selecionado, a checkbox pinta-se de Verde Lima */
   &.selected .custom-checkbox {
     background: var(--ion-color-success);
     border-color: var(--ion-color-success);
   }
 
-  /* Textos */
   .garantia-info {
     flex: 1;
     .nome {
@@ -314,14 +354,29 @@
   }
 }
 
-
-
-
 /* --- MODO ESCURO --- */
 @media (prefers-color-scheme: dark) {
   .soft-input { 
     --background: #1e1e1e; 
-    &.ion-focused { --background: #121212; } 
+    border: 1px solid rgba(255, 255, 255, 0.1); 
+    &.ion-focused { 
+      --background: #121212; 
+      border: 1px solid var(--ion-color-success);
+    } 
+  }
+
+  .input-box-wrapper {
+    background: #1e1e1e;
+    border-color: rgba(255, 255, 255, 0.1);
+
+    &:focus-within {
+      background: #121212;
+      border-color: var(--ion-color-success);
+    }
+  }
+
+  .aviso-validacao {
+    background: rgba(235, 68, 90, 0.15);
   }
   
   .step-circle:not(.active):not(.completed), .step-line:not(.completed) { background: #2a2a2a; }

@@ -15,7 +15,8 @@ import {
   createOutline,
   calendarOutline,
   shieldCheckmarkOutline,
-  trashOutline // Ícone para usar no ActionSheet (opcional, mas fica bem)
+  trashOutline, // Ícone para usar no ActionSheet (opcional, mas fica bem)
+  informationCircleOutline // Ícone para o aviso de grupo arquivado
 } from 'ionicons/icons';
 
 @Component({
@@ -28,6 +29,9 @@ export class DetalheGrupoPage implements OnInit {
   
   grupo: any;
   garantiasCompletas: any[] = [];
+  
+  // Variável para saber se estamos a ver um grupo do histórico
+  isAntigo: boolean = false; 
   
   constructor(
     private route: ActivatedRoute,
@@ -44,7 +48,8 @@ export class DetalheGrupoPage implements OnInit {
       createOutline,
       calendarOutline,
       shieldCheckmarkOutline,
-      trashOutline
+      trashOutline,
+      informationCircleOutline
     });
   }
 
@@ -57,11 +62,26 @@ export class DetalheGrupoPage implements OnInit {
       const perfil = await this.garantiasService.getPerfil();
       
       if (perfil) {
-        const gruposAtualizados = await this.garantiasService.getGruposRemotos(perfil.email);
-        this.grupo = gruposAtualizados.find(g => g.id === id);
+        // 1. Tenta encontrar o grupo nos ativos (Firebase)
+        const gruposAtuais = await this.garantiasService.getGruposRemotos(perfil.email);
+        let grupoEncontrado = gruposAtuais.find(g => g.id === id);
         
-        if (this.grupo && this.grupo.garantiasIds) {
-          await this.carregarDadosDasGarantias();
+        // 2. Se não encontrou, procura nos arquivados (Memória local)
+        if (!grupoEncontrado) {
+          const historico = JSON.parse(localStorage.getItem('gruposAntigos') || '[]');
+          grupoEncontrado = historico.find((g: any) => g.id === id);
+          this.isAntigo = true; // Ativa o modo de histórico
+        } else {
+          this.isAntigo = false; // Garante que volta a false se for um grupo ativo
+        }
+
+        // 3. Se o grupo existe (seja onde for), carrega as informações
+        if (grupoEncontrado) {
+          this.grupo = grupoEncontrado;
+          
+          if (this.grupo.garantiasIds) {
+            await this.carregarDadosDasGarantias();
+          }
         }
       }
     }
@@ -89,7 +109,7 @@ export class DetalheGrupoPage implements OnInit {
       buttons: [
         {
           text: 'Sair do Grupo',
-          role: 'destructive', // Faz com que o texto fique vermelho
+          role: 'destructive',
           icon: 'log-out-outline',
           handler: async () => {
             const perfil = await this.garantiasService.getPerfil();
@@ -98,15 +118,21 @@ export class DetalheGrupoPage implements OnInit {
               const sucesso = await this.gruposService.sairDoGrupo(this.grupo.id, perfil.email);
               
               if (sucesso) {
+                // --- NOVA LÓGICA: Guardar o grupo no histórico local ---
+                const historico = JSON.parse(localStorage.getItem('gruposAntigos') || '[]');
+                // Se o grupo ainda não estiver no histórico, adicionamos a cópia dele
+                if (!historico.find((g: any) => g.id === this.grupo.id)) {
+                  historico.push(this.grupo);
+                  localStorage.setItem('gruposAntigos', JSON.stringify(historico));
+                }
+                // -------------------------------------------------------
+
                 this.router.navigateByUrl('/tabs/tab2');
               }
             }
           }
         },
-        { 
-          text: 'Cancelar', 
-          role: 'cancel' 
-        }
+        { text: 'Cancelar', role: 'cancel' }
       ]
     });
 

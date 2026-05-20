@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core'; 
 import { Router, ActivatedRoute } from '@angular/router'; 
-import { ToastController } from '@ionic/angular'; // Importação do ToastController
+import { ToastController } from '@ionic/angular';
 
 // Registo de ícones do Ionic para a interface
 import { addIcons } from 'ionicons';
 import { 
   closeCircle, 
-  peopleOutline, 
-  shieldCheckmarkOutline, 
-  notificationsOutline, 
-  archiveOutline,
-  checkmarkCircleOutline // Adicionado para o balão de sucesso
+  people, 
+  checkmarkCircleOutline,
+  checkmarkOutline,
+  addOutline,
+  ellipseOutline,
+  checkmarkCircle,
+  chevronForwardOutline
 } from 'ionicons/icons';
 
 // Serviço e Interface para gestão de dados
@@ -47,16 +49,18 @@ export class CriarGrupoPage implements OnInit {
     private router: Router, 
     private route: ActivatedRoute, 
     private garantiasService: GarantiasService,
-    private toastController: ToastController // Injeção no construtor
+    private toastController: ToastController
   ) {
-    // Registo de todos os ícones usados nesta página
+    // Registo de todos os ícones usados nesta página e no HTML
     addIcons({ 
       closeCircle, 
-      peopleOutline, 
-      shieldCheckmarkOutline, 
-      notificationsOutline, 
-      archiveOutline,
-      checkmarkCircleOutline 
+      people, 
+      checkmarkCircleOutline,
+      checkmarkOutline,
+      addOutline,
+      ellipseOutline,
+      checkmarkCircle,
+      chevronForwardOutline
     });
   }
 

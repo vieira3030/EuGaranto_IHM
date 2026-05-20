@@ -19,11 +19,8 @@
     </div>
   </div>
   
-  <div class="filters-container">
+<div class="filters-container">
     <ion-segment [(ngModel)]="filtroAtual" (ionChange)="mudouFiltro($event)" mode="ios" class="custom-segment">
-      <ion-segment-button value="todas">
-        <ion-label>Todas</ion-label>
-      </ion-segment-button>
       <ion-segment-button value="ativas">
         <ion-label>Ativas</ion-label>
       </ion-segment-button>
@@ -33,6 +30,7 @@
     </ion-segment>
   </div>
 
+  
   <div class="empty-state" *ngIf="garantiasFiltradas.length === 0">
     <div class="icon-box">
       <ion-icon name="document-text-outline"></ion-icon>

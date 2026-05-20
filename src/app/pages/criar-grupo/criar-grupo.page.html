@@ -33,58 +33,57 @@
     </div>
   </div>
 
-  <div *ngIf="passoAtual === 1" class="step-content animate-fade-in">
-    <div class="section-header">
-      <h2>Passo 1: Detalhes do Grupo</h2>
-      <p>Dá um nome ao grupo e adiciona as pessoas.</p>
-    </div>
-    
+  <div *ngIf="passoAtual === 1" class="step-content">
+    <h3 class="section-title">Passo 1: Detalhes do Grupo</h3>
+  
     <div class="custom-input-group">
-      <ion-label class="input-label">Nome do Grupo</ion-label>
-      <ion-input type="text" class="soft-input" [(ngModel)]="novoGrupo.nome" placeholder="Ex: Família Silva"></ion-input>
-    </div>
-
-    <div class="custom-input-group" style="margin-top: 24px;">
-      <ion-label class="input-label">Convidar Membros</ion-label>
-      <div class="add-member-row">
-        <ion-input type="email" class="soft-input member-input" [(ngModel)]="novoMembroEmail" placeholder="Email do membro" (keyup.enter)="adicionarMembro()"></ion-input>
-        <ion-button (click)="adicionarMembro()" class="btn-add-member" [disabled]="!novoMembroEmail">
-          <ion-icon name="add-outline"></ion-icon>
-        </ion-button>
+      <small style="margin-left: 4px; margin-bottom: 8px; display: block; font-weight: 600; color: var(--ion-color-medium);">Nome do Grupo:</small>
+      <div class="input-box-wrapper">
+        <ion-input [(ngModel)]="novoGrupo.nome" placeholder="Ex: Família Silva" class="clean-input"></ion-input>
       </div>
     </div>
 
-    <div class="chips-container" *ngIf="novoGrupo.membros.length > 0">
-      <ion-chip *ngFor="let membro of novoGrupo.membros" class="custom-chip">
-        <ion-label>{{ membro }}</ion-label>
-        <ion-icon name="close-circle" (click)="removerMembro(membro)"></ion-icon>
-      </ion-chip>
+    <h4 class="sub-title">Convidar Membros</h4>
+    <div class="add-member-row">
+      <ion-input type="email" class="soft-input member-input" [(ngModel)]="novoMembroEmail" placeholder="Email do membro" (keyup.enter)="adicionarMembro()"></ion-input>
+      
+      <ion-button (click)="adicionarMembro()" class="btn-add" [disabled]="!novoMembroEmail">
+        <ion-icon name="add-outline" slot="icon-only"></ion-icon>
+      </ion-button>
     </div>
+
+    <ion-list lines="none" class="transparent-list">
+      <ion-item *ngFor="let membro of novoGrupo.membros" class="item-card">
+        <ion-label>{{ membro }}</ion-label>
+        <ion-icon name="close-circle" slot="end" color="danger" (click)="removerMembro(membro)"></ion-icon>
+      </ion-item>
+    </ion-list>
   </div>
+
 
   <div *ngIf="passoAtual === 2" class="step-content animate-fade-in">
-  <div class="section-header">
-    <h2>Passo 2: Partilhar Garantias</h2>
-    <p>Escolhe os produtos para partilhar com o grupo.</p>
-  </div>
+    <div class="section-header">
+      <h2>Passo 2: Partilhar Garantias</h2>
+      <p>Escolhe os produtos para partilhar com o grupo.</p>
+    </div>
 
-  <div class="garantias-list" *ngIf="garantiasDisponiveis.length > 0">
-    <div *ngFor="let garantia of garantiasDisponiveis" 
-         class="garantia-select-card"
-         [class.selected]="isGarantiaSelecionada(garantia.id)"
-         (click)="toggleGarantia(garantia.id)">
-      
-      <div class="custom-checkbox">
-        <ion-icon name="checkmark-outline" *ngIf="isGarantiaSelecionada(garantia.id)"></ion-icon>
-      </div>
-      
-      <div class="garantia-info">
-        <span class="nome">{{ garantia.nomeProduto || garantia.nome }}</span>
-        <span class="marca">Expira a: {{ garantia.dataExpiracao | date: 'dd/MM/yyyy' }}</span>
+    <div class="garantias-list" *ngIf="garantiasDisponiveis.length > 0">
+      <div *ngFor="let garantia of garantiasDisponiveis" 
+           class="garantia-select-card"
+           [class.selected]="isGarantiaSelecionada(garantia.id)"
+           (click)="toggleGarantia(garantia.id)">
+        
+        <div class="custom-checkbox">
+          <ion-icon name="checkmark-outline" *ngIf="isGarantiaSelecionada(garantia.id)"></ion-icon>
+        </div>
+        
+        <div class="garantia-info">
+          <span class="nome">{{ garantia.nomeProduto || garantia.nome }}</span>
+          <span class="marca">Expira a: {{ garantia.dataExpiracao | date: 'dd/MM/yyyy' }}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
   <div *ngIf="passoAtual === 3" class="step-content animate-fade-in">
     <div class="section-header">
@@ -149,7 +148,13 @@
 <ion-footer class="ion-no-border">
   <div class="footer-toolbar">
     
-    <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" [disabled]="!novoGrupo.nome" style="width: 100%;">
+    <div *ngIf="passoAtual === 1 && !novoGrupo.nome" class="aviso-validacao animate-fade-in">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <span>Preenche o nome do grupo para avançar.</span>
+    </div>
+
+    <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" 
+                [disabled]="!novoGrupo.nome" style="width: 100%;">
       Seguinte
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
     </ion-button>

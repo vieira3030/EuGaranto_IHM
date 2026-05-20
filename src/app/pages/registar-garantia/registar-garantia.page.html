@@ -48,24 +48,32 @@
     <div class="form-wrapper">
       <div class="custom-input-group">
         <ion-label class="input-label">Nome do Produto</ion-label>
-        <ion-input type="text" placeholder="Ex: Smartphone Samsung" class="soft-input" [(ngModel)]="novaGarantia.nome"></ion-input>
+        <div class="input-box-wrapper">
+          <ion-input type="text" placeholder="Ex: Smartphone Samsung" class="clean-input" [(ngModel)]="novaGarantia.nome"></ion-input>
+        </div>
       </div>
       
       <div class="custom-input-group">
         <ion-label class="input-label">Data de compra</ion-label>
-        <ion-input type="date" class="soft-input" [(ngModel)]="novaGarantia.dataCompra"></ion-input>
+        <div class="input-box-wrapper">
+          <ion-input type="date" class="clean-input" [(ngModel)]="novaGarantia.dataCompra"></ion-input>
+        </div>
       </div>
       
       <div class="custom-input-group">
         <ion-label class="input-label">Data de Expiração</ion-label>
-        <ion-input type="date" class="soft-input" [(ngModel)]="novaGarantia.dataExpiracao"></ion-input>
+        <div class="input-box-wrapper">
+          <ion-input type="date" class="clean-input" [(ngModel)]="novaGarantia.dataExpiracao"></ion-input>
+        </div>
       </div>
 
       <div class="custom-input-group">
         <ion-label class="input-label">
           Descrição da garantia <span class="optional-text">(Opcional)</span>
         </ion-label>
-        <ion-textarea rows="4" placeholder="Ex: Informações adicionais..." class="soft-input soft-textarea" [(ngModel)]="novaGarantia.descricao"></ion-textarea>
+        <div class="input-box-wrapper">
+          <ion-textarea rows="4" placeholder="Ex: Informações adicionais..." class="clean-input" [(ngModel)]="novaGarantia.descricao"></ion-textarea>
+        </div>
       </div>
     </div>
   </div>
@@ -189,7 +197,15 @@
 <ion-footer class="ion-no-border">
   <div style="padding: 16px; background: var(--ion-background-color); padding-bottom: max(16px, env(safe-area-inset-bottom));">
     
-    <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" style="margin: 0; min-height: 54px;">
+    <div *ngIf="passoAtual === 1 && (!novaGarantia.nome || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao)" 
+         class="aviso-validacao animate-fade-in">
+      <ion-icon name="information-circle-outline"></ion-icon>
+      <span>Preenche o nome e as datas para avançar.</span>
+    </div>
+
+    <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" 
+                [disabled]="!novaGarantia.nome || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao"
+                style="margin: 0; min-height: 54px;">
       Seguinte
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
     </ion-button>

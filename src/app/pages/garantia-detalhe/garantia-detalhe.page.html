@@ -9,69 +9,82 @@
 
 <ion-content class="ion-padding">
   
-  <div class="product-hero-card animate-fade-in">
-    <div class="hero-icon">
-      <ion-icon name="cube-outline"></ion-icon>
-    </div>
-    <h2>{{ garantia?.nome }}</h2>
-    <div class="status-badge" [class.expiring]="garantia?.diasRestantes <= 30">
-      Faltam {{ garantia?.diasRestantes }} dias
-    </div>
-  </div>
-
-  <div class="section-container animate-fade-in" style="animation-delay: 0.1s;">
-    <h3 class="section-title">Informações</h3>
+  <div *ngIf="garantia" class="animate-fade-in">
     
-    <div class="info-list">
-      <div class="info-item">
-        <div class="info-label">Data de Compra</div>
-        <div class="info-value">{{ garantia?.dataCompra | date: 'dd/MM/yyyy' }}</div>
+    <div *ngIf="isExpirada" class="aviso-validacao" style="background: rgba(235, 68, 90, 0.1); color: #eb445a; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 8px 12px; border-radius: 8px;">
+      <ion-icon name="information-circle-outline" style="font-size: 18px;"></ion-icon>
+      <span>Esta garantia já se encontra expirada.</span>
+    </div>
+
+    <div class="product-hero-card">
+      <div class="hero-icon">
+        <ion-icon name="cube-outline"></ion-icon>
       </div>
-      
-      <div class="info-item">
-        <div class="info-label">Fim da Garantia</div>
-        <div class="info-value text-success">{{ garantia?.dataExpiracao | date: 'dd/MM/yyyy' }}</div>
-      </div>
-      
-      <div class="info-item">
-        <div class="info-label">Alerta</div>
-        <div class="info-value">{{ garantia?.alerta }}</div>
+      <h2>{{ garantia?.nome }}</h2>
+      <div class="status-badge" [class.expiring]="garantia?.diasRestantes <= 30 && !isExpirada">
+        <ng-container *ngIf="!isExpirada; else expirouTexto">
+          Faltam {{ garantia?.diasRestantes }} dias
+        </ng-container>
+        <ng-template #expirouTexto>
+          Expirada
+        </ng-template>
       </div>
     </div>
-  </div>
 
-  <div class="section-container animate-fade-in" style="animation-delay: 0.2s;">
-    <h3 class="section-title">Documentos</h3>
-    
-    <div class="documents-grid">
+    <div class="section-container animate-fade-in" style="animation-delay: 0.1s;">
+      <h3 class="section-title">Informações</h3>
       
-      <div class="doc-card" (click)="verDocumento('talao')">
-        <div class="doc-image" *ngIf="garantia?.fotoTalao">
-          <img [src]="garantia.fotoTalao" alt="Miniatura Talão">
-        </div>
-        <div class="doc-icon" *ngIf="!garantia?.fotoTalao">
-          <ion-icon name="receipt-outline"></ion-icon>
+      <div class="info-list">
+        <div class="info-item">
+          <div class="info-label">Data de Compra</div>
+          <div class="info-value">{{ garantia?.dataCompra | date: 'dd/MM/yyyy' }}</div>
         </div>
         
-        <div class="doc-text">Foto do Talão</div>
-        <ion-icon name="eye-outline" class="view-icon"></ion-icon>
-      </div>
-      
-      <div class="doc-card" (click)="verDocumento('local')">
-        <div class="doc-image" *ngIf="garantia?.fotoLocal">
-          <img [src]="garantia.fotoLocal" alt="Miniatura Local">
-        </div>
-        <div class="doc-icon" *ngIf="!garantia?.fotoLocal">
-          <ion-icon name="storefront-outline"></ion-icon>
+        <div class="info-item">
+          <div class="info-label">Fim da Garantia</div>
+          <div class="info-value text-success">{{ garantia?.dataExpiracao | date: 'dd/MM/yyyy' }}</div>
         </div>
         
-        <div class="doc-text">Foto do Local</div>
-        <ion-icon name="eye-outline" class="view-icon"></ion-icon>
+        <div class="info-item">
+          <div class="info-label">Alerta</div>
+          <div class="info-value">{{ garantia?.alerta }}</div>
+        </div>
       </div>
-
     </div>
-  </div>
 
+    <div class="section-container animate-fade-in" style="animation-delay: 0.2s;">
+      <h3 class="section-title">Documentos</h3>
+      
+      <div class="documents-grid">
+        
+        <div class="doc-card" (click)="verDocumento('talao')">
+          <div class="doc-image" *ngIf="garantia?.fotoTalao">
+            <img [src]="garantia.fotoTalao" alt="Miniatura Talão">
+          </div>
+          <div class="doc-icon" *ngIf="!garantia?.fotoTalao">
+            <ion-icon name="receipt-outline"></ion-icon>
+          </div>
+          
+          <div class="doc-text">Foto do Talão</div>
+          <ion-icon name="eye-outline" class="view-icon"></ion-icon>
+        </div>
+        
+        <div class="doc-card" (click)="verDocumento('local')">
+          <div class="doc-image" *ngIf="garantia?.fotoLocal">
+            <img [src]="garantia.fotoLocal" alt="Miniatura Local">
+          </div>
+          <div class="doc-icon" *ngIf="!garantia?.fotoLocal">
+            <ion-icon name="storefront-outline"></ion-icon>
+          </div>
+          
+          <div class="doc-text">Foto do Local</div>
+          <ion-icon name="eye-outline" class="view-icon"></ion-icon>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
 </ion-content>
 
 <ion-footer class="ion-no-border">
@@ -113,5 +126,3 @@
     </ion-content>
   </ng-template>
 </ion-modal>
-
-

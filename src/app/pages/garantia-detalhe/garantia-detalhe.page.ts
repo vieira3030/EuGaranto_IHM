@@ -3,8 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GarantiasService } from '../../services/garantias.service'; 
 import { ActionSheetController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-// 1. Adicionámos o ícone 'closeOutline' à lista
-import { cubeOutline, receiptOutline, storefrontOutline, eyeOutline, trashOutline, pencilOutline, closeOutline } from 'ionicons/icons';
+import { 
+  cubeOutline, 
+  receiptOutline, 
+  storefrontOutline, 
+  eyeOutline, 
+  trashOutline, 
+  pencilOutline, 
+  closeOutline,
+  informationCircleOutline // Ícone novo para o alerta
+} from 'ionicons/icons';
 
 @Component({
   selector: 'app-garantia-detalhe',
@@ -16,9 +24,12 @@ export class GarantiaDetalhePage implements OnInit {
   
   garantia: any = null;
 
-  // 2. Variáveis para controlar o modal da foto
+  // Variáveis para controlar o modal da foto
   modalAberto = false;
   fotoEmDestaque = '';
+  
+  // Variável para saber se a garantia está expirada
+  isExpirada: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -26,30 +37,44 @@ export class GarantiaDetalhePage implements OnInit {
     private garantiasService: GarantiasService,
     private actionSheetCtrl: ActionSheetController
   ) {
-    // 3. Registar o novo ícone
-    addIcons({ cubeOutline, receiptOutline, storefrontOutline, eyeOutline, trashOutline, pencilOutline, closeOutline });
+    // Registar todos os ícones necessários
+    addIcons({ cubeOutline, receiptOutline, storefrontOutline, eyeOutline, trashOutline, pencilOutline, closeOutline, informationCircleOutline });
   }
 
   async ngOnInit() {
+    // O carregamento é feito no ionViewWillEnter para garantir que os dados estão atualizados
+  }
+
+  async ionViewWillEnter() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       const lista = await this.garantiasService.getGarantias();
       this.garantia = lista.find((g: any) => g.id === id);
+
+      if (this.garantia && this.garantia.dataExpiracao) {
+        const hoje = new Date();
+        hoje.setHours(0, 0, 0, 0); // Ignora as horas para comparar só o dia
+        const dataExp = new Date(this.garantia.dataExpiracao);
+        
+        this.isExpirada = dataExp < hoje;
+      } else {
+        this.isExpirada = false;
+      }
     }
   }
 
-  // 4. Em vez de um alert, agora abre o modal com a foto grande!
+  // Abre o modal com a foto grande
   verDocumento(tipo: string) {
     const foto = tipo === 'talao' ? this.garantia?.fotoTalao : this.garantia?.fotoLocal;
     if (foto) {
       this.fotoEmDestaque = foto;
-      this.modalAberto = true; // Abre a janela
+      this.modalAberto = true; 
     } else {
       alert('Nenhuma foto guardada para este documento.');
     }
   }
 
-  // 5. Função para fechar o modal
+  // Função para fechar o modal
   fecharModal() {
     this.modalAberto = false;
     this.fotoEmDestaque = '';

@@ -9,15 +9,18 @@
 
 <ion-content class="ion-padding">
 
-  <div class="summary-banner">
+  <<div class="summary-banner">
     <div class="summary-info">
-      <span class="summary-label">Grupos Ativos</span>
-      <h1 class="summary-number">{{ totalAtivos }}</h1>
+      <span class="summary-label">
+        {{ filtroAtual === 'ativos' ? 'Grupos Ativos' : 'Grupos Antigos' }}
+      </span>
+      <h1 class="summary-number">{{ gruposFiltrados.length }}</h1>
     </div>
     <div class="summary-icon">
-      <ion-icon name="people"></ion-icon>
+      <ion-icon [name]="filtroAtual === 'ativos' ? 'people' : 'time-outline'"></ion-icon>
     </div>
   </div>
+  
   
   <div class="filters-container">
     <ion-segment [(ngModel)]="filtroAtual" (ionChange)="mudouFiltro($event)" mode="ios" class="custom-segment">
@@ -58,7 +61,7 @@
     </ion-card>
   </div>
 
-  <ion-button expand="block" class="btn-primary" routerLink="/criar-grupo">
+  <ion-button *ngIf="filtroAtual === 'ativos'" expand="block" class="btn-primary" routerLink="/criar-grupo">
     <ion-icon slot="start" name="add-circle-outline"></ion-icon>
     Criar Grupo
   </ion-button>

@@ -11,15 +11,18 @@
 
   <div class="summary-banner">
     <div class="summary-info">
-      <span class="summary-label">Garantias Ativas</span>
-      <h1 class="summary-number">{{ totalAtivas }}</h1>
+      <span class="summary-label">
+        {{ filtroAtual === 'ativas' ? 'Garantias Ativas' : 'Garantias Expiradas' }}
+      </span>
+      <h1 class="summary-number">{{ garantiasFiltradas.length }}</h1>
     </div>
     <div class="summary-icon">
-      <ion-icon name="shield-checkmark-outline"></ion-icon>
+      <ion-icon [name]="filtroAtual === 'ativas' ? 'shield-checkmark-outline' : 'warning-outline'"></ion-icon>
     </div>
   </div>
+
   
-<div class="filters-container">
+  <div class="filters-container">
     <ion-segment [(ngModel)]="filtroAtual" (ionChange)="mudouFiltro($event)" mode="ios" class="custom-segment">
       <ion-segment-button value="ativas">
         <ion-label>Ativas</ion-label>
@@ -30,7 +33,6 @@
     </ion-segment>
   </div>
 
-  
   <div class="empty-state" *ngIf="garantiasFiltradas.length === 0">
     <div class="icon-box">
       <ion-icon name="document-text-outline"></ion-icon>
@@ -59,7 +61,7 @@
     </ion-card>
   </div>
 
-  <ion-button expand="block" class="btn-primary" routerLink="/registar-garantia">
+  <ion-button *ngIf="filtroAtual === 'ativas'" expand="block" class="btn-primary" routerLink="/registar-garantia">
     <ion-icon slot="start" name="add-circle-outline"></ion-icon>
     Adicionar Garantia
   </ion-button>

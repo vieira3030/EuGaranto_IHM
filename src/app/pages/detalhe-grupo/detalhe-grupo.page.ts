@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-// 1. IMPORTANTE: Substituir AlertController por ActionSheetController
 import { ActionSheetController } from '@ionic/angular'; 
-
 import { GruposService } from '../../services/grupos';
 import { GarantiasService } from '../../services/garantias.service';
 import { addIcons } from 'ionicons';
-
 import { 
   logOutOutline, 
   personCircleOutline, 
@@ -15,8 +11,8 @@ import {
   createOutline,
   calendarOutline,
   shieldCheckmarkOutline,
-  trashOutline, // Ícone para usar no ActionSheet (opcional, mas fica bem)
-  informationCircleOutline // Ícone para o aviso de grupo arquivado
+  trashOutline, 
+  informationCircleOutline 
 } from 'ionicons/icons';
 
 @Component({
@@ -27,20 +23,18 @@ import {
 })
 export class DetalheGrupoPage implements OnInit {
   
-  grupo: any;
-  garantiasCompletas: any[] = [];
-  
-  // Variável para saber se estamos a ver um grupo do histórico
-  isAntigo: boolean = false; 
+  grupo: any; // Guarda os dados do grupo atual
+  garantiasCompletas: any[] = []; // Lista as garantias associadas ao grupo
+  isAntigo: boolean = false; // Controla se o grupo pertence ao histórico local
   
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    // 2. IMPORTANTE: Injetar o ActionSheetController no constructor
     private actionSheetCtrl: ActionSheetController, 
     private gruposService: GruposService,
     private garantiasService: GarantiasService 
   ) {
+    // Regista os ícones usados na interface
     addIcons({ 
       logOutOutline, 
       personCircleOutline, 
@@ -55,6 +49,7 @@ export class DetalheGrupoPage implements OnInit {
 
   ngOnInit() {}
 
+  // Carrega os dados sempre que a página fica ativa
   async ionViewWillEnter() {
     const id = this.route.snapshot.paramMap.get('id');
     
@@ -66,16 +61,16 @@ export class DetalheGrupoPage implements OnInit {
         const gruposAtuais = await this.garantiasService.getGruposRemotos(perfil.email);
         let grupoEncontrado = gruposAtuais.find(g => g.id === id);
         
-        // 2. Se não encontrou, procura nos arquivados (Memória local)
+        // 2. Se não encontrou, procura nos arquivados (Ionic Storage)
         if (!grupoEncontrado) {
-          const historico = JSON.parse(localStorage.getItem('gruposAntigos') || '[]');
+          const historico = await this.garantiasService.getGruposAntigos();
           grupoEncontrado = historico.find((g: any) => g.id === id);
-          this.isAntigo = true; // Ativa o modo de histórico
+          this.isAntigo = true; 
         } else {
-          this.isAntigo = false; // Garante que volta a false se for um grupo ativo
+          this.isAntigo = false; 
         }
 
-        // 3. Se o grupo existe (seja onde for), carrega as informações
+        // 3. Se o grupo existe, carrega as informações
         if (grupoEncontrado) {
           this.grupo = grupoEncontrado;
           
@@ -87,6 +82,7 @@ export class DetalheGrupoPage implements OnInit {
     }
   }
 
+  // Filtra e carrega os detalhes das garantias partilhadas no grupo
   async carregarDadosDasGarantias() {
     const todasGarantias = await this.garantiasService.getGarantias();
     
@@ -95,13 +91,14 @@ export class DetalheGrupoPage implements OnInit {
     );
   }
 
+  // Navega para o ecrã de edição do grupo
   editar() {
     if (this.grupo && this.grupo.id) {
       this.router.navigate(['/criar-grupo', this.grupo.id]);
     }
   }
 
-  // 3. IMPORTANTE: Nova lógica para sair do grupo usando a janela de baixo
+  // Abre confirmação para sair do grupo e guarda-o no histórico do Ionic Storage
   async sairDoGrupo() {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Sair do Grupo',
@@ -118,15 +115,8 @@ export class DetalheGrupoPage implements OnInit {
               const sucesso = await this.gruposService.sairDoGrupo(this.grupo.id, perfil.email);
               
               if (sucesso) {
-                // --- NOVA LÓGICA: Guardar o grupo no histórico local ---
-                const historico = JSON.parse(localStorage.getItem('gruposAntigos') || '[]');
-                // Se o grupo ainda não estiver no histórico, adicionamos a cópia dele
-                if (!historico.find((g: any) => g.id === this.grupo.id)) {
-                  historico.push(this.grupo);
-                  localStorage.setItem('gruposAntigos', JSON.stringify(historico));
-                }
-                // -------------------------------------------------------
-
+                // Guarda o grupo arquivado através do serviço e redireciona
+                await this.garantiasService.guardarGrupoAntigo(this.grupo);
                 this.router.navigateByUrl('/tabs/tab2');
               }
             }

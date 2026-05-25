@@ -51,7 +51,7 @@ export class Tab2Page implements OnInit {
       const todosRemotos = await this.garantiasService.getGruposRemotos(perfil.email);
       
       // 2. Vai buscar o histórico de Antigos à memória local do telemóvel
-      this.gruposAntigos = JSON.parse(localStorage.getItem('gruposAntigos') || '[]');
+     this.gruposAntigos = await this.garantiasService.getGruposAntigos();
 
       // 3. A MAGIA: Cria uma lista só com os IDs dos grupos antigos
       const idsAntigos = this.gruposAntigos.map((g: Grupo) => g.id);

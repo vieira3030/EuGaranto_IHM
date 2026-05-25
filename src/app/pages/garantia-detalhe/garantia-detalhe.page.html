@@ -89,8 +89,8 @@
 
 <ion-footer class="ion-no-border">
   <div class="footer-container">
-    <ion-row class="ion-no-padding">
-      
+    
+    <ion-row class="ion-no-padding" *ngIf="!isExpirada">
       <ion-col size="3" class="ion-no-padding" style="padding-right: 8px;">
         <ion-button expand="block" class="btn-danger-outline" (click)="apagarProduto()">
           <ion-icon name="trash-outline"></ion-icon>
@@ -103,8 +103,17 @@
           Editar Produto
         </ion-button>
       </ion-col>
-
     </ion-row>
+
+    <ion-row class="ion-no-padding" *ngIf="isExpirada">
+      <ion-col size="12" class="ion-no-padding">
+        <ion-button expand="block" color="danger" fill="outline" (click)="apagarProduto()" style="--border-radius: 12px; height: 54px; font-weight: 700; text-transform: none; font-size: 16px;">
+          <ion-icon slot="start" name="trash-outline"></ion-icon>
+          Eliminar Registo
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
   </div>
 </ion-footer>
 

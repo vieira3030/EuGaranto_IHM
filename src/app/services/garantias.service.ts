@@ -187,4 +187,24 @@ export class GarantiasService {
       return null;
     }
   }
+
+  // --- LÓGICA DE HISTÓRICO DE GRUPOS (Storage) ---
+
+  // Guarda um grupo no histórico local de forma assíncrona
+  async guardarGrupoAntigo(grupo: any) {
+    const historico = await this.storage.get('gruposAntigos') || [];
+    
+    // Evita duplicados verificando o ID
+    if (!historico.find((g: any) => g.id === grupo.id)) {
+      historico.push(grupo);
+      await this.storage.set('gruposAntigos', historico);
+    }
+  }
+
+  // Lê a lista de grupos arquivados da memória do dispositivo
+  async getGruposAntigos() {
+    return await this.storage.get('gruposAntigos') || [];
+  }
+
 }
+

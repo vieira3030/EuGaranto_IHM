@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { GarantiasService } from '../services/garantias.service'; // Importa o serviço
-import { AlertController } from '@ionic/angular'; // Importa o controlador de alertas
+import { GarantiasService } from '../services/garantias.service'; // Importa o serviço de dados
+import { AlertController } from '@ionic/angular'; // Importa o controlador de alertas nativos
 import { addIcons } from 'ionicons'; // Importa a função de registo de ícones
-import { createOutline, camera } from 'ionicons/icons'; // Ícones para a interface
+// Adicionado o ícone personCircleOutline para o cabeçalho da página
+import { createOutline, camera, personCircleOutline } from 'ionicons/icons'; 
 
 @Component({
   selector: 'app-tab3',
@@ -11,23 +12,23 @@ import { createOutline, camera } from 'ionicons/icons'; // Ícones para a interf
   standalone: false,
 })
 export class Tab3Page {
-  // Variável para guardar os dados do utilizador
-  perfil: any = null;
+  
+  perfil: any = null; // Armazena os dados do perfil do utilizador
 
   constructor(
     private garantiasService: GarantiasService,
-    private alertController: AlertController // Injeta o AlertController
+    private alertController: AlertController 
   ) {
-    // Regista os ícones para serem usados no HTML
-    addIcons({ createOutline, camera });
+    // Regista os ícones necessários para o funcionamento da interface HTML
+    addIcons({ createOutline, camera, personCircleOutline });
   }
 
-  // Carrega os dados sempre que o utilizador entra na tab
+  // Carrega as informações do perfil sempre que o ecrã fica ativo
   async ionViewWillEnter() {
     this.perfil = await this.garantiasService.getPerfil();
   }
 
-  // Abre uma caixa de diálogo para editar apenas Nome e Email
+  // Apresenta uma caixa de diálogo nativa para modificar o Nome e o Email
   async editarPerfil() {
     const alert = await this.alertController.create({
       header: 'Editar Perfil',
@@ -36,31 +37,26 @@ export class Tab3Page {
           name: 'nome',
           type: 'text',
           placeholder: 'O teu nome',
-          value: this.perfil?.nome // Mostra o nome atual
+          value: this.perfil?.nome 
         },
         {
           name: 'email',
           type: 'email',
           placeholder: 'O teu email',
-          value: this.perfil?.email // Mostra o email atual
+          value: this.perfil?.email 
         }
       ],
       buttons: [
         {
           text: 'Cancelar',
-          role: 'cancel' // Fecha sem guardar
+          role: 'cancel' 
         },
         {
           text: 'Guardar',
           handler: async (dados) => {
-            // Garante que o nome e email estão preenchidos
             if (dados.nome && dados.email) {
-              
-              // Atualiza os dados visualmente no ecrã
               this.perfil.nome = dados.nome;
               this.perfil.email = dados.email;
-
-              // NOTA: Descomentar para guardar na base de dados
               // await this.garantiasService.atualizarPerfil(this.perfil);
             }
           }
@@ -71,28 +67,23 @@ export class Tab3Page {
     await alert.present();
   }
 
-  // Função para abrir a galeria e alterar a foto diretamente
+  // Captura o ficheiro selecionado da galeria e converte-o para Base64
   alterarFoto(event: any) {
-    // Apanha a imagem que o utilizador selecionou
     const ficheiro = event.target.files[0];
     
     if (ficheiro) {
       const leitor = new FileReader();
       
-      // Quando o ficheiro for lido, atualiza a foto do perfil
       leitor.onload = () => {
-        this.perfil.foto = leitor.result as string; // Converte a imagem para Base64
-        
-        // NOTA: Descomentar para guardar na base de dados
+        this.perfil.foto = leitor.result as string; 
         // this.garantiasService.atualizarPerfil(this.perfil);
       };
       
-      // Inicia a leitura do ficheiro
       leitor.readAsDataURL(ficheiro);
     }
   }
 
-  // Função para o botão de sair
+  // Limpa o estado atual e encerra a sessão ativa do utilizador
   terminarSessao() {
     console.log('Sessão terminada');
   }

@@ -11,7 +11,7 @@ import {
   trashOutline, 
   pencilOutline, 
   closeOutline,
-  informationCircleOutline // Ícone novo para o alerta
+  informationCircleOutline 
 } from 'ionicons/icons';
 
 @Component({
@@ -22,13 +22,14 @@ import {
 })
 export class GarantiaDetalhePage implements OnInit {
   
+  // Guarda os dados da garantia atualmente em visualização
   garantia: any = null;
 
-  // Variáveis para controlar o modal da foto
+  // Controla a visibilidade e a fonte da imagem do modal
   modalAberto = false;
   fotoEmDestaque = '';
   
-  // Variável para saber se a garantia está expirada
+  // Controla o estado de validade para ocultar botões de edição
   isExpirada: boolean = false;
 
   constructor(
@@ -37,23 +38,23 @@ export class GarantiaDetalhePage implements OnInit {
     private garantiasService: GarantiasService,
     private actionSheetCtrl: ActionSheetController
   ) {
-    // Registar todos os ícones necessários
+    // Regista os ícones visuais da interface HTML
     addIcons({ cubeOutline, receiptOutline, storefrontOutline, eyeOutline, trashOutline, pencilOutline, closeOutline, informationCircleOutline });
   }
 
-  async ngOnInit() {
-    // O carregamento é feito no ionViewWillEnter para garantir que os dados estão atualizados
-  }
+  async ngOnInit() {}
 
+  // Carrega os dados atualizados sempre que o ecrã fica ativo
   async ionViewWillEnter() {
     const id = this.route.snapshot.paramMap.get('id');
     if (id) {
       const lista = await this.garantiasService.getGarantias();
       this.garantia = lista.find((g: any) => g.id === id);
 
+      // Compara a data de expiração com o dia atual para definir o estado de validade
       if (this.garantia && this.garantia.dataExpiracao) {
         const hoje = new Date();
-        hoje.setHours(0, 0, 0, 0); // Ignora as horas para comparar só o dia
+        hoje.setHours(0, 0, 0, 0); 
         const dataExp = new Date(this.garantia.dataExpiracao);
         
         this.isExpirada = dataExp < hoje;
@@ -63,7 +64,7 @@ export class GarantiaDetalhePage implements OnInit {
     }
   }
 
-  // Abre o modal com a foto grande
+  // Abre um modal com a imagem expandida do documento selecionado
   verDocumento(tipo: string) {
     const foto = tipo === 'talao' ? this.garantia?.fotoTalao : this.garantia?.fotoLocal;
     if (foto) {
@@ -74,12 +75,13 @@ export class GarantiaDetalhePage implements OnInit {
     }
   }
 
-  // Função para fechar o modal
+  // Encerra a visualização em ecrã inteiro da fotografia
   fecharModal() {
     this.modalAberto = false;
     this.fotoEmDestaque = '';
   }
 
+  // Pede confirmação ao utilizador e elimina o registo ativo
   async apagarProduto() {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Eliminar Garantia',
@@ -90,9 +92,16 @@ export class GarantiaDetalhePage implements OnInit {
           role: 'destructive',
           icon: 'trash-outline',
           handler: async () => {
-            if (this.garantia?.id) {
-              await this.garantiasService.apagarGarantia(this.garantia.id); 
-              this.router.navigate(['/tabs/tab1']);
+            try {
+              if (this.garantia?.id) {
+                // ATENÇÃO: Verifica se o método no serviço se chama mesmo 'apagarGarantia'
+                await this.garantiasService.apagarGarantia(this.garantia.id); 
+                
+                // Retorna ao separador principal após a eliminação
+                this.router.navigate(['/tabs/tab1']);
+              }
+            } catch (erro) {
+              console.error('Falha ao eliminar a garantia:', erro);
             }
           }
         },
@@ -103,6 +112,7 @@ export class GarantiaDetalhePage implements OnInit {
     await actionSheet.present();
   }
 
+  // Redireciona o utilizador para o formulário de edição com o ID atual
   editarProduto() {
     if (this.garantia?.id) {
       this.router.navigate(['/registar-garantia', this.garantia.id]);

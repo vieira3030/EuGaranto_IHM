@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GarantiasService } from '../services/garantias.service';
-
-// Importar os ícones necessários
+import { Subscription } from 'rxjs'; // Necessário para gerir a memória
 import { addIcons } from 'ionicons';
 import { documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline } from 'ionicons/icons';
 
@@ -11,73 +10,70 @@ import { documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline
   styleUrls: ['tab1.page.scss'],
   standalone: false,
 })
-export class Tab1Page implements OnInit {
+export class Tab1Page implements OnInit, OnDestroy {
   
-  // Variáveis para gerir a lista e os filtros
-  garantias: any[] = [];          
+  // Lista de todas as garantias e a versão filtrada para a interface
+  garantias: any[] = [];           
   garantiasFiltradas: any[] = []; 
-  filtroAtual: string = 'ativas'; // Começa diretamente nas ativas
+  filtroAtual: string = 'ativas'; 
   totalAtivas: number = 0; 
 
+  // Referência para cancelar a subscrição e evitar erros de atualização
+  private subscricao!: Subscription;
+
   constructor(private garantiasService: GarantiasService) {
-    // Regista os ícones para poderem ser usados no HTML
     addIcons({ documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline });
   }
 
-  // Executa ao iniciar a página
-  async ngOnInit() {
+  // Inicializa a página e mantém a lista sincronizada com o serviço
+  ngOnInit() {
     this.carregarLista();
     
-    // Atualiza a lista automaticamente se houver mudanças noutras páginas
-    this.garantiasService.dadosAlterados.subscribe(() => {
+    // Escuta alterações globais para refrescar a lista automaticamente
+    this.subscricao = this.garantiasService.dadosAlterados.subscribe(() => {
       this.carregarLista();
     });
   }
 
-  // Executa sempre que o separador fica visível
+  // Liberta a subscrição ao sair da página para evitar fugas de memória
+  ngOnDestroy() {
+    if (this.subscricao) this.subscricao.unsubscribe();
+  }
+
+  // Garante que a lista está atualizada sempre que o utilizador regressa a este separador
   async ionViewWillEnter() {
     this.carregarLista();
   }
 
-  // Vai buscar os dados e aplica o filtro
+  // Busca os dados atualizados ao serviço e dispara a lógica de filtro
   async carregarLista() {
     this.garantias = await this.garantiasService.getGarantias();
     this.aplicarFiltro();  
   }
 
-  // Atualiza o estado quando mudas de aba no ecrã
+  // Atualiza o critério de visualização quando o utilizador muda de filtro
   mudouFiltro(event: any) {
     this.filtroAtual = event.detail.value;
     this.aplicarFiltro();
   }
 
-  // Separa as garantias consoante a data atual e mostra a lista certa
+  // Filtra as garantias entre válidas e expiradas com base na data de hoje
   aplicarFiltro() {
     const hoje = new Date();
-    hoje.setHours(0, 0, 0, 0); // Ignora as horas para comparar apenas os dias
+    hoje.setHours(0, 0, 0, 0); 
 
-    // Guarda as que ainda estão válidas ou não têm data definida
     const ativas = this.garantias.filter(g => {
       if (!g.dataExpiracao) return true; 
-      const dataExp = new Date(g.dataExpiracao);
-      return dataExp >= hoje;
+      return new Date(g.dataExpiracao) >= hoje;
     });
 
-    // Guarda as que já ultrapassaram a data de hoje
     const expiradas = this.garantias.filter(g => {
       if (!g.dataExpiracao) return false;
-      const dataExp = new Date(g.dataExpiracao);
-      return dataExp < hoje;
+      return new Date(g.dataExpiracao) < hoje;
     });
 
-    // Define qual lista aparece no ecrã
-    if (this.filtroAtual === 'ativas') {
-      this.garantiasFiltradas = ativas;
-    } else if (this.filtroAtual === 'expiradas') {
-      this.garantiasFiltradas = expiradas;
-    }
-
-    // Atualiza o número verde do topo apenas com as garantias válidas
+    // Define a lista exibida conforme a seleção do utilizador
+    this.garantiasFiltradas = (this.filtroAtual === 'ativas') ? ativas : expiradas;
     this.totalAtivas = ativas.length;
   }
 }

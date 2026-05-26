@@ -1,10 +1,28 @@
-
+{
   "grupos": [
-    "Tecnologia",
-    "Cozinha",
-    "Eletrodomésticos",
-    "Ferramentas",
-    "Lazer",
-    "Outros"
+    {
+      "id": "grp1",
+      "nome": "Apartamento da Universidade",
+      "adminEmail": "o_teu_email@email.com",
+      "membros": ["o_teu_email@email.com", "tiago@email.com", "cesar@email.com"],
+      "garantiasIds": ["g3", "g4"],
+      "alertaConfig": "1 mês antes"
+    },
+    {
+      "id": "grp2",
+      "nome": "Despesas de Família",
+      "adminEmail": "pai@email.com",
+      "membros": ["pai@email.com", "mae@email.com", "o_teu_email@email.com"],
+      "garantiasIds": ["g1", "g5"],
+      "alertaConfig": "1 semana antes"
+    },
+    {
+      "id": "grp3",
+      "nome": "Equipamento de Testes",
+      "adminEmail": "o_teu_email@email.com",
+      "membros": ["o_teu_email@email.com", "professor@email.com"],
+      "garantiasIds": ["g2"],
+      "alertaConfig": "3 dias antes"
+    }
   ]
 }

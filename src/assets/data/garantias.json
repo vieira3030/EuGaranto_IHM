@@ -1,34 +1,75 @@
 {
   "garantias": [
     {
-      "id": "1",
-      "nome": "Televisor Samsung",
+      "id": "g1",
+      "nome": "PlayStation 5",
       "grupo": "Tecnologia",
-      "dataCompra": "2025-03-24",
-      "diasRestantes": 365,
-      "valor": 500,
+      "loja": "Worten",
+      "dataCompra": "2023-11-20",
+      "dataExpiracao": "2026-11-20",
+      "diasRestantes": 178,
+      "valor": 499.99,
       "localFisico": "Gaveta da sala",
-      "alerta": "1 semana antes"
+      "alerta": "1 mês antes",
+      "fotoLocal": "assets/imgs/talao1.jpg",
+      "fotoTalao": "assets/imgs/ps5.jpg"
     },
     {
-      "id": "2",
-      "nome": "iPhone 16",
+      "id": "g2",
+      "nome": "iPhone 16 Pro",
       "grupo": "Tecnologia",
-      "dataCompra": "2025-01-01",
-      "diasRestantes": 167,
-      "valor": 950,
+      "loja": "Apple Store",
+      "dataCompra": "2025-01-10",
+      "dataExpiracao": "2028-01-10",
+      "diasRestantes": 595,
+      "valor": 1250.00,
       "localFisico": "Caixa do telemóvel",
-      "alerta": "1 semana antes"
+      "alerta": "1 semana antes",
+      "fotoLocal": "assets/imgs/talao2.jpg",
+      "fotoTalao": "assets/imgs/iphone.jpg"
+      
     },
     {
-      "id": "3",
-      "nome": "Máquina de Lavar",
+      "id": "g3",
+      "nome": "Portátil ASUS ROG",
+      "grupo": "Tecnologia",
+      "loja": "PCDIGA",
+      "dataCompra": "2021-05-15",
+      "dataExpiracao": "2024-05-15",
+      "diasRestantes": 0,
+      "valor": 1450.00,
+      "localFisico": "Mochila do portátil",
+      "alerta": "1 mês antes",
+      "fotoLocal": "assets/imgs/talao3.jpg",
+      "fotoTalao": "assets/imgs/asus.jpg"
+    },
+    {
+      "id": "g4",
+      "nome": "Máquina de Café Krups",
       "grupo": "Eletrodomésticos",
-      "dataCompra": "2026-03-24",
-      "diasRestantes": 730,
-      "valor": 350,
+      "loja": "Radio Popular",
+      "dataCompra": "2022-02-10",
+      "dataExpiracao": "2025-02-10",
+      "diasRestantes": 0,
+      "valor": 89.90,
       "localFisico": "Capa de argolas do escritório",
-      "alerta": "1 mês antes"
+      "alerta": "1 semana antes",
+      "fotoLocal": "assets/imgs/talao4.jpg",
+      "fotoTalao": "assets/imgs/krups.jpg"
+    },
+    {
+      "id": "g5",
+      "nome": "Frigorífico Bosch",
+      "grupo": "Eletrodomésticos",
+      "loja": "Worten",
+      "dataCompra": "2026-03-01",
+      "dataExpiracao": "2029-03-01",
+      "diasRestantes": 1009,
+      "valor": 650.00,
+      "localFisico": "Pasta de faturas",
+      "alerta": "3 dias antes",
+      "fotoLocal": "assets/imgs/talao5.jpg",
+      "fotoTalao": "assets/imgs/frigorifico.jpg"
     }
   ],
   "grupos": [

@@ -1,9 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router'; // Necessário para navegar ao clicar no grupo
-// Serviço unificado para ler dados direto do Firebase
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router'; 
 import { GarantiasService, Grupo } from '../services/garantias.service';
-
-// Importar a função de registo de ícones e os respetivos ícones
+import { Subscription } from 'rxjs'; // Necessário para gerir a memória
 import { addIcons } from 'ionicons';
 import { peopleOutline, chevronForwardOutline, addCircleOutline, people } from 'ionicons/icons';
 
@@ -13,78 +11,98 @@ import { peopleOutline, chevronForwardOutline, addCircleOutline, people } from '
   styleUrls: ['tab2.page.scss'],
   standalone: false,
 })
-export class Tab2Page implements OnInit {
+export class Tab2Page implements OnInit, OnDestroy {
   
-  // Arrays separados para gerir os diferentes estados dos dados
+  // Listas de dados para gerir a visualização dos grupos
   gruposAtivos: Grupo[] = [];
   gruposAntigos: Grupo[] = [];
-  gruposFiltrados: Grupo[] = []; // Esta é a lista que aparece efetivamente no ecrã
+  gruposFiltrados: Grupo[] = []; 
   
-  // Variáveis para a interface
+  // Contagem total para o cabeçalho e estado do filtro atual
   totalAtivos: number = 0;
-  // O ecrã arranca agora diretamente nos grupos ativos
   filtroAtual: string = 'ativos';
+
+  // Guarda a subscrição de eventos para poder ser cancelada ao sair
+  private subscricao!: Subscription;
 
   constructor(
     private garantiasService: GarantiasService,
     private router: Router
   ) {
-    // Regista os ícones para ficarem visíveis no HTML
+    // Regista os ícones da interface
     addIcons({ peopleOutline, chevronForwardOutline, addCircleOutline, people });
   }
 
+  // Inicializa o ecrã e fica à escuta de alterações de dados globais
   async ngOnInit() {
-    this.garantiasService.dadosAlterados.subscribe(() => {
+    this.subscricao = this.garantiasService.dadosAlterados.subscribe(() => {
       this.carregarGrupos();
     });
   }
 
+  // Desliga a escuta de eventos ao fechar a página para poupar memória
+  ngOnDestroy() {
+    if (this.subscricao) this.subscricao.unsubscribe();
+  }
+
+  // Atualiza a lista sempre que o utilizador visualiza este separador
   async ionViewWillEnter() {
     await this.carregarGrupos();
   }
 
+  // Combina os dados da Nuvem, JSON local e Memória Local
   async carregarGrupos() {
     const perfil = await this.garantiasService.getPerfil();
     
     if (perfil) {
-      // 1. Vai buscar TODOS os grupos ao Firebase
-      const todosRemotos = await this.garantiasService.getGruposRemotos(perfil.email);
+      // 1. Vai buscar os grupos reais criados no Firebase
+      let todosRemotos = await this.garantiasService.getGruposRemotos(perfil.email);
       
-      // 2. Vai buscar o histórico de Antigos à memória local do telemóvel
-     this.gruposAntigos = await this.garantiasService.getGruposAntigos();
+      // 2. Lê os grupos de teste do ficheiro JSON para apresentação
+      try {
+        const res = await fetch('/assets/data/grupos.json');
+        const dadosJson = await res.json();
+        if (dadosJson && dadosJson.grupos) {
+          // Junta os grupos de teste à lista do Firebase
+          todosRemotos = [...todosRemotos, ...dadosJson.grupos];
+        }
+      } catch (e) {
+        console.error('Aviso: ficheiro grupos.json não encontrado ou vazio.');
+      }
+      
+      // 3. Lê o histórico de grupos apagados da memória do telemóvel
+      this.gruposAntigos = await this.garantiasService.getGruposAntigos();
 
-      // 3. A MAGIA: Cria uma lista só com os IDs dos grupos antigos
+      // 4. Cria uma lista apenas com os IDs dos grupos já apagados
       const idsAntigos = this.gruposAntigos.map((g: Grupo) => g.id);
 
-      // 4. Filtra os Ativos: só entram os grupos que NÃO estão nos antigos
+      // 5. Filtra a lista final (rejeita qualquer grupo que já esteja apagado)
       this.gruposAtivos = todosRemotos.filter((g: Grupo) => !idsAntigos.includes(g.id));
 
-      // 5. Aplica o filtro para desenhar o ecrã
+      // 6. Atualiza o ecrã com a lista correta
       this.aplicarFiltro(); 
     }
   }
   
-  // É chamado sempre que o utilizador clica num botão do filtro
+  // Muda o critério de visualização quando o utilizador toca nas abas
   mudouFiltro(event: any) {
     this.filtroAtual = event.detail.value;
     this.aplicarFiltro();
   }
 
-  // Lógica de filtragem limpa e reduzida apenas aos dois estados
+  // Define qual lista aparece no ecrã consoante o estado selecionado
   aplicarFiltro() {
     if (this.filtroAtual === 'ativos') {
-      // Mostra apenas os ativos
       this.gruposFiltrados = this.gruposAtivos; 
     } else if (this.filtroAtual === 'antigos') {
-      // Mostra o histórico
       this.gruposFiltrados = this.gruposAntigos; 
     }
     
-    // Atualiza o número do banner verde (deve contar apenas os ativos reais)
+    // Atualiza o contador verde do topo
     this.totalAtivos = this.gruposAtivos.length; 
   }
 
-  // Navega para a página de detalhes ao clicar num cartão
+  // Redireciona o utilizador para a vista detalhada ao clicar num grupo
   verGrupo(id: string) {
     this.router.navigate(['/detalhe-grupo', id]);
   }

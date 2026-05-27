@@ -1,9 +1,15 @@
+// Importações nucleares do Angular para a gestão do componente e do seu ciclo de vida
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { GarantiasService } from '../services/garantias.service';
-import { Subscription } from 'rxjs'; // Necessário para gerir a memória
+
+// Importação necessária para gerir o fluxo de dados assíncrono e a memória
+import { Subscription } from 'rxjs'; 
+
+// Importação do sistema de registo e respetivos ícones visuais do Ionic
 import { addIcons } from 'ionicons';
 import { documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline } from 'ionicons/icons';
 
+// Componente responsável por apresentar a listagem principal e gestão de filtros das garantias
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
@@ -12,68 +18,79 @@ import { documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline
 })
 export class Tab1Page implements OnInit, OnDestroy {
   
-  // Lista de todas as garantias e a versão filtrada para a interface
+  // Matriz que armazena a totalidade das garantias carregadas do serviço
   garantias: any[] = [];           
+  
+  // Matriz que contém apenas as garantias que cumprem o critério do filtro ativo
   garantiasFiltradas: any[] = []; 
+  
+  // Define o estado atual do filtro na interface (ex: 'ativas' ou 'expiradas')
   filtroAtual: string = 'ativas'; 
+  
+  // Guarda o número total de garantias que ainda se encontram dentro da validade
   totalAtivas: number = 0; 
 
-  // Referência para cancelar a subscrição e evitar erros de atualização
+  // Referência para a subscrição de eventos, permitindo a sua anulação posterior
   private subscricao!: Subscription;
 
+  // Construtor: inicializa o serviço de dados e regista os ícones para utilização na interface
   constructor(private garantiasService: GarantiasService) {
     addIcons({ documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline });
   }
 
-  // Inicializa a página e mantém a lista sincronizada com o serviço
+  // Executado na inicialização: carrega os dados e subscreve as notificações de alteração do serviço
   ngOnInit() {
     this.carregarLista();
     
-    // Escuta alterações globais para refrescar a lista automaticamente
+    // Associa a atualização da lista ao evento de alterações globais do serviço
     this.subscricao = this.garantiasService.dadosAlterados.subscribe(() => {
       this.carregarLista();
     });
   }
 
-  // Liberta a subscrição ao sair da página para evitar fugas de memória
+  // Executado ao destruir o componente: anula a subscrição de eventos para prevenir fugas de memória
   ngOnDestroy() {
     if (this.subscricao) this.subscricao.unsubscribe();
   }
 
-  // Garante que a lista está atualizada sempre que o utilizador regressa a este separador
+  // Executado sempre que o separador fica visível: força a atualização completa da lista
   async ionViewWillEnter() {
     this.carregarLista();
   }
 
-  // Busca os dados atualizados ao serviço e dispara a lógica de filtro
+  // Solicita os dados atualizados à base local/remota e aplica os filtros de visualização
   async carregarLista() {
     this.garantias = await this.garantiasService.getGarantias();
     this.aplicarFiltro();  
   }
 
-  // Atualiza o critério de visualização quando o utilizador muda de filtro
+  // Captura a alteração do filtro selecionado pelo utilizador na interface e reavalia a lista
   mudouFiltro(event: any) {
     this.filtroAtual = event.detail.value;
     this.aplicarFiltro();
   }
 
-  // Filtra as garantias entre válidas e expiradas com base na data de hoje
+  // Separa as garantias entre válidas e expiradas com base na comparação com a data atual
   aplicarFiltro() {
     const hoje = new Date();
     hoje.setHours(0, 0, 0, 0); 
 
+    // Isola as garantias que não têm data definida ou cuja data é superior/igual à atual
     const ativas = this.garantias.filter(g => {
       if (!g.dataExpiracao) return true; 
       return new Date(g.dataExpiracao) >= hoje;
     });
 
+    // Isola as garantias cuja data limite já foi ultrapassada
     const expiradas = this.garantias.filter(g => {
       if (!g.dataExpiracao) return false;
       return new Date(g.dataExpiracao) < hoje;
     });
 
-    // Define a lista exibida conforme a seleção do utilizador
+    // Define qual a matriz de dados que a interface deve renderizar
     this.garantiasFiltradas = (this.filtroAtual === 'ativas') ? ativas : expiradas;
+    
+    // Atualiza o contador de garantias válidas
     this.totalAtivas = ativas.length;
   }
 }

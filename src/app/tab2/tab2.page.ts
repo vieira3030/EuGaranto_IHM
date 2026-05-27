@@ -1,10 +1,18 @@
+// Importações nucleares do Angular para a gestão do componente e do ciclo de vida
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router'; 
+
+// Importação do serviço de gestão de dados e da interface estrutural do grupo
 import { GarantiasService, Grupo } from '../services/garantias.service';
-import { Subscription } from 'rxjs'; // Necessário para gerir a memória
+
+// Necessário para gerir a memória do fluxo de dados assíncrono
+import { Subscription } from 'rxjs'; 
+
+// Importação e registo dos ícones visuais nativos da biblioteca Ionic
 import { addIcons } from 'ionicons';
 import { peopleOutline, chevronForwardOutline, addCircleOutline, people } from 'ionicons/icons';
 
+// Componente responsável por gerir e apresentar a lista de grupos de partilha de garantias
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
@@ -13,84 +21,89 @@ import { peopleOutline, chevronForwardOutline, addCircleOutline, people } from '
 })
 export class Tab2Page implements OnInit, OnDestroy {
   
-  // Listas de dados para gerir a visualização dos grupos
+  // Matriz que armazena os grupos em que o utilizador participa atualmente
   gruposAtivos: Grupo[] = [];
+  
+  // Matriz que guarda o histórico de grupos que o utilizador já abandonou
   gruposAntigos: Grupo[] = [];
+  
+  // Matriz que contém apenas os grupos correspondentes ao filtro de interface selecionado
   gruposFiltrados: Grupo[] = []; 
   
-  // Contagem total para o cabeçalho e estado do filtro atual
+  // Guarda o número total de grupos ativos para apresentação no cabeçalho
   totalAtivos: number = 0;
+  
+  // Define o estado atual selecionado no filtro da interface (ex: 'ativos' ou 'antigos')
   filtroAtual: string = 'ativos';
 
-  // Guarda a subscrição de eventos para poder ser cancelada ao sair
+  // Referência para a subscrição de eventos, permitindo a sua anulação para evitar fugas de memória
   private subscricao!: Subscription;
 
+  // Construtor: inicializa os serviços de dados e navegação, e regista os ícones visuais da interface
   constructor(
     private garantiasService: GarantiasService,
     private router: Router
   ) {
-    // Regista os ícones da interface
     addIcons({ peopleOutline, chevronForwardOutline, addCircleOutline, people });
   }
 
-  // Inicializa o ecrã e fica à escuta de alterações de dados globais
+  // Executado na inicialização: subscreve as notificações do serviço para atualizar a lista automaticamente
   async ngOnInit() {
     this.subscricao = this.garantiasService.dadosAlterados.subscribe(() => {
       this.carregarGrupos();
     });
   }
 
-  // Desliga a escuta de eventos ao fechar a página para poupar memória
+  // Executado na destruição do componente: anula a subscrição de eventos ativa
   ngOnDestroy() {
     if (this.subscricao) this.subscricao.unsubscribe();
   }
 
-  // Atualiza a lista sempre que o utilizador visualiza este separador
+  // Executado sempre que a página fica visível: força a atualização dos dados da lista de grupos
   async ionViewWillEnter() {
     await this.carregarGrupos();
   }
 
-  // Combina os dados da Nuvem, JSON local e Memória Local
+  // Obtém e combina os dados dos grupos provenientes da nuvem, de ficheiros locais e da memória interna
   async carregarGrupos() {
     const perfil = await this.garantiasService.getPerfil();
     
     if (perfil) {
-      // 1. Vai buscar os grupos reais criados no Firebase
+      // Obtém os grupos da base de dados remota (Firebase) associados ao email do perfil
       let todosRemotos = await this.garantiasService.getGruposRemotos(perfil.email);
       
-      // 2. Lê os grupos de teste do ficheiro JSON para apresentação
+      // Tenta ler e anexar dados de teste locais guardados num ficheiro JSON estático
       try {
         const res = await fetch('/assets/data/grupos.json');
         const dadosJson = await res.json();
         if (dadosJson && dadosJson.grupos) {
-          // Junta os grupos de teste à lista do Firebase
           todosRemotos = [...todosRemotos, ...dadosJson.grupos];
         }
       } catch (e) {
         console.error('Aviso: ficheiro grupos.json não encontrado ou vazio.');
       }
       
-      // 3. Lê o histórico de grupos apagados da memória do telemóvel
+      // Carrega o histórico de grupos já abandonados a partir do armazenamento local
       this.gruposAntigos = await this.garantiasService.getGruposAntigos();
 
-      // 4. Cria uma lista apenas com os IDs dos grupos já apagados
+      // Extrai exclusivamente os identificadores dos grupos presentes no histórico antigo
       const idsAntigos = this.gruposAntigos.map((g: Grupo) => g.id);
 
-      // 5. Filtra a lista final (rejeita qualquer grupo que já esteja apagado)
+      // Isola os grupos ativos filtrando e removendo os que já constam na lista de antigos
       this.gruposAtivos = todosRemotos.filter((g: Grupo) => !idsAntigos.includes(g.id));
 
-      // 6. Atualiza o ecrã com a lista correta
+      // Dispara a lógica de filtragem final para forçar a atualização gráfica do ecrã
       this.aplicarFiltro(); 
     }
   }
   
-  // Muda o critério de visualização quando o utilizador toca nas abas
+  // Captura a alteração do estado do segmento (tabs) na interface e recalcula a matriz apresentada
   mudouFiltro(event: any) {
     this.filtroAtual = event.detail.value;
     this.aplicarFiltro();
   }
 
-  // Define qual lista aparece no ecrã consoante o estado selecionado
+  // Atribui à variável de exibição a matriz de dados correspondente ao filtro ativo
   aplicarFiltro() {
     if (this.filtroAtual === 'ativos') {
       this.gruposFiltrados = this.gruposAtivos; 
@@ -98,11 +111,11 @@ export class Tab2Page implements OnInit, OnDestroy {
       this.gruposFiltrados = this.gruposAntigos; 
     }
     
-    // Atualiza o contador verde do topo
+    // Atualiza a contagem numérica de grupos válidos apresentada na interface
     this.totalAtivos = this.gruposAtivos.length; 
   }
 
-  // Redireciona o utilizador para a vista detalhada ao clicar num grupo
+  // Executa o redirecionamento para a rota da página de detalhes, enviando o ID do grupo selecionado
   verGrupo(id: string) {
     this.router.navigate(['/detalhe-grupo', id]);
   }

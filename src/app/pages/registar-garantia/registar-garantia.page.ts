@@ -1,14 +1,16 @@
+// Importações dos módulos centrais do Angular e serviços de navegação
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'; 
 
-// Plugin nativo da Câmara 
+// Importação do plugin nativo para captura e seleção de imagens
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { GarantiasService } from '../../services/garantias.service';
 
-// Registo de ícones para o novo design (Adicionada a arrowForwardOutline)
+// Importação e registo de ícones visuais para a interface
 import { addIcons } from 'ionicons';
 import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline } from 'ionicons/icons';
 
+// Componente responsável pelo formulário de registo e edição de garantias
 @Component({
   selector: 'app-registar-garantia',
   templateUrl: 'registar-garantia.page.html',
@@ -17,10 +19,13 @@ import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircle
 })
 export class RegistarGarantiaPage implements OnInit {
   
+  // Controla o passo atualmente visível no formulário (varia entre 1 e 5)
   passoAtual: number = 1;
+  
+  // Sinalizador que define se o formulário opera em modo de edição ou de criação
   emModoEdicao: boolean = false; 
 
-  // Estrutura de dados onde guardamos tudo o que o utilizador preenche
+  // Objeto que armazena todos os dados inseridos pelo utilizador no formulário
   novaGarantia: any = {
     id: Date.now().toString(),
     nome: '',
@@ -33,16 +38,17 @@ export class RegistarGarantiaPage implements OnInit {
     diasRestantes: 0
   };
 
+  // Inicializa os serviços de dados e navegação, registando os ícones necessários
   constructor(
     private garantiasService: GarantiasService, 
     private router: Router,
     private route: ActivatedRoute
   ) {
-    // Registo de todos os ícones necessários no HTML
+    // Regista os ícones visuais para utilização na estrutura HTML desta página
     addIcons({ checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline });
   }
 
-  // Verifica se estamos a editar uma garantia existente ao iniciar a página
+  // Executado na inicialização: verifica a existência de um ID de rota para ativar o modo de edição
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     
@@ -51,6 +57,7 @@ export class RegistarGarantiaPage implements OnInit {
       const lista = await this.garantiasService.getGarantias();
       const garantiaExistente = lista.find((g: any) => g.id === id);
       
+      // Preenche o formulário com os dados da garantia localizada
       if (garantiaExistente) {
         this.novaGarantia = { ...garantiaExistente };
       }
@@ -59,7 +66,7 @@ export class RegistarGarantiaPage implements OnInit {
 
   // --- NAVEGAÇÃO E LÓGICA DE DADOS ---
 
-  // Avança para o próximo passo e calcula os dias no passo final
+  // Incrementa o passo do formulário e calcula os dias restantes ao atingir o último passo
   avancarPasso() {
     if (this.passoAtual < 5) {
       this.passoAtual++;
@@ -69,14 +76,14 @@ export class RegistarGarantiaPage implements OnInit {
     }
   }
 
-  // Recua para o passo anterior
+  // Decrementa a variável de controlo para regressar ao passo anterior do formulário
   recuarPasso() {
     if (this.passoAtual > 1) {
       this.passoAtual--;
     }
   }
 
-  // Calcula matematicamente os dias restantes com base na data de expiração
+  // Calcula a diferença matemática em dias entre a data de expiração selecionada e a data atual
   calcularDiasRestantes() {
     if (this.novaGarantia.dataExpiracao) {
       const dataExp = new Date(this.novaGarantia.dataExpiracao);
@@ -86,7 +93,7 @@ export class RegistarGarantiaPage implements OnInit {
     }
   }
 
-  // Conclui o registo, guarda na base de dados e volta à página inicial
+  // Grava o registo remotamente e localmente, redirecionando para a listagem principal após conclusão
   async concluirRegisto() {
     if (this.emModoEdicao) {
       await this.garantiasService.editarGarantia(this.novaGarantia);
@@ -98,16 +105,17 @@ export class RegistarGarantiaPage implements OnInit {
 
   // --- LÓGICA DO UPLOAD DE FOTOS (NATIVA) ---
 
-  // Aciona a câmara ou a galeria do telemóvel
+  // Abre a interface nativa do dispositivo para capturar uma fotografia ou escolher da galeria
   async tirarFoto(tipo: 'talao' | 'local') {
     try {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.DataUrl, 
-        source: CameraSource.Prompt // Pergunta ao utilizador se quer Câmara ou Galeria
+        source: CameraSource.Prompt // Pergunta ao utilizador se pretende usar a Câmara ou a Galeria
       });
 
+      // Associa os dados da imagem capturada ao respetivo campo da garantia
       if (image.dataUrl) {
         if (tipo === 'talao') this.novaGarantia.fotoTalao = image.dataUrl;
         if (tipo === 'local') this.novaGarantia.fotoLocal = image.dataUrl;
@@ -117,7 +125,7 @@ export class RegistarGarantiaPage implements OnInit {
     }
   }
 
-  // Remove a foto guardada e impede que a câmara abra acidentalmente
+  // Apaga a fotografia selecionada e anula a propagação do evento de clique para não reabrir a câmara
   removerFoto(tipo: 'talao' | 'local', event: Event) {
     event.stopPropagation(); 
     if (tipo === 'talao') this.novaGarantia.fotoTalao = '';

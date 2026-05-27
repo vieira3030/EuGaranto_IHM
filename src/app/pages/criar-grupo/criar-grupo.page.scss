@@ -1,4 +1,5 @@
-/* --- INDICADOR DE PASSOS (Com Linhas) --- */
+/* --- INDICADOR DE PASSOS --- */
+/* Define o contentor principal da barra de progresso superior */
 .stepper-wrapper {
   display: flex;
   align-items: center;
@@ -6,6 +7,7 @@
   margin: 10px 0 35px 0;
 }
 
+/* Formata os círculos numerados e o seu estado de preenchimento (ativo/concluído) */
 .step-circle {
   width: 32px;
   height: 32px;
@@ -26,6 +28,7 @@
   }
 }
 
+/* Formata as linhas de ligação entre os passos da barra de progresso */
 .step-line {
   flex: 1;
   height: 2px;
@@ -40,6 +43,7 @@
 }
 
 /* --- TÍTULO DA SECÇÃO --- */
+/* Formata o título principal e o subtítulo descritivo de cada etapa */
 .section-header {
   margin-bottom: 24px;
   
@@ -57,9 +61,11 @@
   }
 }
 
-/* --- INPUTS PREMIUM (Soft UI) --- */
+/* --- CAMPOS DE ENTRADA (INPUTS) --- */
+/* Define o espaçamento base para agrupar campos e etiquetas */
 .custom-input-group { margin-bottom: 20px; }
 
+/* Estilo das etiquetas (labels) de identificação de cada campo */
 .input-label { 
   font-size: 14px; 
   font-weight: 700; 
@@ -68,7 +74,7 @@
   display: block; 
 }
 
-/* A caixa forçada para o Nome do Grupo */
+/* Estrutura flexível para a caixa de input com alteração de borda ao receber foco */
 .input-box-wrapper {
   background: #f1f3f5;
   border: 1px solid rgba(0, 0, 0, 0.1);
@@ -92,6 +98,7 @@
   }
 }
 
+/* Estilo genérico de campos de texto com fundo suave e realce visual no estado ativo */
 .soft-input {
   --background: #f1f3f5; 
   --padding-start: 16px; 
@@ -111,7 +118,8 @@
   }
 }
 
-/* --- ESPECÍFICO DO CRIAR GRUPO (MEMBROS E CHIPS) --- */
+/* --- GESTÃO DE MEMBROS --- */
+/* Alinha horizontalmente o campo de email e o botão de adicionar membro */
 .add-member-row {
   display: flex;
   gap: 8px;
@@ -130,6 +138,7 @@
   }
 }
 
+/* Contentor flexível para agrupar as etiquetas (chips) dos membros adicionados */
 .chips-container {
   display: flex;
   flex-wrap: wrap;
@@ -137,6 +146,7 @@
   margin-top: 16px;
 }
 
+/* Estilo visual individual de cada membro na lista com ícone para remover */
 .custom-chip {
   background: white;
   border: 1px solid rgba(0,0,0,0.05);
@@ -148,13 +158,15 @@
   ion-icon { color: var(--ion-color-danger, #eb445a); }
 }
 
-/* --- CARTÕES DE OPÇÕES DE ALERTA (Passos 2 e 3) --- */
+/* --- CARTÕES DE OPÇÕES DE ALERTA --- */
+/* Alinhamento vertical para a lista de opções de notificação */
 .alert-options {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* Formatação dos botões de seleção em formato cartão e do seu estado selecionado */
 .option-card {
   background: var(--ion-card-background, #ffffff);
   border: 2px solid transparent;
@@ -174,7 +186,8 @@
   }
 }
 
-/* --- CARTÃO DE RESUMO (Passo 4) --- */
+/* --- CARTÃO DE RESUMO FINAL --- */
+/* Caixa principal que agrupa as informações de revisão antes de concluir a ação */
 .summary-card {
   background: var(--ion-card-background, #ffffff);
   border-radius: 16px;
@@ -183,6 +196,7 @@
   border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
+/* Centraliza o conteúdo textual e gráfico dentro do cartão de resumo */
 .summary-container {
   display: flex;
   flex-direction: column;
@@ -190,6 +204,7 @@
   text-align: center;
 }
 
+/* Formatação circular e espaçamento do ícone de sucesso */
 .success-icon-wrapper {
   width: 72px;
   height: 72px;
@@ -206,6 +221,7 @@
   }
 }
 
+/* Estilo do título de destaque no passo de conclusão */
 .product-title {
   margin: 0 0 16px 0;
   font-size: 22px;
@@ -213,6 +229,7 @@
   color: var(--ion-text-color);
 }
 
+/* Disposição lado a lado das caixas informativas (ex: datas) */
 .summary-dates {
   display: flex;
   gap: 12px;
@@ -220,6 +237,7 @@
   width: 100%;
 }
 
+/* Estilo das etiquetas das datas no cartão de resumo */
 .date-chip {
   background: #f1f3f5;
   padding: 10px 20px;
@@ -231,6 +249,7 @@
   &.text-success { color: var(--ion-color-primary); }
 }
 
+/* Formatação do texto descritivo secundário no resumo */
 .summary-text {
   margin: 0;
   font-size: 14px;
@@ -238,12 +257,14 @@
   line-height: 1.6;
 }
 
-/* --- BOTÃO NO RODAPÉ --- */
+/* --- RODAPÉ E BOTÕES DE AÇÃO --- */
+/* Fixa e aplica espaçamento à área inferior onde os botões de navegação residem */
 .footer-toolbar {
   --background: var(--ion-background-color);
   padding: 10px 20px 36px 20px; 
 }
 
+/* Divide o espaço disponível, atribuindo maior largura ao botão primário (avançar) */
 .footer-buttons-split {
   display: flex;
   gap: 12px;
@@ -252,6 +273,7 @@
   .btn-secondary { flex: 1; }
 }
 
+/* Formatação estrutural comum a ambos os botões de navegação */
 .btn-primary, .btn-secondary {
   --border-radius: 14px;
   font-weight: 700;
@@ -261,17 +283,20 @@
   margin: 0;
 }
 
+/* Cor de destaque para o botão de avançar/guardar */
 .btn-primary {
   --background: var(--ion-color-success);
   --color: #1a1c1e;
 }
 
+/* Cor neutra para o botão de recuar/cancelar */
 .btn-secondary {
   --background: var(--ion-color-light);
   --color: var(--ion-text-color);
 }
 
-/* --- AVISO DE VALIDAÇÃO --- */
+/* --- MENSAGENS DE ERRO --- */
+/* Caixa de alerta visual destacada a vermelho para falhas na validação do formulário */
 .aviso-validacao {
   display: flex;
   align-items: center;
@@ -290,11 +315,13 @@
   }
 }
 
-/* --- ANIMAÇÃO DE TRANSIÇÃO --- */
+/* --- ANIMAÇÕES --- */
+/* Aplica um efeito de surgimento suave de baixo para cima nas transições de vista */
 .animate-fade-in { animation: fadeIn 0.3s ease-in-out; }
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* --- CARTÕES DE SELEÇÃO DE GARANTIAS (Passo 2) --- */
+/* --- SELEÇÃO DE GARANTIAS --- */
+/* Formatação visual dos itens da lista de garantias importáveis, simulando botões */
 .garantia-select-card {
   background: var(--ion-card-background, #ffffff);
   border: 1px solid rgba(0, 0, 0, 0.06);
@@ -315,6 +342,7 @@
     background: rgba(141, 230, 26, 0.05); 
   }
 
+  /* Formatação visual da caixa de verificação personalizada simulando rádio ou checkbox */
   .custom-checkbox {
     width: 26px;
     height: 26px;
@@ -332,11 +360,13 @@
     }
   }
 
+  /* Altera a cor de preenchimento quando a garantia está selecionada */
   &.selected .custom-checkbox {
     background: var(--ion-color-success);
     border-color: var(--ion-color-success);
   }
 
+  /* Alinhamento textual do nome e marca dentro do cartão da garantia */
   .garantia-info {
     flex: 1;
     .nome {
@@ -355,6 +385,7 @@
 }
 
 /* --- MODO ESCURO --- */
+/* Inverte cores de fundo, bordas e sombras caso o dispositivo esteja em tema escuro */
 @media (prefers-color-scheme: dark) {
   .soft-input { 
     --background: #1e1e1e; 

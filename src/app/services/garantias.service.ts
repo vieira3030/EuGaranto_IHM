@@ -1,9 +1,9 @@
 import { Injectable, EventEmitter } from '@angular/core';
 import { Storage } from '@ionic/storage-angular';
 import { Firestore, collection, addDoc, query, where, getDocs, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
-import { LocalNotifications } from '@capacitor/local-notifications'; // Importação do plugin de notificações
+import { LocalNotifications } from '@capacitor/local-notifications'; 
 
-// Estrutura de dados para representar um Grupo de partilha
+// Interface que define a estrutura de dados de um grupo de partilha
 export interface Grupo {
   id?: string;
   nome: string;
@@ -13,27 +13,29 @@ export interface Grupo {
   alertaConfig: string;
 }
 
+// Serviço central para gestão de garantias e grupos, sincronizando armazenamento local e remoto
 @Injectable({ providedIn: 'root' })
 export class GarantiasService {
   
-  // Instância ativa do motor de base de dados local Ionic Storage
+  // Referência para a instância ativa da base de dados local (Ionic Storage)
   private _storage: Storage | null = null;
   
-  // Emissor de eventos para sinalizar mudanças nos dados e atualizar as páginas
+  // Emissor de eventos para notificar a interface sobre atualizações nos dados
   public dadosAlterados = new EventEmitter<void>();
 
+  // Inicializa os serviços de armazenamento local e remoto (Firestore)
   constructor(private storage: Storage, private firestore: Firestore) { 
     this.init(); 
   }
 
-  // Inicializa o motor de armazenamento local Ionic Storage
+  // Instancia a base de dados local e aciona o carregamento inicial
   async init() {
     const storage = await this.storage.create();
     this._storage = storage;
     await this.carregarDadosIniciais();
   }
 
-  // Carrega as garantias padrão do ficheiro JSON caso a memória local esteja vazia
+  // Importa dados de teste de um ficheiro JSON caso o armazenamento local esteja vazio
   private async carregarDadosIniciais() {
     const jaTemDados = await this._storage?.get('dados_app');
     if (!jaTemDados) {
@@ -43,18 +45,18 @@ export class GarantiasService {
     }
   }
 
-  // Encaminha o pedido de eliminação da página de detalhes para a lógica de remoção
+  // Invoca o método interno responsável pela remoção de uma garantia
   async apagarGarantia(id: string) {
     return this.removerGarantia(id);
   }
 
-  // Obtém a lista completa de todas as garantias guardadas localmente
+  // Devolve a lista completa de garantias guardadas no armazenamento local
   async getGarantias() {
     const data = await this._storage?.get('dados_app');
     return data?.garantias || [];
   }
 
-  // Regista uma nova garantia no armazenamento local, na Firebase e agenda o alerta
+  // Regista uma nova garantia no Firebase (sem imagens) e na memória local, agendando o alerta
   async adicionarGarantia(novaGarantia: any) {
     try {
       const garantiaParaNuvem = { ...novaGarantia };
@@ -80,11 +82,11 @@ export class GarantiasService {
       this.dadosAlterados.emit(); 
     }
 
-    // Agenda a notificação local para esta nova garantia
+    // Aciona o agendamento da notificação nativa para a nova garantia
     await this.agendarNotificacao(novaGarantia);
   }
 
-  // Atualiza os dados de uma garantia específica no local e no Firebase
+  // Atualiza as propriedades de uma garantia na memória local e no Firebase
   async editarGarantia(garantiaEditada: any) {
     let garantias = await this.getGarantias();
     const index = garantias.findIndex((g: any) => g.id === garantiaEditada.id);
@@ -113,7 +115,7 @@ export class GarantiasService {
     }
   }
 
-  // Elimina de forma permanente uma garantia do Ionic Storage e da nuvem Firebase
+  // Elimina permanentemente o registo de uma garantia do armazenamento local e da nuvem
   async removerGarantia(id: string) {
     let garantias = await this.getGarantias();
     garantias = garantias.filter((g: any) => g.id !== id);
@@ -135,7 +137,7 @@ export class GarantiasService {
     }
   }
 
-  // Cria as credenciais e o registo de um novo grupo de partilha no Firebase
+  // Regista um novo grupo de partilha na base de dados remota e emite evento de atualização
   async criarGrupo(novoGrupo: Grupo) {
     try {
       const gruposRef = collection(this.firestore, 'grupos');
@@ -151,7 +153,7 @@ export class GarantiasService {
     }
   }
 
-  // Guarda as alterações feitas nas propriedades de um grupo remoto no Firebase
+  // Atualiza os dados de um grupo existente diretamente no Firebase
   async editarGrupo(grupoEditado: Grupo) {
     try {
       if (grupoEditado.id) {
@@ -168,7 +170,7 @@ export class GarantiasService {
     }
   }
 
-  // Localiza e lista todos os grupos do Firebase onde o utilizador está registado
+  // Obtém do Firebase a lista de grupos onde o endereço de email especificado consta como membro
   async getGruposRemotos(emailUtilizador: string) {
     try {
       const gruposRef = collection(this.firestore, 'grupos');
@@ -180,7 +182,7 @@ export class GarantiasService {
     }
   }
 
-  // Importa a estrutura de dados inicial do perfil através de um ficheiro JSON local
+  // Lê os dados do perfil de utilizador a partir do ficheiro JSON local
   async getPerfil() {
     try {
       const res = await fetch('/assets/data/perfil.json');
@@ -191,7 +193,7 @@ export class GarantiasService {
     }
   }
 
-  // Grava de forma assíncrona um grupo arquivado no histórico local do Ionic Storage
+  // Arquiva o registo de um grupo no histórico local para consulta futura
   async guardarGrupoAntigo(grupo: any) {
     const historico = await this.storage.get('gruposAntigos') || [];
     
@@ -201,17 +203,16 @@ export class GarantiasService {
     }
   }
 
-  // Devolve todos os registos de grupos antigos armazenados na memória local
+  // Devolve a lista de grupos arquivados no armazenamento local
   async getGruposAntigos() {
     return await this.storage.get('gruposAntigos') || [];
   }
 
-  // Pede permissão ao telemóvel e agenda o aviso para aparecer no ecrã
+  // Pede permissão ao sistema operativo e agenda um alerta local para a expiração
   async agendarNotificacao(garantia: any) {
     const permissao = await LocalNotifications.requestPermissions();
     
     if (permissao.display === 'granted') {
-      // Agendado para daqui a 1 minuto para efeitos de teste
       const dataAviso = new Date(Date.now() + 1000 * 30); 
 
       await LocalNotifications.schedule({

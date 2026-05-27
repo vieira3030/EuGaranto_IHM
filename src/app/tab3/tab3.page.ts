@@ -1,10 +1,15 @@
+// Importação dos módulos nucleares do Angular
 import { Component } from '@angular/core';
-import { GarantiasService } from '../services/garantias.service'; // Importa o serviço de dados
-import { AlertController } from '@ionic/angular'; // Importa o controlador de alertas nativos
-import { addIcons } from 'ionicons'; // Importa a função de registo de ícones
-// Adicionado o ícone personCircleOutline para o cabeçalho da página
+
+// Importação do serviço de gestão de dados e do controlador de alertas nativos do Ionic
+import { GarantiasService } from '../services/garantias.service'; 
+import { AlertController } from '@ionic/angular'; 
+
+// Importação da função de registo e respetivos ícones visuais
+import { addIcons } from 'ionicons'; 
 import { createOutline, camera, personCircleOutline } from 'ionicons/icons'; 
 
+// Componente responsável por apresentar e gerir a página de perfil de utilizador (Tab 3)
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -13,22 +18,23 @@ import { createOutline, camera, personCircleOutline } from 'ionicons/icons';
 })
 export class Tab3Page {
   
-  perfil: any = null; // Armazena os dados do perfil do utilizador
+  // Objeto que armazena os dados do perfil do utilizador atualmente autenticado
+  perfil: any = null; 
 
+  // Construtor: inicializa os serviços de dados e alertas, e regista os ícones para a interface
   constructor(
     private garantiasService: GarantiasService,
     private alertController: AlertController 
   ) {
-    // Regista os ícones necessários para o funcionamento da interface HTML
     addIcons({ createOutline, camera, personCircleOutline });
   }
 
-  // Carrega as informações do perfil sempre que o ecrã fica ativo
+  // Executado sempre que a página fica visível: carrega os dados atualizados do perfil
   async ionViewWillEnter() {
     this.perfil = await this.garantiasService.getPerfil();
   }
 
-  // Apresenta uma caixa de diálogo nativa para modificar o Nome e o Email
+  // Apresenta uma caixa de diálogo nativa (Alert) com campos de texto para edição dos dados pessoais
   async editarPerfil() {
     const alert = await this.alertController.create({
       header: 'Editar Perfil',
@@ -54,6 +60,7 @@ export class Tab3Page {
         {
           text: 'Guardar',
           handler: async (dados) => {
+            // Valida o preenchimento dos campos e atualiza o estado local do perfil
             if (dados.nome && dados.email) {
               this.perfil.nome = dados.nome;
               this.perfil.email = dados.email;
@@ -67,7 +74,7 @@ export class Tab3Page {
     await alert.present();
   }
 
-  // Captura o ficheiro selecionado da galeria e converte-o para Base64
+  // Interceta a seleção de um ficheiro de imagem e converte os seus dados para o formato Base64
   alterarFoto(event: any) {
     const ficheiro = event.target.files[0];
     
@@ -75,6 +82,7 @@ export class Tab3Page {
       const leitor = new FileReader();
       
       leitor.onload = () => {
+        // Atribui a string em Base64 à propriedade da fotografia do perfil
         this.perfil.foto = leitor.result as string; 
         // this.garantiasService.atualizarPerfil(this.perfil);
       };
@@ -83,7 +91,7 @@ export class Tab3Page {
     }
   }
 
-  // Limpa o estado atual e encerra a sessão ativa do utilizador
+  // Executa os procedimentos necessários para limpar o estado e encerrar a sessão
   terminarSessao() {
     console.log('Sessão terminada');
   }

@@ -15,6 +15,7 @@ import {
   informationCircleOutline 
 } from 'ionicons/icons';
 
+// Componente responsável por apresentar a informação detalhada de um grupo e as suas garantias
 @Component({
   selector: 'app-detalhe-grupo',
   templateUrl: './detalhe-grupo.page.html',
@@ -23,13 +24,16 @@ import {
 })
 export class DetalheGrupoPage implements OnInit {
   
-  // Variável para guardar toda a informação do grupo selecionado
+  // Objeto que armazena a informação completa do grupo selecionado
   grupo: any;
-  // Lista que armazena os detalhes visuais de cada garantia deste grupo
+  
+  // Array que guarda os dados detalhados das garantias associadas ao grupo
   garantiasCompletas: any[] = [];
-  // Identifica se o grupo atual é apenas um registo de histórico
+  
+  // Sinalizador booleano que indica se o grupo pertence ao histórico de grupos arquivados
   isAntigo: boolean = false;
   
+  // Inicializa os serviços de roteamento, interface e dados, registando os ícones necessários
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -37,7 +41,7 @@ export class DetalheGrupoPage implements OnInit {
     private gruposService: GruposService,
     private garantiasService: GarantiasService
   ) {
-    // Carrega os ícones visuais para utilização no HTML
+    // Regista os ícones visuais para utilização na estrutura HTML
     addIcons({
       logOutOutline, personCircleOutline, chevronForwardOutline,
       createOutline, calendarOutline, shieldCheckmarkOutline,
@@ -45,9 +49,10 @@ export class DetalheGrupoPage implements OnInit {
     });
   }
 
+  // Método do ciclo de vida do Angular executado na inicialização do componente
   ngOnInit() { }
 
-  // Busca e carrega os dados do grupo sempre que o utilizador entra no ecrã
+  // Executado ao entrar na página. Carrega os dados do grupo e as respetivas garantias
   async ionViewWillEnter() {
     const id = this.route.snapshot.paramMap.get('id');
     
@@ -55,10 +60,10 @@ export class DetalheGrupoPage implements OnInit {
       const perfil = await this.garantiasService.getPerfil();
       
       if (perfil) {
-        // 1. Obtém os grupos da nuvem (Firebase)
+        // Obtém a lista de grupos armazenados na base de dados remota (Firebase)
         let gruposAtuais = await this.garantiasService.getGruposRemotos(perfil.email);
         
-        // 2. Lê os grupos de teste do ficheiro JSON para garantir que aparecem
+        // Adiciona os grupos de teste locais à lista de grupos ativos
         try {
           const res = await fetch('/assets/data/grupos.json');
           const dadosJson = await res.json();
@@ -69,10 +74,10 @@ export class DetalheGrupoPage implements OnInit {
           console.error('Aviso: ficheiro grupos.json não encontrado.');
         }
 
-        // 3. Procura o ID do grupo na lista de grupos ativos
+        // Procura o ID do grupo na lista combinada de grupos ativos
         let grupoEncontrado = gruposAtuais.find((g: any) => g.id === id);
         
-        // 4. Se não encontrar nos ativos, procura no histórico de grupos apagados
+        // Se não existir nos ativos, verifica o histórico de grupos arquivados/apagados
         if (!grupoEncontrado) {
           const historico = await this.garantiasService.getGruposAntigos();
           grupoEncontrado = historico.find((g: any) => g.id === id);
@@ -81,7 +86,7 @@ export class DetalheGrupoPage implements OnInit {
           this.isAntigo = false;
         }
 
-        // 5. Preenche as variáveis do ecrã se o grupo existir
+        // Se o grupo for localizado, preenche a variável principal e carrega as garantias
         if (grupoEncontrado) {
           this.grupo = grupoEncontrado;
           
@@ -93,7 +98,7 @@ export class DetalheGrupoPage implements OnInit {
     }
   }
 
-  // Compara os IDs guardados no grupo com a lista geral para mostrar as garantias
+  // Filtra o catálogo geral de garantias para extrair apenas as associadas ao grupo atual
   async carregarDadosDasGarantias() {
     const todasGarantias = await this.garantiasService.getGarantias();
     
@@ -102,16 +107,14 @@ export class DetalheGrupoPage implements OnInit {
     );
   }
 
-  // Redireciona para o formulário de edição mantendo o ID atual
+  // Navega para a página de edição do grupo atual, enviando o respetivo ID
   editar() {
     if (this.grupo && this.grupo.id) {
       this.router.navigate(['/criar-grupo', this.grupo.id]);
     }
   }
-
   
-  // Pede confirmação e move o grupo atual para a lista de antigos no armazenamento
-  
+  // Apresenta um menu de confirmação para sair do grupo e processa o respetivo arquivamento
   async sairDoGrupo() {
     const actionSheet = await this.actionSheetCtrl.create({
       header: 'Sair do Grupo',
@@ -126,21 +129,21 @@ export class DetalheGrupoPage implements OnInit {
             
             if (perfil && this.grupo?.id) {
               
-              // Se for um grupo de teste (ID pequeno do JSON), arquiva logo sem ir ao Firebase
+              // Processa grupos locais (JSON) movendo-os diretamente para o histórico
               if (this.grupo.id.length < 15) {
                 await this.garantiasService.guardarGrupoAntigo(this.grupo);
                 
-                // Emite o aviso de alteração ANTES de mudar de ecrã
+                // Emite evento para forçar a atualização imediata da interface
                 this.garantiasService.dadosAlterados.emit();
                 
                 this.router.navigateByUrl('/tabs/tab2');
               } else {
-                // Se for um grupo real, avisa a nuvem (Firebase) primeiro
+                // Remove o utilizador do grupo na base de dados remota (Firebase)
                 const sucesso = await this.gruposService.sairDoGrupo(this.grupo.id, perfil.email);
                 if (sucesso) {
                   await this.garantiasService.guardarGrupoAntigo(this.grupo);
                   
-                  // Emite o aviso de alteração ANTES de mudar de ecrã
+                  // Emite evento para forçar a atualização imediata da interface
                   this.garantiasService.dadosAlterados.emit();
                   
                   this.router.navigateByUrl('/tabs/tab2');

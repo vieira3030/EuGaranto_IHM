@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'; 
 import { ToastController } from '@ionic/angular';
 
-// Registo de ícones do Ionic para a interface
+// Importação da função de registo e respetivos ícones visuais do Ionic
 import { addIcons } from 'ionicons';
 import { 
   closeCircle, 
@@ -15,9 +15,10 @@ import {
   chevronForwardOutline
 } from 'ionicons/icons';
 
-// Serviço e Interface para gestão de dados
+// Importação do serviço e da interface de estrutura de dados do grupo
 import { GarantiasService, Grupo } from '../../services/garantias.service';
 
+// Componente responsável pelo formulário de criação e edição de grupos
 @Component({
   selector: 'app-criar-grupo',
   templateUrl: './criar-grupo.page.html',
@@ -26,13 +27,13 @@ import { GarantiasService, Grupo } from '../../services/garantias.service';
 })
 export class CriarGrupoPage implements OnInit {
   
-  // Controla o passo visível no formulário (1 a 4)
+  // Define o passo atual visível no formulário (varia entre 1 e 4)
   passoAtual: number = 1;
 
-  // Indica se estamos a editar um grupo existente
+  // Define se o formulário opera em modo de edição ou de criação
   emModoEdicao: boolean = false;
 
-  // Dados do grupo (novos ou carregados para edição)
+  // Armazena a estrutura de dados do grupo em edição ou criação
   novoGrupo: Grupo = {
     nome: '',
     adminEmail: '',
@@ -41,17 +42,20 @@ export class CriarGrupoPage implements OnInit {
     alertaConfig: '1 semana antes'
   };
 
-  // Variáveis auxiliares para o formulário
+  // Armazena temporariamente o email introduzido no campo de novo membro
   novoMembroEmail: string = '';
+  
+  // Lista com as garantias disponíveis para associação ao grupo
   garantiasDisponiveis: any[] = []; 
 
+  // Construtor: inicializa os serviços de navegação, dados e interface
   constructor(
     private router: Router, 
     private route: ActivatedRoute, 
     private garantiasService: GarantiasService,
     private toastController: ToastController
   ) {
-    // Registo de todos os ícones usados nesta página e no HTML
+    // Regista os ícones necessários para apresentação no HTML
     addIcons({ 
       closeCircle, 
       people, 
@@ -64,13 +68,14 @@ export class CriarGrupoPage implements OnInit {
     });
   }
 
-  /** Lógica executada ao iniciar a página. */
+  // Executado ao iniciar a página: verifica a existência de um ID para ativar o modo de edição
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
     
     if (id) {
       this.emModoEdicao = true;
-      // Procura o grupo na nuvem para preencher o formulário
+      
+      // Obtém o perfil local e procura o grupo correspondente na base de dados remota
       const perfil = await this.garantiasService.getPerfil();
       if (perfil) {
         const lista = await this.garantiasService.getGruposRemotos(perfil.email);
@@ -82,12 +87,13 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
-  /** Atualiza dados sempre que a página entra em foco. */
+  // Executado sempre que a página fica visível: define o criador e carrega a lista de garantias
   async ionViewWillEnter() {
     const perfil = await this.garantiasService.getPerfil();
     if (perfil && !this.emModoEdicao) {
       this.novoGrupo.adminEmail = perfil.email;
-      // Garante que o criador está na lista se for um grupo novo
+      
+      // Insere automaticamente o email do criador na lista de membros do novo grupo
       if (!this.novoGrupo.membros.includes(perfil.email)) {
         this.novoGrupo.membros.push(perfil.email);
       }
@@ -95,14 +101,14 @@ export class CriarGrupoPage implements OnInit {
     await this.carregarGarantias();
   }
 
-  /** Carrega as garantias pessoais para seleção. */
+  // Obtém a lista completa de garantias guardadas no armazenamento local
   async carregarGarantias() {
     this.garantiasDisponiveis = await this.garantiasService.getGarantias();
   }
 
   // --- GESTÃO DE MEMBROS ---
   
-  /** Adiciona um membro à lista se for válido e não repetido. */
+  // Valida o texto inserido e adiciona o email à lista de membros, evitando duplicados
   adicionarMembro() {
     if (this.novoMembroEmail.trim() !== '' && !this.novoGrupo.membros.includes(this.novoMembroEmail)) {
       this.novoGrupo.membros.push(this.novoMembroEmail);
@@ -110,14 +116,14 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
-  /** Remove um membro específico da lista. */
+  // Filtra a lista de membros para remover o email selecionado
   removerMembro(email: string) {
     this.novoGrupo.membros = this.novoGrupo.membros.filter(m => m !== email);
   }
 
   // --- SELEÇÃO DE GARANTIAS ---
 
-  /** Adiciona ou remove o ID de uma garantia selecionada. */
+  // Adiciona o ID da garantia à lista se não existir, ou remove-o caso já esteja presente
   toggleGarantia(id: string) {
     const index = this.novoGrupo.garantiasIds.indexOf(id);
     if (index === -1) {
@@ -127,24 +133,24 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
-  /** Verifica se a garantia está selecionada para apresentar na interface. */
+  // Valida se o ID de uma garantia específica consta na lista de garantias selecionadas
   isGarantiaSelecionada(id: string): boolean {
     return this.novoGrupo.garantiasIds.includes(id);
   }
 
   // --- NAVEGAÇÃO E FEEDBACK ---
 
-  /** Avança para o passo seguinte do formulário. */
+  // Incrementa a variável de controlo para avançar na navegação do formulário
   avancarPasso() {
     if (this.passoAtual < 4) this.passoAtual++;
   }
 
-  /** Recua para o passo anterior do formulário. */
+  // Decrementa a variável de controlo para retroceder na navegação do formulário
   recuarPasso() {
     if (this.passoAtual > 1) this.passoAtual--;
   }
 
-  /** Mostra uma notificação visual (Toast) no topo do ecrã. */
+  // Apresenta uma notificação temporária de sucesso no topo do ecrã
   async mostrarSucesso(mensagem: string) {
     const toast = await this.toastController.create({
       message: mensagem,
@@ -156,25 +162,26 @@ export class CriarGrupoPage implements OnInit {
     await toast.present();
   }
 
-  /** Grava as alterações ou cria o grupo novo no Firebase. */
+  // Executa a gravação do grupo e redireciona o utilizador em caso de sucesso
   async concluirCriacao() {
     let sucesso = false;
 
     if (this.emModoEdicao) {
-      // Chama a função de edição no serviço
+      // Atualiza os dados de um grupo já existente
       await this.garantiasService.editarGrupo(this.novoGrupo);
       sucesso = true;
     } else {
-      // Cria um grupo novo
+      // Regista a criação de um grupo inteiramente novo
       const id = await this.garantiasService.criarGrupo(this.novoGrupo);
       sucesso = !!id;
     }
     
     if (sucesso) {
-      // Apresenta o feedback consoante a ação realizada
+      // Define a mensagem de feedback consoante o estado de edição ou criação e apresenta o Toast
       const msg = this.emModoEdicao ? 'Grupo atualizado com sucesso!' : 'Grupo criado com sucesso!';
       await this.mostrarSucesso(msg);
       
+      // Retorna à lista principal de grupos
       this.router.navigateByUrl('/tabs/tab2'); 
     }
   }

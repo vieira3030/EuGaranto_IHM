@@ -29,6 +29,7 @@ export class RegistarGarantiaPage implements OnInit {
   novaGarantia: any = {
     id: Date.now().toString(),
     nome: '',
+    categoria: '', // Armazena a categoria selecionada via ficheiro estático
     dataCompra: '',
     dataExpiracao: '',
     descricao: '',
@@ -37,6 +38,9 @@ export class RegistarGarantiaPage implements OnInit {
     alerta: '1 semana antes',
     diasRestantes: 0
   };
+
+  // Matriz que armazena a lista de categorias carregadas pelo serviço HTTP
+  categorias: string[] = [];
 
   // Inicializa os serviços de dados e navegação, registando os ícones necessários
   constructor(
@@ -48,8 +52,12 @@ export class RegistarGarantiaPage implements OnInit {
     addIcons({ checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline });
   }
 
-  // Executado na inicialização: verifica a existência de um ID de rota para ativar o modo de edição
+  // Executado na inicialização: carrega categorias do ficheiro JSON e verifica o ID de rota
   async ngOnInit() {
+    // Carrega a lista estática de categorias de produtos via HTTP JSON
+    this.categorias = await this.garantiasService.getCategorias();
+
+    // Verifica a existência de um ID de rota para ativar o modo de edição
     const id = this.route.snapshot.paramMap.get('id');
     
     if (id) {

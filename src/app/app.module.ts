@@ -16,6 +16,9 @@ import { environment } from '../environments/environment';
 import { provideFirebaseApp, initializeApp } from '@angular/fire/app';
 import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 
+// Importação do módulo para requisições HTTP externas e locais
+import { HttpClientModule } from '@angular/common/http';
+
 // Decorador que define as dependências globais e a configuração de arranque do projeto
 @NgModule({
   declarations: [AppComponent], // Regista o componente principal (raiz) da aplicação
@@ -23,7 +26,8 @@ import { provideFirestore, getFirestore } from '@angular/fire/firestore';
     BrowserModule, // Prepara a aplicação para ser executada no ambiente do navegador
     IonicModule.forRoot(), // Inicializa os recursos e componentes visuais do Ionic
     AppRoutingModule, // Injeta as regras de navegação globais
-    IonicStorageModule.forRoot() // Instancia o motor de armazenamento local de dados
+    IonicStorageModule.forRoot(), // Instancia o motor de armazenamento local de dados
+    HttpClientModule // Regista o módulo HTTP para leitura de ficheiros e comunicações
   ],
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, // Aplica a gestão de cache de rotas própria do Ionic

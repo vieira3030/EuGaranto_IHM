@@ -52,6 +52,15 @@
           <ion-input type="text" placeholder="Ex: Smartphone Samsung" class="clean-input" [(ngModel)]="novaGarantia.nome"></ion-input>
         </div>
       </div>
+
+      <div class="custom-input-group">
+        <ion-label class="input-label">Categoria</ion-label>
+        <div class="input-box-wrapper">
+          <ion-select [(ngModel)]="novaGarantia.categoria" placeholder="Seleciona uma categoria" class="clean-input" interface="action-sheet">
+            <ion-select-option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
       
       <div class="custom-input-group">
         <ion-label class="input-label">Data de compra</ion-label>
@@ -197,14 +206,14 @@
 <ion-footer class="ion-no-border">
   <div style="padding: 16px; background: var(--ion-background-color); padding-bottom: max(16px, env(safe-area-inset-bottom));">
     
-    <div *ngIf="passoAtual === 1 && (!novaGarantia.nome || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao)" 
+    <div *ngIf="passoAtual === 1 && (!novaGarantia.nome || !novaGarantia.categoria || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao)" 
          class="aviso-validacao animate-fade-in">
       <ion-icon name="information-circle-outline"></ion-icon>
-      <span>Preenche o nome e as datas para avançar.</span>
+      <span>Preenche o nome, categoria e datas para avançar.</span>
     </div>
 
     <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" 
-                [disabled]="!novaGarantia.nome || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao"
+                [disabled]="!novaGarantia.nome || !novaGarantia.categoria || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao"
                 style="margin: 0; min-height: 54px;">
       Seguinte
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>

@@ -36,6 +36,11 @@
       
       <div class="info-list">
         <div class="info-item">
+          <div class="info-label">Categoria</div>
+          <div class="info-value">{{ garantia?.categoria || 'Não definida' }}</div>
+        </div>
+
+        <div class="info-item">
           <div class="info-label">Data de Compra</div>
           <div class="info-value">{{ garantia?.dataCompra | date: 'dd/MM/yyyy' }}</div>
         </div>
@@ -116,7 +121,6 @@
 
   </div>
 </ion-footer>
-
 
 <ion-modal [isOpen]="modalAberto" (didDismiss)="fecharModal()" class="photo-viewer-modal">
   <ng-template>

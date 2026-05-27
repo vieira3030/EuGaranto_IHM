@@ -3,7 +3,7 @@
     {
       "id": "g1",
       "nome": "PlayStation 5",
-      "grupo": "Tecnologia",
+      "categoria": "Eletrónicos",
       "loja": "Worten",
       "dataCompra": "2023-11-20",
       "dataExpiracao": "2026-11-20",
@@ -17,7 +17,7 @@
     {
       "id": "g2",
       "nome": "iPhone 16 Pro",
-      "grupo": "Tecnologia",
+      "categoria": "Eletrónicos",
       "loja": "Apple Store",
       "dataCompra": "2025-01-10",
       "dataExpiracao": "2028-01-10",
@@ -27,12 +27,11 @@
       "alerta": "1 semana antes",
       "fotoLocal": "assets/imgs/talao2.jpg",
       "fotoTalao": "assets/imgs/iphone.jpg"
-      
     },
     {
       "id": "g3",
       "nome": "Portátil ASUS ROG",
-      "grupo": "Tecnologia",
+      "categoria": "Informática",
       "loja": "PCDIGA",
       "dataCompra": "2021-05-15",
       "dataExpiracao": "2024-05-15",
@@ -46,7 +45,7 @@
     {
       "id": "g4",
       "nome": "Máquina de Café Krups",
-      "grupo": "Eletrodomésticos",
+      "categoria": "Eletrodomésticos",
       "loja": "Radio Popular",
       "dataCompra": "2022-02-10",
       "dataExpiracao": "2025-02-10",
@@ -60,7 +59,7 @@
     {
       "id": "g5",
       "nome": "Frigorífico Bosch",
-      "grupo": "Eletrodomésticos",
+      "categoria": "Eletrodomésticos",
       "loja": "Worten",
       "dataCompra": "2026-03-01",
       "dataExpiracao": "2029-03-01",

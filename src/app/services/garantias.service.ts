@@ -3,6 +3,10 @@ import { Storage } from '@ionic/storage-angular';
 import { Firestore, collection, addDoc, query, where, getDocs, doc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { LocalNotifications } from '@capacitor/local-notifications'; 
 
+// Importações para requisições HTTP e manipulação de fluxos assíncronos
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
+
 // Interface que define a estrutura de dados de um grupo de partilha
 export interface Grupo {
   id?: string;
@@ -23,8 +27,12 @@ export class GarantiasService {
   // Emissor de eventos para notificar a interface sobre atualizações nos dados
   public dadosAlterados = new EventEmitter<void>();
 
-  // Inicializa os serviços de armazenamento local e remoto (Firestore)
-  constructor(private storage: Storage, private firestore: Firestore) { 
+  // Inicializa os serviços de armazenamento, base de dados remota e cliente HTTP
+  constructor(
+    private storage: Storage, 
+    private firestore: Firestore,
+    private http: HttpClient
+  ) { 
     this.init(); 
   }
 
@@ -42,6 +50,17 @@ export class GarantiasService {
       const res = await fetch('/assets/data/garantias.json');
       const dados = await res.json();
       await this._storage?.set('dados_app', dados);
+    }
+  }
+
+  // Executa um pedido HTTP GET para carregar a matriz de categorias do ficheiro local JSON
+  async getCategorias() {
+    try {
+      const resposta: any = await firstValueFrom(this.http.get('/assets/data/categorias.json'));
+      return resposta.categorias || [];
+    } catch (erro) {
+      console.error('Erro ao carregar categorias:', erro);
+      return [];
     }
   }
 

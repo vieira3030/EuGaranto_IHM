@@ -1,15 +1,17 @@
 // Importação dos módulos nucleares do Angular
 import { Component } from '@angular/core';
 
-// Importação do serviço de gestão de dados e do controlador de alertas nativos do Ionic
+// Importação do serviço de gestão de dados e do controlador de alertas nativos
 import { GarantiasService } from '../services/garantias.service'; 
 import { AlertController } from '@ionic/angular'; 
+
+// Importação do plugin nativo de Câmara do Capacitor
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 // Importação da função de registo e respetivos ícones visuais
 import { addIcons } from 'ionicons'; 
 import { createOutline, camera, personCircleOutline } from 'ionicons/icons'; 
 
-// Componente responsável por apresentar e gerir a página de perfil de utilizador (Tab 3)
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -18,10 +20,9 @@ import { createOutline, camera, personCircleOutline } from 'ionicons/icons';
 })
 export class Tab3Page {
   
-  // Objeto que armazena os dados do perfil do utilizador atualmente autenticado
+  // Objeto que armazena os dados do perfil
   perfil: any = null; 
 
-  // Construtor: inicializa os serviços de dados e alertas, e regista os ícones para a interface
   constructor(
     private garantiasService: GarantiasService,
     private alertController: AlertController 
@@ -29,38 +30,22 @@ export class Tab3Page {
     addIcons({ createOutline, camera, personCircleOutline });
   }
 
-  // Executado sempre que a página fica visível: carrega os dados atualizados do perfil
   async ionViewWillEnter() {
     this.perfil = await this.garantiasService.getPerfil();
   }
 
-  // Apresenta uma caixa de diálogo nativa (Alert) com campos de texto para edição dos dados pessoais
   async editarPerfil() {
     const alert = await this.alertController.create({
       header: 'Editar Perfil',
       inputs: [
-        {
-          name: 'nome',
-          type: 'text',
-          placeholder: 'O teu nome',
-          value: this.perfil?.nome 
-        },
-        {
-          name: 'email',
-          type: 'email',
-          placeholder: 'O teu email',
-          value: this.perfil?.email 
-        }
+        { name: 'nome', type: 'text', placeholder: 'O teu nome', value: this.perfil?.nome },
+        { name: 'email', type: 'email', placeholder: 'O teu email', value: this.perfil?.email }
       ],
       buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel' 
-        },
+        { text: 'Cancelar', role: 'cancel' },
         {
           text: 'Guardar',
           handler: async (dados) => {
-            // Valida o preenchimento dos campos e atualiza o estado local do perfil
             if (dados.nome && dados.email) {
               this.perfil.nome = dados.nome;
               this.perfil.email = dados.email;
@@ -74,24 +59,26 @@ export class Tab3Page {
     await alert.present();
   }
 
-  // Interceta a seleção de um ficheiro de imagem e converte os seus dados para o formato Base64
-  alterarFoto(event: any) {
-    const ficheiro = event.target.files[0];
-    
-    if (ficheiro) {
-      const leitor = new FileReader();
-      
-      leitor.onload = () => {
-        // Atribui a string em Base64 à propriedade da fotografia do perfil
-        this.perfil.foto = leitor.result as string; 
+  // Abre o menu nativo para escolher entre Câmara ou Galeria
+  async alterarFoto() {
+    try {
+      const imagem = await Camera.getPhoto({
+        quality: 90,
+        allowEditing: false,
+        resultType: CameraResultType.DataUrl, // Retorna logo a imagem em formato Base64
+        source: CameraSource.Prompt // É isto que força a aparecer o menu de escolha (Câmara/Galeria)
+      });
+
+      if (imagem.dataUrl) {
+        this.perfil.foto = imagem.dataUrl; 
         // this.garantiasService.atualizarPerfil(this.perfil);
-      };
-      
-      leitor.readAsDataURL(ficheiro);
+      }
+    } catch (erro) {
+      console.log('O utilizador fechou a câmara sem tirar foto.', erro);
     }
   }
 
-  // Executa os procedimentos necessários para limpar o estado e encerrar a sessão
+  // Executa os procedimentos necessários para terminar a sessão
   terminarSessao() {
     console.log('Sessão terminada');
   }

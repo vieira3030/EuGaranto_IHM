@@ -46,14 +46,25 @@
   padding: 4px;
 
   ion-segment-button {
+    /* Define a cor da pastilha deslizante automaticamente */
+    --indicator-color: var(--ion-background-color);
+    
+    /* Remove os fundos extra para eliminar a borda colorida */
+    --background: transparent;
+    --background-checked: transparent;
+
     --color: var(--ion-color-medium);
-    --color-checked: #1a1c1e;
-    --background-checked: var(--ion-color-success); 
+    --color-checked: var(--ion-text-color);
     --border-radius: 8px;
+    
     font-weight: 700;
     text-transform: capitalize;
     min-height: 38px;
     font-size: 14px;
+    
+    /* Remove bordas/margens padrão */
+    border: none;
+    margin: 0;
   }
 }
 
@@ -136,6 +147,6 @@
   
   .custom-segment ion-segment-button {
     --color-checked: #ffffff;
-    --background-checked: var(--ion-color-primary); 
+    /* Removido o --background-checked para usar o --indicator-color padrão */
   }
 }

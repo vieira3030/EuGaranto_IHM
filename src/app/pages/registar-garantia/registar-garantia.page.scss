@@ -80,12 +80,12 @@
   border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 12px;
   display: flex;
-  align-items: flex-start; /* Ajuda a posicionar melhor a textarea */
+  align-items: flex-start; 
   min-height: 52px;
   transition: all 0.2s ease;
   margin-top: 4px;
 
-  /* Quando o utilizador clica, a caixa fica verde à volta */
+  /* Efeito de foco: borda verde ao clicar */
   &:focus-within {
     border-color: var(--ion-color-success);
     background: #ffffff;
@@ -101,7 +101,24 @@
     width: 100%;
     font-size: 16px;
     color: var(--ion-text-color);
+
+    /* CORREÇÃO MOBILE: Garante visibilidade do texto nos inputs de data nativos */
+    &[type="date"] {
+      --color: var(--ion-text-color) !important;
+      color: var(--ion-text-color) !important;
+
+      /* Alvo no Shadow DOM para iOS Safari e Android WebView */
+      &::part(native) {
+        color: var(--ion-text-color) !important;
+        opacity: 1 !important;
+      }
+    }
   }
+}
+
+/* Força a cor do ícone do calendário a adaptar-se ao tema */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(var(--ion-color-step-600-invert, 0.5));
 }
 
 /* --- ÁREA DE UPLOAD (Passo 2) --- */
@@ -150,7 +167,6 @@
   gap: 12px;
   width: 100%;
   
-  /* Ajuste seguro de tamanho nos botões duplos */
   .btn-primary { flex: 2; }
   .btn-secondary { flex: 1; }
 }
@@ -183,7 +199,6 @@
   to { opacity: 1; transform: translateY(0); } 
 }
 
-
 /* Miniatura da foto carregada no Passo 2 */
 .image-preview-talao {
   width: 100%;
@@ -191,8 +206,6 @@
   object-fit: contain;
   border-radius: 12px;
 }
-
-
 
 /* --- CARTÕES DE OPÇÕES DE ALERTA (Passo 4) --- */
 .alert-options {
@@ -213,7 +226,6 @@
   transition: all 0.2s ease;
   cursor: pointer;
   
-  /* Estado selecionado (Fica verde) */
   &.selected {
     background: var(--ion-color-success);
     color: #1a1c1e;
@@ -221,11 +233,10 @@
   }
 }
 
-
 /* --- CARTÃO DE RESUMO REFINADO (Passo 5) --- */
 .summary-card {
   background: var(--ion-card-background, #ffffff);
-  border-radius: 16px; // Cantos arredondados de 16px conforme o design
+  border-radius: 16px; 
   padding: 32px 24px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
   border: 1px solid rgba(0, 0, 0, 0.02);
@@ -235,14 +246,14 @@
 .summary-container {
   display: flex;
   flex-direction: column;
-  align-items: center; // Centraliza os elementos
+  align-items: center; 
   text-align: center;
 }
 
 .success-icon-wrapper {
   width: 72px;
   height: 72px;
-  background: rgba(141, 230, 26, 0.15); // Fundo verde suave de baixa opacidade
+  background: rgba(141, 230, 26, 0.15); 
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -251,7 +262,7 @@
 
   ion-icon {
     font-size: 40px;
-    color: var(--ion-color-success); // Ícone em Verde Lima
+    color: var(--ion-color-success); 
   }
 }
 
@@ -273,16 +284,16 @@
 }
 
 .date-chip {
-  background: #f1f3f5; // Fundo neutro suave
+  background: #f1f3f5; 
   padding: 10px 20px;
-  border-radius: 12px; // Alinhado com a geometria suave da interface
+  border-radius: 12px; 
   font-size: 15px;
   font-weight: 700;
   color: var(--ion-text-color);
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
   
   &.text-success {
-    color: var(--ion-color-primary); // Destaque na data de expiração
+    color: var(--ion-color-primary); 
   }
 }
 
@@ -298,8 +309,6 @@
   line-height: 1.6;
   max-width: 280px;
 }
-
-
 
 /* --- AVISO DE VALIDAÇÃO --- */
 .aviso-validacao {

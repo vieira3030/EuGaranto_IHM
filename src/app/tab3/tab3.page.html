@@ -10,7 +10,7 @@
 <ion-content [fullscreen]="true" class="ion-padding">
   <div *ngIf="perfil" class="ion-text-center">
     
-  <div style="position: relative; width: 100px; margin: 20px auto; cursor: pointer;" (click)="fileInput.click()">
+    <div style="position: relative; width: 100px; margin: 20px auto; cursor: pointer;" (click)="alterarFoto()">
       
       <ion-avatar style="width: 100px; height: 100px; border: 3px solid var(--ion-color-primary); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
         <img [src]="perfil?.foto || 'https://ionicframework.com/docs/img/demos/avatar.svg'" alt="Avatar">
@@ -22,30 +22,26 @@
 
     </div>
 
-    <input type="file" #fileInput (change)="alterarFoto($event)" accept="image/*" style="display: none;">
-
     <h2>{{ perfil.nome }}</h2>
     <p>{{ perfil.email }}</p>
 
-   <ion-list lines="full" class="ion-margin-top" style="background: transparent;">
-  
-  <ion-list-header>
-    <ion-label style="color: var(--ion-text-color);">Preferências de notificação</ion-label>
-  </ion-list-header>
+    <ion-list lines="full" class="ion-margin-top" style="background: transparent;">
+      <ion-list-header>
+        <ion-label style="color: var(--ion-text-color);">Preferências de notificação</ion-label>
+      </ion-list-header>
 
-  <ion-item style="--background: transparent;">
-    <ion-label style="color: var(--ion-text-color);">Alertas por Email</ion-label>
-    <ion-toggle [(ngModel)]="perfil.preferencias.notificacoesEmail"></ion-toggle>
-  </ion-item>
+      <ion-item style="--background: transparent;">
+        <ion-label style="color: var(--ion-text-color);">Alertas por Email</ion-label>
+        <ion-toggle [(ngModel)]="perfil.preferencias.notificacoesEmail"></ion-toggle>
+      </ion-item>
 
-  <ion-item style="--background: transparent;">
-    <ion-label style="color: var(--ion-text-color);">Notificações Push</ion-label>
-    <ion-toggle [(ngModel)]="perfil.preferencias.notificacoesPush"></ion-toggle>
-  </ion-item>
+      <ion-item style="--background: transparent;">
+        <ion-label style="color: var(--ion-text-color);">Notificações Push</ion-label>
+        <ion-toggle [(ngModel)]="perfil.preferencias.notificacoesPush"></ion-toggle>
+      </ion-item>
+    </ion-list>
 
-</ion-list>
-
-   <div class="ion-margin-top">
+    <div class="ion-margin-top">
       <ion-button expand="block" color="light" (click)="editarPerfil()">
         <ion-icon slot="start" name="create-outline"></ion-icon>
         Editar Perfil

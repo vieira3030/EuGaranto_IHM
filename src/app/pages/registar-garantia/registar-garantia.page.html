@@ -64,17 +64,59 @@
       
       <div class="custom-input-group">
         <ion-label class="input-label">Data de compra</ion-label>
-        <div class="input-box-wrapper">
-          <ion-input type="date" class="clean-input" [(ngModel)]="novaGarantia.dataCompra"></ion-input>
+        <div class="input-box-wrapper" (click)="modalCompraAberto = true">
+          <ion-input
+            class="clean-input"
+            [value]="novaGarantia.dataCompra ? formatarData(novaGarantia.dataCompra) : ''"
+            placeholder="Selecionar data"
+            readonly="true">
+          </ion-input>
         </div>
       </div>
-      
+
+      <ion-modal class="datetime-modal" [isOpen]="modalCompraAberto" (didDismiss)="modalCompraAberto = false">
+        <ng-template>
+          <ion-datetime
+            presentation="date"
+            [(ngModel)]="novaGarantia.dataCompra"
+            (ionChange)="modalCompraAberto = false"
+            locale="pt-PT"
+            [showDefaultButtons]="true"
+            doneText="Confirmar"
+            cancelText="Cancelar"
+            min="2000"
+            max="2100">
+          </ion-datetime>
+        </ng-template>
+      </ion-modal>
+
       <div class="custom-input-group">
         <ion-label class="input-label">Data de Expiração</ion-label>
-        <div class="input-box-wrapper">
-          <ion-input type="date" class="clean-input" [(ngModel)]="novaGarantia.dataExpiracao"></ion-input>
+        <div class="input-box-wrapper" (click)="modalExpiracaoAberto = true">
+          <ion-input
+            class="clean-input"
+            [value]="novaGarantia.dataExpiracao ? formatarData(novaGarantia.dataExpiracao) : ''"
+            placeholder="Selecionar data"
+            readonly="true">
+          </ion-input>
         </div>
       </div>
+
+      <ion-modal class="datetime-modal" [isOpen]="modalExpiracaoAberto" (didDismiss)="modalExpiracaoAberto = false">
+        <ng-template>
+          <ion-datetime
+            presentation="date"
+            [(ngModel)]="novaGarantia.dataExpiracao"
+            (ionChange)="modalExpiracaoAberto = false"
+            locale="pt-PT"
+            [showDefaultButtons]="true"
+            doneText="Confirmar"
+            cancelText="Cancelar"
+            min="2000"
+            max="2100">
+          </ion-datetime>
+        </ng-template>
+      </ion-modal>
 
       <div class="custom-input-group">
         <ion-label class="input-label">
@@ -104,7 +146,6 @@
     <div class="upload-area preview-mode" *ngIf="novaGarantia.fotoTalao" style="border-color: var(--ion-color-success);">
        <img [src]="novaGarantia.fotoTalao" alt="Preview Talão" class="image-preview">
        <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
-       
        <ion-button fill="clear" color="medium" (click)="removerFoto('talao', $event)" style="text-transform: none; text-decoration: underline;">
          Alterar foto
        </ion-button>
@@ -128,7 +169,6 @@
     <div class="upload-area preview-mode" *ngIf="novaGarantia.fotoLocal" style="border-color: var(--ion-color-success);">
        <img [src]="novaGarantia.fotoLocal" alt="Preview Local" class="image-preview">
        <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
-       
        <ion-button fill="clear" color="medium" (click)="removerFoto('local', $event)" style="text-transform: none; text-decoration: underline;">
          Alterar foto
        </ion-button>
@@ -147,19 +187,16 @@
            (click)="novaGarantia.alerta = '1 dia antes'">
         <span>1 dia antes</span>
       </div>
-      
       <div class="option-card" 
            [class.selected]="novaGarantia.alerta === '1 semana antes'" 
            (click)="novaGarantia.alerta = '1 semana antes'">
         <span>1 semana antes</span>
       </div>
-      
       <div class="option-card" 
            [class.selected]="novaGarantia.alerta === '1 mês antes'" 
            (click)="novaGarantia.alerta = '1 mês antes'">
         <span>1 mês antes</span>
       </div>
-
       <div class="option-card" 
            [class.selected]="novaGarantia.alerta === 'Nenhum'" 
            (click)="novaGarantia.alerta = 'Nenhum'">
@@ -184,13 +221,11 @@
         
         <div class="summary-dates">
           <div class="date-chip text-muted">
-            {{ (novaGarantia.dataCompra | date: 'dd/MM/yyyy') || '--/--/----' }}
+            {{ novaGarantia.dataCompra ? formatarData(novaGarantia.dataCompra) : '--/--/----' }}
           </div>
-          
           <ion-icon name="arrow-forward-outline" class="arrow-icon"></ion-icon>
-          
           <div class="date-chip text-success">
-            {{ (novaGarantia.dataExpiracao | date: 'dd/MM/yyyy') || '--/--/----' }}
+            {{ novaGarantia.dataExpiracao ? formatarData(novaGarantia.dataExpiracao) : '--/--/----' }}
           </div>
         </div>
 
@@ -220,25 +255,20 @@
     </ion-button>
 
     <ion-row *ngIf="passoAtual > 1" class="ion-no-padding">
-      
       <ion-col size="4" class="ion-no-padding" style="padding-right: 8px;">
         <ion-button expand="block" class="btn-secondary" (click)="recuarPasso()" style="margin: 0; min-height: 54px;">
           Anterior
         </ion-button>
       </ion-col>
-
       <ion-col size="8" class="ion-no-padding" style="padding-left: 8px;">
-        
         <ion-button *ngIf="passoAtual < 5" expand="block" class="btn-primary" (click)="avancarPasso()" style="margin: 0; min-height: 54px;">
           Seguinte
           <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
         </ion-button>
-
         <ion-button *ngIf="passoAtual === 5" expand="block" class="btn-primary" (click)="concluirRegisto()" style="margin: 0; min-height: 54px;">
           Concluir
           <ion-icon slot="end" name="checkmark-circle-outline"></ion-icon>
         </ion-button>
-
       </ion-col>
     </ion-row>
 

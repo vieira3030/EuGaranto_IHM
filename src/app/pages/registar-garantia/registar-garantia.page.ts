@@ -8,7 +8,7 @@ import { GarantiasService } from '../../services/garantias.service';
 
 // Importação e registo de ícones visuais para a interface
 import { addIcons } from 'ionicons';
-import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline } from 'ionicons/icons';
+import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline, informationCircleOutline } from 'ionicons/icons';
 
 // Componente responsável pelo formulário de registo e edição de garantias
 @Component({
@@ -25,11 +25,17 @@ export class RegistarGarantiaPage implements OnInit {
   // Sinalizador que define se o formulário opera em modo de edição ou de criação
   emModoEdicao: boolean = false; 
 
+  // Controla a visibilidade do modal do picker de data de compra
+  modalCompraAberto: boolean = false;
+
+  // Controla a visibilidade do modal do picker de data de expiração
+  modalExpiracaoAberto: boolean = false;
+
   // Objeto que armazena todos os dados inseridos pelo utilizador no formulário
   novaGarantia: any = {
     id: Date.now().toString(),
     nome: '',
-    categoria: '', // Armazena a categoria selecionada via ficheiro estático
+    categoria: '',
     dataCompra: '',
     dataExpiracao: '',
     descricao: '',
@@ -49,7 +55,7 @@ export class RegistarGarantiaPage implements OnInit {
     private route: ActivatedRoute
   ) {
     // Regista os ícones visuais para utilização na estrutura HTML desta página
-    addIcons({ checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline });
+    addIcons({ checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline, informationCircleOutline });
   }
 
   // Executado na inicialização: carrega categorias do ficheiro JSON e verifica o ID de rota
@@ -101,13 +107,34 @@ export class RegistarGarantiaPage implements OnInit {
     }
   }
 
+  // Converte uma string ISO de data para o formato dd/MM/yyyy para apresentação na interface
+  formatarData(dataIso: string): string {
+    if (!dataIso) return '';
+    const data = new Date(dataIso);
+    const dia = String(data.getUTCDate()).padStart(2, '0');
+    const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+    const ano = data.getUTCFullYear();
+    return `${dia}/${mes}/${ano}`;
+  }
+
   // Grava o registo remotamente e localmente, redirecionando para a listagem principal após conclusão
   async concluirRegisto() {
+    // 1. Limpar as horas e guardar apenas o dia (YYYY-MM-DD)
+    if (this.novaGarantia.dataCompra && this.novaGarantia.dataCompra.includes('T')) {
+      this.novaGarantia.dataCompra = this.novaGarantia.dataCompra.split('T')[0];
+    }
+    if (this.novaGarantia.dataExpiracao && this.novaGarantia.dataExpiracao.includes('T')) {
+      this.novaGarantia.dataExpiracao = this.novaGarantia.dataExpiracao.split('T')[0];
+    }
+
+    // 2. Guardar os dados
     if (this.emModoEdicao) {
       await this.garantiasService.editarGarantia(this.novaGarantia);
     } else {
       await this.garantiasService.adicionarGarantia(this.novaGarantia);
     }
+    
+    // 3. Voltar à página inicial
     this.router.navigate(['/tabs/tab1']);
   }
 

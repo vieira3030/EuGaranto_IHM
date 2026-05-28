@@ -1,13 +1,20 @@
 /*
  * App Global CSS
  * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
+ * Put style rules here that you want to apply globally.
  */
+
+/* Importação da Fonte Google: Poppins */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+
+/* Aplicação Global da Fonte */
+:root {
+  --ion-font-family: 'Poppins', sans-serif;
+}
+
+* {
+  font-family: 'Poppins', sans-serif;
+}
 
 /* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
@@ -28,77 +35,63 @@
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
  */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
-
-
-
 
 /* 1. CARTÕES (Cards): Sombras suaves e cantos arredondados (16px) */
 ion-card {
-  --background: var(--ion-card-background, #ffffff); /* Adaptável: Fundo branco de dia, escuro à noite */
-  --color: var(--ion-text-color, #333333); /* Adaptável: Texto escuro de dia, claro à noite */
-  border-radius: 16px; /* Cantos bem redondos */
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important; /* Sombra suave e profunda */
-  margin-bottom: 16px; /* Espaço entre cartões */
-  border: none !important; /* Remove as bordas feias padrão */
+  --background: var(--ion-card-background, #ffffff);
+  --color: var(--ion-text-color, #333333);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08) !important;
+  margin-bottom: 16px;
+  border: none !important;
 }
 
-/* Ajusta o espaçamento interno do conteúdo do cartão */
 ion-card-content {
   padding: 20px !important; 
 }
 
 /* 2. ITENS DE LISTA (como os membros do grupo): Aspeto de cartão */
 ion-item.item-card {
-  --background: var(--ion-item-background, #f8f9fa); /* Adaptável para as listas */
+  --background: var(--ion-item-background, #f8f9fa);
   --border-radius: 12px;
   --padding-start: 16px;
   margin-bottom: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04); /* Sombra muito subtil */
-  border: 1px solid var(--ion-color-light-shade, #eeeeee); /* Borda adaptável */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  border: 1px solid var(--ion-color-light-shade, #eeeeee);
 }
 
 /* 3. ALINHAMENTOS: Centrar conteúdo verticalmente em listas */
 ion-item {
-  --min-height: 56px; /* Garante uma altura mínima confortável para o toque */
+  --min-height: 56px;
   align-items: center; 
 }
-
-
-
 
 /* 1. TIPOGRAFIA: Hierarquia e cores suaves */
 ion-title {
   font-weight: 700;
-  letter-spacing: -0.02em; /* Dá um ar mais moderno e unido às letras */
+  letter-spacing: -0.02em; 
 }
 
 h2 {
   font-weight: 700;
   font-size: 18px;
-  color: var(--ion-color-dark); /* Cor escura adaptável para títulos */
+  color: var(--ion-color-dark); 
 }
 
 p, ion-note {
-  color: var(--ion-color-medium); /* Cinza suave adaptável para datas e detalhes */
+  color: var(--ion-color-medium); 
   font-size: 14px;
 }
 
 /* 2. BOTÕES: Formato uniforme e moderno */
 ion-button {
-  --border-radius: 24px; /* Arredonda todos os botões automaticamente */
+  --border-radius: 24px; 
   font-weight: 600;
   letter-spacing: 0.5px;
-  text-transform: none; /* Retira o texto todo em maiúsculas */
+  text-transform: none; 
 }
-
-
 
 /* Layout centrado para quando não há dados (Garantias ou Grupos) */
 .empty-state {
@@ -106,7 +99,7 @@ ion-button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 60vh; /* Ocupa boa parte do ecrã para ficar bem centrado */
+  height: 60vh; 
   text-align: center;
   padding: 20px;
 }
@@ -114,7 +107,7 @@ ion-button {
 /* Ícone grande e opaco */
 .empty-state ion-icon {
   font-size: 80px;
-  color: var(--ion-color-medium); /* Usa a variável adaptável do Ionic */
+  color: var(--ion-color-medium); 
   opacity: 0.4;
   margin-bottom: 16px;
 }

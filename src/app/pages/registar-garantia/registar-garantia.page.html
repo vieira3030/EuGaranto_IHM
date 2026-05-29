@@ -8,247 +8,249 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+  <form [formGroup]="garantiaForm">
 
-  <div class="stepper-wrapper">
-    <div class="step-circle" [class.active]="passoAtual === 1" [class.completed]="passoAtual > 1">
-      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 1"></ion-icon>
-      <span *ngIf="passoAtual <= 1">1</span>
-    </div>
-    <div class="step-line" [class.completed]="passoAtual > 1"></div>
-    
-    <div class="step-circle" [class.active]="passoAtual === 2" [class.completed]="passoAtual > 2">
-      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 2"></ion-icon>
-      <span *ngIf="passoAtual <= 2">2</span>
-    </div>
-    <div class="step-line" [class.completed]="passoAtual > 2"></div>
-    
-    <div class="step-circle" [class.active]="passoAtual === 3" [class.completed]="passoAtual > 3">
-      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 3"></ion-icon>
-      <span *ngIf="passoAtual <= 3">3</span>
-    </div>
-    <div class="step-line" [class.completed]="passoAtual > 3"></div>
-    
-    <div class="step-circle" [class.active]="passoAtual === 4" [class.completed]="passoAtual > 4">
-      <ion-icon name="checkmark-outline" *ngIf="passoAtual > 4"></ion-icon>
-      <span *ngIf="passoAtual <= 4">4</span>
-    </div>
-    <div class="step-line" [class.completed]="passoAtual > 4"></div>
-
-    <div class="step-circle" [class.active]="passoAtual === 5">
-      <span>5</span>
-    </div>
-  </div>
-
-  <div *ngIf="passoAtual === 1" class="step-content animate-fade-in">
-    <div class="section-header">
-      <h2>Passo 1: Dados do Produto</h2>
-      <p>Adicionar Nova Garantia - Preencha os dados do produto para iniciar o registo</p>
-    </div>
-    
-    <div class="form-wrapper">
-      <div class="custom-input-group">
-        <ion-label class="input-label">Nome do Produto</ion-label>
-        <div class="input-box-wrapper">
-          <ion-input type="text" placeholder="Ex: Smartphone Samsung" class="clean-input" [(ngModel)]="novaGarantia.nome"></ion-input>
-        </div>
+    <div class="stepper-wrapper">
+      <div class="step-circle" [class.active]="passoAtual === 1" [class.completed]="passoAtual > 1">
+        <ion-icon name="checkmark-outline" *ngIf="passoAtual > 1"></ion-icon>
+        <span *ngIf="passoAtual <= 1">1</span>
       </div>
+      <div class="step-line" [class.completed]="passoAtual > 1"></div>
+      
+      <div class="step-circle" [class.active]="passoAtual === 2" [class.completed]="passoAtual > 2">
+        <ion-icon name="checkmark-outline" *ngIf="passoAtual > 2"></ion-icon>
+        <span *ngIf="passoAtual <= 2">2</span>
+      </div>
+      <div class="step-line" [class.completed]="passoAtual > 2"></div>
+      
+      <div class="step-circle" [class.active]="passoAtual === 3" [class.completed]="passoAtual > 3">
+        <ion-icon name="checkmark-outline" *ngIf="passoAtual > 3"></ion-icon>
+        <span *ngIf="passoAtual <= 3">3</span>
+      </div>
+      <div class="step-line" [class.completed]="passoAtual > 3"></div>
+      
+      <div class="step-circle" [class.active]="passoAtual === 4" [class.completed]="passoAtual > 4">
+        <ion-icon name="checkmark-outline" *ngIf="passoAtual > 4"></ion-icon>
+        <span *ngIf="passoAtual <= 4">4</span>
+      </div>
+      <div class="step-line" [class.completed]="passoAtual > 4"></div>
 
-      <div class="custom-input-group">
-        <ion-label class="input-label">Categoria</ion-label>
-        <div class="input-box-wrapper">
-          <ion-select [(ngModel)]="novaGarantia.categoria" placeholder="Seleciona uma categoria" class="clean-input" interface="action-sheet">
-            <ion-select-option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</ion-select-option>
-          </ion-select>
-        </div>
+      <div class="step-circle" [class.active]="passoAtual === 5">
+        <span>5</span>
+      </div>
+    </div>
+
+    <div *ngIf="passoAtual === 1" class="step-content animate-fade-in">
+      <div class="section-header">
+        <h2>Passo 1: Dados do Produto</h2>
+        <p>Adicionar Nova Garantia - Preencha os dados do produto para iniciar o registo</p>
       </div>
       
-      <div class="custom-input-group">
-        <ion-label class="input-label">Data de compra</ion-label>
-        <div class="input-box-wrapper" (click)="modalCompraAberto = true">
-          <ion-input
-            class="clean-input"
-            [value]="novaGarantia.dataCompra ? formatarData(novaGarantia.dataCompra) : ''"
-            placeholder="Selecionar data"
-            readonly="true">
-          </ion-input>
-        </div>
-      </div>
-
-      <ion-modal class="datetime-modal" [isOpen]="modalCompraAberto" (didDismiss)="modalCompraAberto = false">
-        <ng-template>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="novaGarantia.dataCompra"
-            (ionChange)="modalCompraAberto = false"
-            locale="pt-PT"
-            [showDefaultButtons]="true"
-            doneText="Confirmar"
-            cancelText="Cancelar"
-            min="2000"
-            max="2100">
-          </ion-datetime>
-        </ng-template>
-      </ion-modal>
-
-      <div class="custom-input-group">
-        <ion-label class="input-label">Data de Expiração</ion-label>
-        <div class="input-box-wrapper" (click)="modalExpiracaoAberto = true">
-          <ion-input
-            class="clean-input"
-            [value]="novaGarantia.dataExpiracao ? formatarData(novaGarantia.dataExpiracao) : ''"
-            placeholder="Selecionar data"
-            readonly="true">
-          </ion-input>
-        </div>
-      </div>
-
-      <ion-modal class="datetime-modal" [isOpen]="modalExpiracaoAberto" (didDismiss)="modalExpiracaoAberto = false">
-        <ng-template>
-          <ion-datetime
-            presentation="date"
-            [(ngModel)]="novaGarantia.dataExpiracao"
-            (ionChange)="modalExpiracaoAberto = false"
-            locale="pt-PT"
-            [showDefaultButtons]="true"
-            doneText="Confirmar"
-            cancelText="Cancelar"
-            min="2000"
-            max="2100">
-          </ion-datetime>
-        </ng-template>
-      </ion-modal>
-
-      <div class="custom-input-group">
-        <ion-label class="input-label">
-          Descrição da garantia <span class="optional-text">(Opcional)</span>
-        </ion-label>
-        <div class="input-box-wrapper">
-          <ion-textarea rows="4" placeholder="Ex: Informações adicionais..." class="clean-input" [(ngModel)]="novaGarantia.descricao"></ion-textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="passoAtual === 2" class="step-content animate-fade-in">
-    <div class="section-header">
-      <h2>Passo 2: Upload da foto do talão</h2>
-      <p>Capture ou faça o upload da foto do talão de compra.</p>
-    </div>
-    
-    <div class="upload-area" (click)="tirarFoto('talao')" *ngIf="!novaGarantia.fotoTalao">
-      <div class="upload-icon-circle">
-        <ion-icon name="camera-outline"></ion-icon>
-      </div>
-      <h3>Tirar ou carregar foto</h3>
-      <p>Formatos: JPG, PNG ou PDF</p>
-    </div>
-
-    <div class="upload-area preview-mode" *ngIf="novaGarantia.fotoTalao" style="border-color: var(--ion-color-success);">
-       <img [src]="novaGarantia.fotoTalao" alt="Preview Talão" class="image-preview">
-       <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
-       <ion-button fill="clear" color="medium" (click)="removerFoto('talao', $event)" style="text-transform: none; text-decoration: underline;">
-         Alterar foto
-       </ion-button>
-    </div>
-  </div>
-
-  <div *ngIf="passoAtual === 3" class="step-content animate-fade-in">
-    <div class="section-header">
-      <h2>Passo 3: Upload do local físico</h2>
-      <p>Capture ou faça o upload da foto onde guardou o talão.</p>
-    </div>
-    
-    <div class="upload-area" (click)="tirarFoto('local')" *ngIf="!novaGarantia.fotoLocal">
-      <div class="upload-icon-circle">
-        <ion-icon name="camera-outline"></ion-icon>
-      </div>
-      <h3>Tirar ou carregar foto</h3>
-      <p>Formatos: JPG, PNG ou PDF</p>
-    </div>
-
-    <div class="upload-area preview-mode" *ngIf="novaGarantia.fotoLocal" style="border-color: var(--ion-color-success);">
-       <img [src]="novaGarantia.fotoLocal" alt="Preview Local" class="image-preview">
-       <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
-       <ion-button fill="clear" color="medium" (click)="removerFoto('local', $event)" style="text-transform: none; text-decoration: underline;">
-         Alterar foto
-       </ion-button>
-    </div>
-  </div>
-
-  <div *ngIf="passoAtual === 4" class="step-content animate-fade-in">
-    <div class="section-header">
-      <h2>Passo 4: Configurar Alerta</h2>
-      <p>Escolha quando deseja ser avisado antes que a garantia expire.</p>
-    </div>
-    
-    <div class="alert-options">
-      <div class="option-card" 
-           [class.selected]="novaGarantia.alerta === '1 dia antes'" 
-           (click)="novaGarantia.alerta = '1 dia antes'">
-        <span>1 dia antes</span>
-      </div>
-      <div class="option-card" 
-           [class.selected]="novaGarantia.alerta === '1 semana antes'" 
-           (click)="novaGarantia.alerta = '1 semana antes'">
-        <span>1 semana antes</span>
-      </div>
-      <div class="option-card" 
-           [class.selected]="novaGarantia.alerta === '1 mês antes'" 
-           (click)="novaGarantia.alerta = '1 mês antes'">
-        <span>1 mês antes</span>
-      </div>
-      <div class="option-card" 
-           [class.selected]="novaGarantia.alerta === 'Nenhum'" 
-           (click)="novaGarantia.alerta = 'Nenhum'">
-        <span>Não quero alertas</span>
-      </div>
-    </div>
-  </div>
-
-  <div *ngIf="passoAtual === 5" class="step-content animate-fade-in">
-    <div class="section-header">
-      <h2>Confirmação</h2>
-      <p>Revise os dados inseridos e conclua o registo.</p>
-    </div>
-
-    <div class="summary-card">
-      <div class="summary-container">
-        <div class="success-icon-wrapper">
-          <ion-icon name="checkmark-circle-outline"></ion-icon>
-        </div>
-        
-        <h3 class="product-title">{{ novaGarantia.nome || 'Produto sem nome' }}</h3>
-        
-        <div class="summary-dates">
-          <div class="date-chip text-muted">
-            {{ novaGarantia.dataCompra ? formatarData(novaGarantia.dataCompra) : '--/--/----' }}
-          </div>
-          <ion-icon name="arrow-forward-outline" class="arrow-icon"></ion-icon>
-          <div class="date-chip text-success">
-            {{ novaGarantia.dataExpiracao ? formatarData(novaGarantia.dataExpiracao) : '--/--/----' }}
+      <div class="form-wrapper">
+        <div class="custom-input-group">
+          <ion-label class="input-label">Nome do Produto</ion-label>
+          <div class="input-box-wrapper">
+            <ion-input type="text" placeholder="Ex: Smartphone Samsung" class="clean-input" formControlName="nome"></ion-input>
           </div>
         </div>
 
-        <p class="summary-text">
-          Garantia registada com sucesso! Enviaremos um aviso quando estiver perto do fim para que não se esqueça.
-        </p>
+        <div class="custom-input-group">
+          <ion-label class="input-label">Categoria</ion-label>
+          <div class="input-box-wrapper">
+            <ion-select formControlName="categoria" placeholder="Seleciona uma categoria" class="clean-input" interface="action-sheet">
+              <ion-select-option *ngFor="let cat of categorias" [value]="cat">{{ cat }}</ion-select-option>
+            </ion-select>
+          </div>
+        </div>
+        
+        <div class="custom-input-group">
+          <ion-label class="input-label">Data de compra</ion-label>
+          <div class="input-box-wrapper" (click)="modalCompraAberto = true">
+            <ion-input
+              class="clean-input"
+              [value]="garantiaForm.get('dataCompra')?.value ? formatarData(garantiaForm.get('dataCompra')?.value) : ''"
+              placeholder="Selecionar data"
+              readonly="true">
+            </ion-input>
+          </div>
+        </div>
+
+        <ion-modal class="datetime-modal" [isOpen]="modalCompraAberto" (didDismiss)="modalCompraAberto = false">
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              formControlName="dataCompra"
+              (ionChange)="modalCompraAberto = false"
+              locale="pt-PT"
+              [showDefaultButtons]="true"
+              doneText="Confirmar"
+              cancelText="Cancelar"
+              min="2000"
+              max="2100">
+            </ion-datetime>
+          </ng-template>
+        </ion-modal>
+
+        <div class="custom-input-group">
+          <ion-label class="input-label">Data de Expiração</ion-label>
+          <div class="input-box-wrapper" (click)="modalExpiracaoAberto = true">
+            <ion-input
+              class="clean-input"
+              [value]="garantiaForm.get('dataExpiracao')?.value ? formatarData(garantiaForm.get('dataExpiracao')?.value) : ''"
+              placeholder="Selecionar data"
+              readonly="true">
+            </ion-input>
+          </div>
+        </div>
+
+        <ion-modal class="datetime-modal" [isOpen]="modalExpiracaoAberto" (didDismiss)="modalExpiracaoAberto = false">
+          <ng-template>
+            <ion-datetime
+              presentation="date"
+              formControlName="dataExpiracao"
+              (ionChange)="modalExpiracaoAberto = false"
+              locale="pt-PT"
+              [showDefaultButtons]="true"
+              doneText="Confirmar"
+              cancelText="Cancelar"
+              min="2000"
+              max="2100">
+            </ion-datetime>
+          </ng-template>
+        </ion-modal>
+
+        <div class="custom-input-group">
+          <ion-label class="input-label">
+            Descrição da garantia <span class="optional-text">(Opcional)</span>
+          </ion-label>
+          <div class="input-box-wrapper">
+            <ion-textarea rows="4" placeholder="Ex: Informações adicionais..." class="clean-input" formControlName="descricao"></ion-textarea>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
 
+    <div *ngIf="passoAtual === 2" class="step-content animate-fade-in">
+      <div class="section-header">
+        <h2>Passo 2: Upload da foto do talão</h2>
+        <p>Capture ou faça o upload da foto do talão de compra.</p>
+      </div>
+      
+      <div class="upload-area" (click)="tirarFoto('talao')" *ngIf="!garantiaForm.get('fotoTalao')?.value">
+        <div class="upload-icon-circle">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+        <h3>Tirar ou carregar foto</h3>
+        <p>Formatos: JPG, PNG ou PDF</p>
+      </div>
+
+      <div class="upload-area preview-mode" *ngIf="garantiaForm.get('fotoTalao')?.value" style="border-color: var(--ion-color-success);">
+         <img [src]="garantiaForm.get('fotoTalao')?.value" alt="Preview Talão" class="image-preview">
+         <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
+         <ion-button fill="clear" color="medium" (click)="removerFoto('talao', $event)" style="text-transform: none; text-decoration: underline;">
+           Alterar foto
+         </ion-button>
+      </div>
+    </div>
+
+    <div *ngIf="passoAtual === 3" class="step-content animate-fade-in">
+      <div class="section-header">
+        <h2>Passo 3: Upload do local físico</h2>
+        <p>Capture ou faça o upload da foto onde guardou o talão.</p>
+      </div>
+      
+      <div class="upload-area" (click)="tirarFoto('local')" *ngIf="!garantiaForm.get('fotoLocal')?.value">
+        <div class="upload-icon-circle">
+          <ion-icon name="camera-outline"></ion-icon>
+        </div>
+        <h3>Tirar ou carregar foto</h3>
+        <p>Formatos: JPG, PNG ou PDF</p>
+      </div>
+
+      <div class="upload-area preview-mode" *ngIf="garantiaForm.get('fotoLocal')?.value" style="border-color: var(--ion-color-success);">
+         <img [src]="garantiaForm.get('fotoLocal')?.value" alt="Preview Local" class="image-preview">
+         <h3 style="color: var(--ion-color-primary); margin-top: 12px;">Foto adicionada com sucesso!</h3>
+         <ion-button fill="clear" color="medium" (click)="removerFoto('local', $event)" style="text-transform: none; text-decoration: underline;">
+           Alterar foto
+         </ion-button>
+      </div>
+    </div>
+
+    <div *ngIf="passoAtual === 4" class="step-content animate-fade-in">
+      <div class="section-header">
+        <h2>Passo 4: Configurar Alerta</h2>
+        <p>Escolha quando deseja ser avisado antes que a garantia expire.</p>
+      </div>
+      
+      <div class="alert-options">
+        <div class="option-card" 
+             [class.selected]="garantiaForm.get('alerta')?.value === '1 dia antes'" 
+             (click)="atualizarAlerta('1 dia antes')">
+          <span>1 dia antes</span>
+        </div>
+        <div class="option-card" 
+             [class.selected]="garantiaForm.get('alerta')?.value === '1 semana antes'" 
+             (click)="atualizarAlerta('1 semana antes')">
+          <span>1 semana antes</span>
+        </div>
+        <div class="option-card" 
+             [class.selected]="garantiaForm.get('alerta')?.value === '1 mês antes'" 
+             (click)="atualizarAlerta('1 mês antes')">
+          <span>1 mês antes</span>
+        </div>
+        <div class="option-card" 
+             [class.selected]="garantiaForm.get('alerta')?.value === 'Nenhum'" 
+             (click)="atualizarAlerta('Nenhum')">
+          <span>Não quero alertas</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="passoAtual === 5" class="step-content animate-fade-in">
+      <div class="section-header">
+        <h2>Confirmação</h2>
+        <p>Revise os dados inseridos e conclua o registo.</p>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-container">
+          <div class="success-icon-wrapper">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+          </div>
+          
+          <h3 class="product-title">{{ garantiaForm.get('nome')?.value || 'Produto sem nome' }}</h3>
+          
+          <div class="summary-dates">
+            <div class="date-chip text-muted">
+              {{ garantiaForm.get('dataCompra')?.value ? formatarData(garantiaForm.get('dataCompra')?.value) : '--/--/----' }}
+            </div>
+            <ion-icon name="arrow-forward-outline" class="arrow-icon"></ion-icon>
+            <div class="date-chip text-success">
+              {{ garantiaForm.get('dataExpiracao')?.value ? formatarData(garantiaForm.get('dataExpiracao')?.value) : '--/--/----' }}
+            </div>
+          </div>
+
+          <p class="summary-text">
+            Garantia registada com sucesso! Enviaremos um aviso quando estiver perto do fim para que não se esqueça.
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </form>
 </ion-content>
 
 <ion-footer class="ion-no-border">
   <div style="padding: 16px; background: var(--ion-background-color); padding-bottom: max(16px, env(safe-area-inset-bottom));">
     
-    <div *ngIf="passoAtual === 1 && (!novaGarantia.nome || !novaGarantia.categoria || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao)" 
+    <div *ngIf="passoAtual === 1 && (garantiaForm.get('nome')?.invalid || garantiaForm.get('categoria')?.invalid || garantiaForm.get('dataCompra')?.invalid || garantiaForm.get('dataExpiracao')?.invalid)" 
          class="aviso-validacao animate-fade-in">
       <ion-icon name="information-circle-outline"></ion-icon>
       <span>Preenche o nome, categoria e datas para avançar.</span>
     </div>
 
     <ion-button *ngIf="passoAtual === 1" expand="block" class="btn-primary" (click)="avancarPasso()" 
-                [disabled]="!novaGarantia.nome || !novaGarantia.categoria || !novaGarantia.dataCompra || !novaGarantia.dataExpiracao"
+                [disabled]="garantiaForm.get('nome')?.invalid || garantiaForm.get('categoria')?.invalid || garantiaForm.get('dataCompra')?.invalid || garantiaForm.get('dataExpiracao')?.invalid"
                 style="margin: 0; min-height: 54px;">
       Seguinte
       <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>

@@ -1,16 +1,16 @@
-// Importações dos módulos centrais do Angular e serviços de navegação
+// Importações dos módulos centrais do Angular
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router'; 
+import { FormBuilder, FormGroup, Validators } from '@angular/forms'; // Ferramentas de Reactive Forms
 
-// Importação do plugin nativo para captura e seleção de imagens
+// Importação do plugin nativo e serviço
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { GarantiasService } from '../../services/garantias.service';
 
-// Importação e registo de ícones visuais para a interface
+// Importação e registo de ícones visuais
 import { addIcons } from 'ionicons';
 import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline, informationCircleOutline } from 'ionicons/icons';
 
-// Componente responsável pelo formulário de registo e edição de garantias
 @Component({
   selector: 'app-registar-garantia',
   templateUrl: 'registar-garantia.page.html',
@@ -19,68 +19,57 @@ import { checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircle
 })
 export class RegistarGarantiaPage implements OnInit {
   
-  // Controla o passo atualmente visível no formulário (varia entre 1 e 5)
-  passoAtual: number = 1;
+  garantiaForm: FormGroup; // Grupo principal que controla todo o formulário
+  passoAtual: number = 1; // Passo do formulário (1 a 5)
+  emModoEdicao: boolean = false; // Modo de edição
+  modalCompraAberto: boolean = false; // Controlo do modal de data
+  modalExpiracaoAberto: boolean = false; // Controlo do modal de data
+  categorias: string[] = []; // Lista de categorias
   
-  // Sinalizador que define se o formulário opera em modo de edição ou de criação
-  emModoEdicao: boolean = false; 
+  garantiaId: string = Date.now().toString(); // ID gerado para a garantia
+  diasRestantes: number = 0; // Controlo externo ao formulário para exibição
 
-  // Controla a visibilidade do modal do picker de data de compra
-  modalCompraAberto: boolean = false;
-
-  // Controla a visibilidade do modal do picker de data de expiração
-  modalExpiracaoAberto: boolean = false;
-
-  // Objeto que armazena todos os dados inseridos pelo utilizador no formulário
-  novaGarantia: any = {
-    id: Date.now().toString(),
-    nome: '',
-    categoria: '',
-    dataCompra: '',
-    dataExpiracao: '',
-    descricao: '',
-    fotoTalao: '',
-    fotoLocal: '',
-    alerta: '1 semana antes',
-    diasRestantes: 0
-  };
-
-  // Matriz que armazena a lista de categorias carregadas pelo serviço HTTP
-  categorias: string[] = [];
-
-  // Inicializa os serviços de dados e navegação, registando os ícones necessários
   constructor(
     private garantiasService: GarantiasService, 
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private fb: FormBuilder // Injeta o construtor de formulários
   ) {
-    // Regista os ícones visuais para utilização na estrutura HTML desta página
     addIcons({ checkmarkOutline, chevronForwardOutline, cameraOutline, checkmarkCircleOutline, arrowForwardOutline, informationCircleOutline });
+    
+    // Constrói o formulário reativo definindo as regras de validação
+    this.garantiaForm = this.fb.group({
+      nome: ['', Validators.required],
+      categoria: ['', Validators.required],
+      dataCompra: ['', Validators.required],
+      dataExpiracao: ['', Validators.required],
+      descricao: [''],
+      fotoTalao: [''],
+      fotoLocal: [''],
+      alerta: ['1 semana antes'] // Valor por defeito
+    });
   }
 
-  // Executado na inicialização: carrega categorias do ficheiro JSON e verifica o ID de rota
   async ngOnInit() {
-    // Carrega a lista estática de categorias de produtos via HTTP JSON
     this.categorias = await this.garantiasService.getCategorias();
-
-    // Verifica a existência de um ID de rota para ativar o modo de edição
     const id = this.route.snapshot.paramMap.get('id');
     
     if (id) {
       this.emModoEdicao = true;
+      this.garantiaId = id; // Guarda o ID original
       const lista = await this.garantiasService.getGarantias();
       const garantiaExistente = lista.find((g: any) => g.id === id);
       
-      // Preenche o formulário com os dados da garantia localizada
       if (garantiaExistente) {
-        this.novaGarantia = { ...garantiaExistente };
+        // Preenche o formulário automaticamente com os dados encontrados
+        this.garantiaForm.patchValue(garantiaExistente);
+        this.diasRestantes = garantiaExistente.diasRestantes || 0;
       }
     }
   }
 
   // --- NAVEGAÇÃO E LÓGICA DE DADOS ---
 
-  // Incrementa o passo do formulário e calcula os dias restantes ao atingir o último passo
   avancarPasso() {
     if (this.passoAtual < 5) {
       this.passoAtual++;
@@ -90,24 +79,22 @@ export class RegistarGarantiaPage implements OnInit {
     }
   }
 
-  // Decrementa a variável de controlo para regressar ao passo anterior do formulário
   recuarPasso() {
     if (this.passoAtual > 1) {
       this.passoAtual--;
     }
   }
 
-  // Calcula a diferença matemática em dias entre a data de expiração selecionada e a data atual
   calcularDiasRestantes() {
-    if (this.novaGarantia.dataExpiracao) {
-      const dataExp = new Date(this.novaGarantia.dataExpiracao);
+    const dataExp = this.garantiaForm.get('dataExpiracao')?.value;
+    if (dataExp) {
+      const data = new Date(dataExp);
       const hoje = new Date();
-      const difTempo = dataExp.getTime() - hoje.getTime();
-      this.novaGarantia.diasRestantes = Math.ceil(difTempo / (1000 * 3600 * 24));
+      const difTempo = data.getTime() - hoje.getTime();
+      this.diasRestantes = Math.ceil(difTempo / (1000 * 3600 * 24));
     }
   }
 
-  // Converte uma string ISO de data para o formato dd/MM/yyyy para apresentação na interface
   formatarData(dataIso: string): string {
     if (!dataIso) return '';
     const data = new Date(dataIso);
@@ -117,53 +104,62 @@ export class RegistarGarantiaPage implements OnInit {
     return `${dia}/${mes}/${ano}`;
   }
 
-  // Grava o registo remotamente e localmente, redirecionando para a listagem principal após conclusão
+  // Atualiza programaticamente o valor do alerta no formulário
+  atualizarAlerta(tipo: string) {
+    this.garantiaForm.patchValue({ alerta: tipo });
+  }
+
   async concluirRegisto() {
-    // 1. Limpar as horas e guardar apenas o dia (YYYY-MM-DD)
-    if (this.novaGarantia.dataCompra && this.novaGarantia.dataCompra.includes('T')) {
-      this.novaGarantia.dataCompra = this.novaGarantia.dataCompra.split('T')[0];
+    // Extrai todos os dados validados do Reactive Form
+    const dadosFormulario = this.garantiaForm.value;
+
+    if (dadosFormulario.dataCompra && dadosFormulario.dataCompra.includes('T')) {
+      dadosFormulario.dataCompra = dadosFormulario.dataCompra.split('T')[0];
     }
-    if (this.novaGarantia.dataExpiracao && this.novaGarantia.dataExpiracao.includes('T')) {
-      this.novaGarantia.dataExpiracao = this.novaGarantia.dataExpiracao.split('T')[0];
+    if (dadosFormulario.dataExpiracao && dadosFormulario.dataExpiracao.includes('T')) {
+      dadosFormulario.dataExpiracao = dadosFormulario.dataExpiracao.split('T')[0];
     }
 
-    // 2. Guardar os dados
+    // Junta o ID e os cálculos ao objeto final a guardar
+    const garantiaFinal = {
+      ...dadosFormulario,
+      id: this.garantiaId,
+      diasRestantes: this.diasRestantes
+    };
+
     if (this.emModoEdicao) {
-      await this.garantiasService.editarGarantia(this.novaGarantia);
+      await this.garantiasService.editarGarantia(garantiaFinal);
     } else {
-      await this.garantiasService.adicionarGarantia(this.novaGarantia);
+      await this.garantiasService.adicionarGarantia(garantiaFinal);
     }
     
-    // 3. Voltar à página inicial
     this.router.navigate(['/tabs/tab1']);
   }
 
   // --- LÓGICA DO UPLOAD DE FOTOS (NATIVA) ---
 
-  // Abre a interface nativa do dispositivo para capturar uma fotografia ou escolher da galeria
   async tirarFoto(tipo: 'talao' | 'local') {
     try {
       const image = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
         resultType: CameraResultType.DataUrl, 
-        source: CameraSource.Prompt // Pergunta ao utilizador se pretende usar a Câmara ou a Galeria
+        source: CameraSource.Prompt
       });
 
-      // Associa os dados da imagem capturada ao respetivo campo da garantia
       if (image.dataUrl) {
-        if (tipo === 'talao') this.novaGarantia.fotoTalao = image.dataUrl;
-        if (tipo === 'local') this.novaGarantia.fotoLocal = image.dataUrl;
+        // Atualiza a foto diretamente no controlo do formulário
+        if (tipo === 'talao') this.garantiaForm.patchValue({ fotoTalao: image.dataUrl });
+        if (tipo === 'local') this.garantiaForm.patchValue({ fotoLocal: image.dataUrl });
       }
     } catch (error) {
       console.log('Operação da câmara cancelada.');
     }
   }
 
-  // Apaga a fotografia selecionada e anula a propagação do evento de clique para não reabrir a câmara
   removerFoto(tipo: 'talao' | 'local', event: Event) {
     event.stopPropagation(); 
-    if (tipo === 'talao') this.novaGarantia.fotoTalao = '';
-    if (tipo === 'local') this.novaGarantia.fotoLocal = '';
+    if (tipo === 'talao') this.garantiaForm.patchValue({ fotoTalao: '' });
+    if (tipo === 'local') this.garantiaForm.patchValue({ fotoLocal: '' });
   }
 }

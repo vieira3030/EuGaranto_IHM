@@ -1,22 +1,22 @@
 // Importações dos módulos centrais do Angular e do Ionic
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // Módulo de Reactive Forms adicionado
 import { IonicModule } from '@ionic/angular';
 
-// Importações do sistema de navegação e do componente principal do ecrã
+// Importações do sistema de navegação e do componente principal
 import { RegistarGarantiaPageRoutingModule } from './registar-garantia-routing.module';
 import { RegistarGarantiaPage } from './registar-garantia.page';
 
-// Decorador que define as dependências e a configuração do módulo da página
+// Decorador que define as dependências
 @NgModule({
   imports: [
-    CommonModule, // Fornece as diretivas estruturais nativas do Angular (ex: *ngIf, *ngFor)
-    FormsModule, // Permite a ligação bidirecional de dados nos formulários (ngModel)
-    IonicModule, // Disponibiliza os componentes visuais nativos da framework Ionic
-    RegistarGarantiaPageRoutingModule // Injeta a configuração de rotas específicas desta página
+    CommonModule, // Fornece as diretivas estruturais nativas
+    FormsModule, // Mantido para compatibilidade de outros componentes
+    ReactiveFormsModule, // Permite o uso de FormBuilder e FormGroup (Requisito 6)
+    IonicModule, // Componentes visuais Ionic
+    RegistarGarantiaPageRoutingModule // Rotas
   ],
-  declarations: [RegistarGarantiaPage] // Regista o componente principal para ser reconhecido no módulo
+  declarations: [RegistarGarantiaPage] // Regista o componente principal
 })
-// Classe exportada que encapsula os recursos do ecrã de registo de garantias
 export class RegistarGarantiaPageModule {}

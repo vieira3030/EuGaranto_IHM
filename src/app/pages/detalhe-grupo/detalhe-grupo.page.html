@@ -9,9 +9,10 @@
 
 <ion-content class="ion-padding">
   <div *ngIf="grupo" class="animate-fade-in">
-    <div *ngIf="isAntigo" class="aviso-validacao" style="background: rgba(235, 68, 90, 0.1); color: #eb445a; margin-bottom: 20px;">
+    
+    <div class="banner-aviso" *ngIf="isAntigo">
       <ion-icon name="information-circle-outline"></ion-icon>
-      <span>Estás a ver um grupo antigo. Já não fazes parte dele.</span>
+      <span>Já não faz parte deste grupo.</span>
     </div>
 
     <div class="hero-card">

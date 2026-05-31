@@ -10,7 +10,8 @@ import { Subscription } from 'rxjs';
 
 // Importação e registo dos ícones visuais nativos da biblioteca Ionic
 import { addIcons } from 'ionicons';
-import { peopleOutline, chevronForwardOutline, addCircleOutline, people } from 'ionicons/icons';
+// Adicionado o timeOutline para o filtro de grupos antigos
+import { peopleOutline, chevronForwardOutline, addCircleOutline, people, timeOutline } from 'ionicons/icons';
 
 // Componente responsável por gerir e apresentar a lista de grupos de partilha de garantias
 @Component({
@@ -44,7 +45,8 @@ export class Tab2Page implements OnInit, OnDestroy {
     private garantiasService: GarantiasService,
     private router: Router
   ) {
-    addIcons({ peopleOutline, chevronForwardOutline, addCircleOutline, people });
+    // Registo do novo ícone timeOutline
+    addIcons({ peopleOutline, chevronForwardOutline, addCircleOutline, people, timeOutline });
   }
 
   // Executado na inicialização: subscreve as notificações do serviço para atualizar a lista automaticamente

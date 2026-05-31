@@ -60,38 +60,41 @@ export class DetalheGrupoPage implements OnInit {
       const perfil = await this.garantiasService.getPerfil();
       
       if (perfil) {
-        // Obtém a lista de grupos armazenados na base de dados remota (Firebase)
-        let gruposAtuais = await this.garantiasService.getGruposRemotos(perfil.email);
-        
-        // Adiciona os grupos de teste locais à lista de grupos ativos
-        try {
-          const res = await fetch('/assets/data/grupos.json');
-          const dadosJson = await res.json();
-          if (dadosJson && dadosJson.grupos) {
-            gruposAtuais = [...gruposAtuais, ...dadosJson.grupos];
-          }
-        } catch (e) {
-          console.error('Aviso: ficheiro grupos.json não encontrado.');
-        }
+        // 1. PRIMEIRO PASSO: Verifica se o grupo já foi abandonado (está no histórico)
+        const historico = await this.garantiasService.getGruposAntigos();
+        const grupoNoHistorico = historico.find((g: any) => g.id === id);
 
-        // Procura o ID do grupo na lista combinada de grupos ativos
-        let grupoEncontrado = gruposAtuais.find((g: any) => g.id === id);
-        
-        // Se não existir nos ativos, verifica o histórico de grupos arquivados/apagados
-        if (!grupoEncontrado) {
-          const historico = await this.garantiasService.getGruposAntigos();
-          grupoEncontrado = historico.find((g: any) => g.id === id);
+        if (grupoNoHistorico) {
+          // Se encontrou no histórico, assume imediatamente que é um grupo Antigo
+          this.grupo = grupoNoHistorico;
           this.isAntigo = true;
-        } else {
-          this.isAntigo = false;
-        }
-
-        // Se o grupo for localizado, preenche a variável principal e carrega as garantias
-        if (grupoEncontrado) {
-          this.grupo = grupoEncontrado;
           
           if (this.grupo.garantiasIds) {
             await this.carregarDadosDasGarantias();
+          }
+        } else {
+          // 2. SE NÃO ESTIVER NO HISTÓRICO: Procura nos grupos ativos (Firebase + JSON local)
+          let gruposAtuais = await this.garantiasService.getGruposRemotos(perfil.email);
+          
+          try {
+            const res = await fetch('/assets/data/grupos.json');
+            const dadosJson = await res.json();
+            if (dadosJson && dadosJson.grupos) {
+              gruposAtuais = [...gruposAtuais, ...dadosJson.grupos];
+            }
+          } catch (e) {
+            console.error('Aviso: ficheiro grupos.json não encontrado.');
+          }
+
+          const grupoEncontrado = gruposAtuais.find((g: any) => g.id === id);
+          
+          if (grupoEncontrado) {
+            this.grupo = grupoEncontrado;
+            this.isAntigo = false;
+            
+            if (this.grupo.garantiasIds) {
+              await this.carregarDadosDasGarantias();
+            }
           }
         }
       }

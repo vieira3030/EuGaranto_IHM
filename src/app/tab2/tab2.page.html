@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title style="font-weight: 800; font-size: 22px; overflow: visible;">
+    <ion-title style="font-weight: 800; font-size: 19px; padding-inline: 10px;">
       <ion-icon name="people-outline" style="vertical-align: sub; margin-right: 6px; color: var(--ion-color-medium);"></ion-icon>
       Grupos de Partilha
     </ion-title>
@@ -8,6 +8,8 @@
 </ion-header>
 
 <ion-content class="ion-padding">
+
+  
 
   <div class="summary-banner">
     <div class="summary-info">
@@ -48,9 +50,15 @@
               class="garantia-card">
       <ion-card-content class="card-content-flex">
         
-        <div class="info-text">
-          <h2>{{ grupo.nome }}</h2>
-          <p><strong>{{ grupo.membros.length }}</strong> membros · <strong>{{ grupo.garantiasIds.length || 0 }}</strong> garantias</p>
+        <div class="item-left">
+          <div class="card-icon-wrapper" [ngClass]="filtroAtual === 'ativos' ? 'bg-primario' : 'bg-inativo'">
+            <ion-icon [name]="filtroAtual === 'ativos' ? 'people-outline' : 'time-outline'"></ion-icon>
+          </div>
+          
+          <div class="info-text">
+            <h2>{{ grupo.nome }}</h2>
+            <p><strong>{{ grupo.membros.length }}</strong> membros · <strong>{{ grupo.garantiasIds.length || 0 }}</strong> garantias</p>
+          </div>
         </div>
         
         <div class="icon-arrow">

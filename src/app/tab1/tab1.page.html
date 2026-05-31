@@ -1,6 +1,6 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-title style="font-weight: 800; font-size: 22px; overflow: visible;">
+    <ion-title style="font-weight: 800; font-size: 19px; padding-inline: 10px;">
       <ion-icon name="document-text-outline" style="vertical-align: sub; margin-right: 6px; color: var(--ion-color-medium);"></ion-icon>
       As Minhas Garantias
     </ion-title>
@@ -47,6 +47,11 @@
               button
               class="garantia-card">
       <ion-card-content class="card-content-flex">
+        
+        <!-- ÍCONE REDONDO ADICIONADO AQUI -->
+        <div class="card-icon-wrapper" [ngClass]="filtroAtual === 'ativas' ? 'bg-sucesso' : 'bg-perigo'">
+          <ion-icon [name]="filtroAtual === 'ativas' ? 'shield-checkmark-outline' : 'warning-outline'"></ion-icon>
+        </div>
         
         <div class="info-text">
           <h2>{{ garantia.nomeProduto || garantia.nome }}</h2>

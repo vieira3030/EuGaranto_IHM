@@ -110,7 +110,31 @@
   padding: 18px;
 }
 
+/* --- NOVAS CLASSES PARA O ÍCONE REDONDO --- */
+.card-icon-wrapper {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px; /* Espaço entre o ícone e o texto */
+  font-size: 24px;
+}
+
+.bg-sucesso {
+  background: rgba(var(--ion-color-success-rgb), 0.15);
+  color: var(--ion-color-success);
+}
+
+.bg-perigo {
+  background: rgba(var(--ion-color-danger-rgb), 0.15);
+  color: var(--ion-color-danger);
+}
+
 .info-text {
+  /* Adicionado flex-grow para empurrar a seta para a direita */
+  flex-grow: 1;
   h2 { margin: 0 0 4px 0; font-weight: 700; font-size: 16px; color: var(--ion-text-color); }
   p { margin: 0; font-size: 13px; color: var(--ion-color-medium); }
   strong { color: var(--ion-text-color); font-weight: 600; }
@@ -147,6 +171,5 @@
   
   .custom-segment ion-segment-button {
     --color-checked: #ffffff;
-    /* O --background-checked foi removido daqui porque o --indicator-color resolve o visual de forma automática */
   }
 }

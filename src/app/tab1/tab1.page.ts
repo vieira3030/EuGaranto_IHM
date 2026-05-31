@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
 
 // Importação do sistema de registo e respetivos ícones visuais do Ionic
 import { addIcons } from 'ionicons';
-import { documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline } from 'ionicons/icons';
+import { documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline, warningOutline } from 'ionicons/icons';
 
 // Componente responsável por apresentar a listagem principal e gestão de filtros das garantias
 @Component({
@@ -35,7 +35,7 @@ export class Tab1Page implements OnInit, OnDestroy {
 
   // Construtor: inicializa o serviço de dados e regista os ícones para utilização na interface
   constructor(private garantiasService: GarantiasService) {
-    addIcons({ documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline });
+    addIcons({ documentTextOutline, chevronForwardOutline, add, shieldCheckmarkOutline, addCircleOutline, warningOutline });
   }
 
   // Executado na inicialização: carrega os dados e subscreve as notificações de alteração do serviço

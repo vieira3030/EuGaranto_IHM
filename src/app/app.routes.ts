@@ -32,5 +32,9 @@ export const routes: Routes = [
     // Define a rota e carrega de forma assíncrona o componente de edição do perfil do utilizador
     path: 'editar-perfil',
     loadComponent: () => import('./pages/editar-perfil/editar-perfil.page').then( m => m.EditarPerfilPage)
+  },  {
+    path: 'login',
+    loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
   },
+
 ];

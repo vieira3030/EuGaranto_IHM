@@ -5,12 +5,16 @@ import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 // Define a matriz principal de rotas de toda a aplicação
 const routes: Routes = [
   {
-    // Define o caminho de raiz que encaminha o utilizador para a interface de separadores
+    // A rota de login independente
+    path: 'login',
+    loadChildren: () => import('./login/login.module').then(m => m.LoginPageModule)
+  },
+  {
+    // As tabs voltam a assumir a base da aplicação (path vazio)
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    // Define a rota de acesso ao formulário de criação de um novo grupo vazio
     path: 'criar-grupo',
     loadChildren: () => import('./pages/criar-grupo/criar-grupo.module').then(m => m.CriarGrupoPageModule)
   },

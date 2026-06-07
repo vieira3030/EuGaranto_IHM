@@ -1,0 +1,40 @@
+<ion-content class="ion-padding" style="--background: var(--ion-color-light);">
+  <div style="display: flex; flex-direction: column; height: 100%; justify-content: center;">
+    
+    <div style="text-align: center; margin-bottom: 40px;">
+      <ion-icon name="shield-checkmark-outline" style="font-size: 80px; color: var(--ion-color-success);"></ion-icon>
+      <h1 style="font-weight: 800; color: var(--ion-text-color);">EuGaranto</h1>
+      <p style="color: var(--ion-color-medium);">
+        {{ modoLogin ? 'Acede à tua conta para continuar' : 'Cria uma conta para começar' }}
+      </p>
+    </div>
+
+    <div style="background: var(--ion-card-background, #ffffff); border-radius: 16px; padding: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.05);">
+      
+      <ion-item lines="none" *ngIf="!modoLogin" style="--background: transparent; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 10px;">
+        <ion-icon name="person-outline" slot="start" color="medium"></ion-icon>
+        <ion-input type="text" placeholder="O teu nome completo" [(ngModel)]="nome"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" style="--background: transparent; border-bottom: 1px solid rgba(0,0,0,0.1); margin-bottom: 10px;">
+        <ion-icon name="mail-outline" slot="start" color="medium"></ion-icon>
+        <ion-input type="email" placeholder="O teu email" [(ngModel)]="email"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none" style="--background: transparent;">
+        <ion-icon name="lock-closed-outline" slot="start" color="medium"></ion-icon>
+        <ion-input type="password" placeholder="A tua palavra-passe" [(ngModel)]="palavraPasse"></ion-input>
+      </ion-item>
+    </div>
+
+    <ion-button expand="block" (click)="submeter()" 
+                style="margin-top: 30px; --background: var(--ion-color-success); --color: #000; font-weight: 700; height: 54px; --border-radius: 14px;">
+      {{ modoLogin ? 'Entrar' : 'Criar Conta' }}
+    </ion-button>
+
+    <ion-button fill="clear" expand="block" (click)="alternarModo()" style="margin-top: 15px; color: var(--ion-color-medium); text-transform: none;">
+      {{ modoLogin ? 'Não tens conta? Cria uma aqui.' : 'Já tens conta? Inicia sessão.' }}
+    </ion-button>
+
+  </div>
+</ion-content>

@@ -36,7 +36,7 @@ const routes: Routes = [
         // Interceta caminhos vazios dentro da estrutura de separadores
         path: '',
         // Redireciona a navegação para o primeiro separador
-        redirectTo: '/tabs/tab1',
+        redirectTo: 'login',
         // Exige uma correspondência exata com o caminho vazio
         pathMatch: 'full'
       }

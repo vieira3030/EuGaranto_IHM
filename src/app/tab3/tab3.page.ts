@@ -12,6 +12,8 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { addIcons } from 'ionicons'; 
 import { createOutline, camera, personCircleOutline } from 'ionicons/icons'; 
 
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
@@ -25,7 +27,8 @@ export class Tab3Page {
 
   constructor(
     private garantiasService: GarantiasService,
-    private alertController: AlertController 
+    private alertController: AlertController,
+    private router: Router // Injeta o serviço de navegação
   ) {
     addIcons({ createOutline, camera, personCircleOutline });
   }
@@ -81,5 +84,6 @@ export class Tab3Page {
   // Executa os procedimentos necessários para terminar a sessão
   terminarSessao() {
     console.log('Sessão terminada');
+    this.router.navigateByUrl('/login'); // Redireciona o utilizador de volta para a página de login
   }
 }

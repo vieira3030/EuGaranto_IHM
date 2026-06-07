@@ -1,17 +1,10 @@
-// Importação dos módulos nucleares do Angular
+// Importação dos módulos nucleares do Angular e do Ionic
 import { Component } from '@angular/core';
-
-// Importação do serviço de gestão de dados e do controlador de alertas nativos
 import { GarantiasService } from '../services/garantias.service'; 
 import { AlertController } from '@ionic/angular'; 
-
-// Importação do plugin nativo de Câmara do Capacitor
 import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
-
-// Importação da função de registo e respetivos ícones visuais
 import { addIcons } from 'ionicons'; 
-import { createOutline, camera, personCircleOutline } from 'ionicons/icons'; 
-
+import { createOutline, camera, personCircleOutline, person } from 'ionicons/icons'; 
 import { Router } from '@angular/router';
 
 @Component({
@@ -21,22 +14,40 @@ import { Router } from '@angular/router';
   standalone: false,
 })
 export class Tab3Page {
-  
-  // Objeto que armazena os dados do perfil
+  // Objeto que armazena a informação a apresentar no perfil
   perfil: any = null; 
 
   constructor(
     private garantiasService: GarantiasService,
     private alertController: AlertController,
-    private router: Router // Injeta o serviço de navegação
+    private router: Router
   ) {
-    addIcons({ createOutline, camera, personCircleOutline });
+    // Registo dos ícones (adicionei o ícone 'person' genérico)
+    addIcons({ createOutline, camera, personCircleOutline, person });
   }
 
+  // Método executado sempre que a página é carregada
   async ionViewWillEnter() {
     this.perfil = await this.garantiasService.getPerfil();
+    
+    // Recupera os dados dinâmicos da memória local
+    const nomeGuardado = localStorage.getItem('mockNome');
+    const emailGuardado = localStorage.getItem('mockEmail');
+    const fotoGuardada = localStorage.getItem('mockFoto'); // Procura a foto na memória
+    
+    // Atualiza a interface com a informação real
+    if (nomeGuardado) this.perfil.nome = nomeGuardado;
+    if (emailGuardado) this.perfil.email = emailGuardado;
+
+    // Se o utilizador já tirou foto, usa-a. Se for conta nova, anula a foto de teste.
+    if (fotoGuardada) {
+      this.perfil.foto = fotoGuardada;
+    } else {
+      this.perfil.foto = null; 
+    }
   }
 
+  // Abre uma janela para modificar os dados de texto
   async editarPerfil() {
     const alert = await this.alertController.create({
       header: 'Editar Perfil',
@@ -52,38 +63,40 @@ export class Tab3Page {
             if (dados.nome && dados.email) {
               this.perfil.nome = dados.nome;
               this.perfil.email = dados.email;
-              // await this.garantiasService.atualizarPerfil(this.perfil);
+              localStorage.setItem('mockNome', dados.nome);
+              localStorage.setItem('mockEmail', dados.email);
             }
           }
         }
       ]
     });
-
     await alert.present();
   }
 
-  // Abre o menu nativo para escolher entre Câmara ou Galeria
+  // Aciona a câmara nativa e guarda o resultado
   async alterarFoto() {
     try {
       const imagem = await Camera.getPhoto({
         quality: 90,
         allowEditing: false,
-        resultType: CameraResultType.DataUrl, // Retorna logo a imagem em formato Base64
-        source: CameraSource.Prompt // É isto que força a aparecer o menu de escolha (Câmara/Galeria)
+        resultType: CameraResultType.DataUrl,
+        source: CameraSource.Prompt 
       });
 
       if (imagem.dataUrl) {
         this.perfil.foto = imagem.dataUrl; 
-        // this.garantiasService.atualizarPerfil(this.perfil);
+        // Guarda a nova foto permanentemente na memória local do dispositivo
+        localStorage.setItem('mockFoto', imagem.dataUrl);
       }
     } catch (erro) {
       console.log('O utilizador fechou a câmara sem tirar foto.', erro);
     }
   }
 
-  // Executa os procedimentos necessários para terminar a sessão
+  // Encerra a sessão
   terminarSessao() {
     console.log('Sessão terminada');
-    this.router.navigateByUrl('/login'); // Redireciona o utilizador de volta para a página de login
+    localStorage.removeItem('session_active'); 
+    this.router.navigateByUrl('/login'); 
   }
 }

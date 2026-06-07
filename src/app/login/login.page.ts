@@ -10,17 +10,17 @@ import { ToastController } from '@ionic/angular';
   standalone: false
 })
 export class LoginPage {
-  // Controla o estado do formulário (true = Iniciar Sessão, false = Criar Conta)
+  // Define o estado do ecrã: true para Login, false para Registo
   modoLogin: boolean = true; 
   
-  // Variáveis para guardar o texto dos inputs
+  // Variáveis para armazenar os dados introduzidos pelo utilizador
   nome: string = '';
   email: string = '';
   palavraPasse: string = '';
 
   constructor(private router: Router, private toastCtrl: ToastController) {}
 
-  // Alterna entre os ecrãs de Login e Registo e limpa os campos
+  // Alterna a interface entre Login e Registo e limpa os dados
   alternarModo() {
     this.modoLogin = !this.modoLogin;
     this.nome = '';
@@ -28,41 +28,44 @@ export class LoginPage {
     this.palavraPasse = '';
   }
 
-  // Lida com o processo de autenticação simulado
+  // Processa a tentativa de entrada ou criação de conta
   async submeter() {
-    // Valida se os campos obrigatórios estão preenchidos
+    // Valida se os campos obrigatórios estão devidamente preenchidos
     if (!this.email || !this.palavraPasse || (!this.modoLogin && !this.nome)) {
       this.mostrarAviso('Por favor, preenche todos os campos necessários.', 'danger');
       return;
     }
 
     if (!this.modoLogin) {
-      // --- FLUXO DE CRIAR CONTA ---
-      // Guarda as credenciais na memória local do navegador
+      // --- FLUXO DE REGISTO ---
+      // Grava o Nome, Email e Palavra-passe na memória local do navegador
       localStorage.setItem('mockEmail', this.email);
       localStorage.setItem('mockPassword', this.palavraPasse);
+      localStorage.setItem('mockNome', this.nome);
       
       await this.mostrarAviso('Conta criada com sucesso! Já podes iniciar sessão.', 'success');
-      this.alternarModo(); // Alterna automaticamente para o modo de login
+      this.alternarModo(); // Muda automaticamente para o ecrã de entrada
       
     } else {
-      // --- FLUXO DE INICIAR SESSÃO ---
-      // Vai buscar as credenciais guardadas na memória local
+      // --- FLUXO DE LOGIN ---
+      // Recupera as credenciais guardadas na memória local
       const emailGuardado = localStorage.getItem('mockEmail');
       const passwordGuardada = localStorage.getItem('mockPassword');
 
-      // Verifica se a conta existe e se os dados coincidem
+      // Verifica se os dados coincidem com o registo
       if (this.email === emailGuardado && this.palavraPasse === passwordGuardada) {
+        // Cria a chave de sessão ativa para permitir a navegação livre
+        localStorage.setItem('session_active', 'true'); 
         await this.mostrarAviso('Sessão iniciada com sucesso!', 'success');
-        this.router.navigateByUrl('/tabs/tab1'); // Redireciona para a aplicação
+        this.router.navigateByUrl('/tabs/tab1'); // Avança para as garantias
       } else {
-        // Bloqueia o acesso se não houver conta ou os dados estiverem errados
+        // Bloqueia a entrada se os dados estiverem incorretos
         await this.mostrarAviso('Conta não encontrada ou credenciais inválidas.', 'danger');
       }
     }
   }
 
-  // Função auxiliar para apresentar as mensagens de aviso temporárias no ecrã
+  // Função auxiliar para exibir notificações temporárias no ecrã
   async mostrarAviso(mensagem: string, cor: string) {
     const toast = await this.toastCtrl.create({
       message: mensagem,

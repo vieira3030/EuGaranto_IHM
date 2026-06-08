@@ -55,46 +55,44 @@ export class DetalheGrupoPage implements OnInit {
   // Executado ao entrar na página. Carrega os dados do grupo e as respetivas garantias
   async ionViewWillEnter() {
     const id = this.route.snapshot.paramMap.get('id');
+    // Vai buscar o email real da pessoa que iniciou sessão
+    const emailLogado = localStorage.getItem('mockEmail');
     
-    if (id) {
-      const perfil = await this.garantiasService.getPerfil();
-      
-      if (perfil) {
-        // 1. PRIMEIRO PASSO: Verifica se o grupo já foi abandonado (está no histórico)
-        const historico = await this.garantiasService.getGruposAntigos();
-        const grupoNoHistorico = historico.find((g: any) => g.id === id);
+    if (id && emailLogado) {
+      // 1. PRIMEIRO PASSO: Verifica se o grupo já foi abandonado (está no histórico)
+      const historico = await this.garantiasService.getGruposAntigos();
+      const grupoNoHistorico = historico.find((g: any) => g.id === id);
 
-        if (grupoNoHistorico) {
-          // Se encontrou no histórico, assume imediatamente que é um grupo Antigo
-          this.grupo = grupoNoHistorico;
-          this.isAntigo = true;
+      if (grupoNoHistorico) {
+        // Se encontrou no histórico, assume imediatamente que é um grupo Antigo
+        this.grupo = grupoNoHistorico;
+        this.isAntigo = true;
+        
+        if (this.grupo.garantiasIds) {
+          await this.carregarDadosDasGarantias();
+        }
+      } else {
+        // 2. SE NÃO ESTIVER NO HISTÓRICO: Procura nos grupos ativos usando o email real
+        let gruposAtuais = await this.garantiasService.getGruposRemotos(emailLogado);
+        
+        try {
+          const res = await fetch('/assets/data/grupos.json');
+          const dadosJson = await res.json();
+          if (dadosJson && dadosJson.grupos) {
+            gruposAtuais = [...gruposAtuais, ...dadosJson.grupos];
+          }
+        } catch (e) {
+          console.error('Aviso: ficheiro grupos.json não encontrado.');
+        }
+
+        const grupoEncontrado = gruposAtuais.find((g: any) => g.id === id);
+        
+        if (grupoEncontrado) {
+          this.grupo = grupoEncontrado;
+          this.isAntigo = false;
           
           if (this.grupo.garantiasIds) {
             await this.carregarDadosDasGarantias();
-          }
-        } else {
-          // 2. SE NÃO ESTIVER NO HISTÓRICO: Procura nos grupos ativos (Firebase + JSON local)
-          let gruposAtuais = await this.garantiasService.getGruposRemotos(perfil.email);
-          
-          try {
-            const res = await fetch('/assets/data/grupos.json');
-            const dadosJson = await res.json();
-            if (dadosJson && dadosJson.grupos) {
-              gruposAtuais = [...gruposAtuais, ...dadosJson.grupos];
-            }
-          } catch (e) {
-            console.error('Aviso: ficheiro grupos.json não encontrado.');
-          }
-
-          const grupoEncontrado = gruposAtuais.find((g: any) => g.id === id);
-          
-          if (grupoEncontrado) {
-            this.grupo = grupoEncontrado;
-            this.isAntigo = false;
-            
-            if (this.grupo.garantiasIds) {
-              await this.carregarDadosDasGarantias();
-            }
           }
         }
       }
@@ -128,9 +126,10 @@ export class DetalheGrupoPage implements OnInit {
           role: 'destructive',
           icon: 'log-out-outline',
           handler: async () => {
-            const perfil = await this.garantiasService.getPerfil();
+            // Vai buscar o email real da pessoa que iniciou sessão
+            const emailLogado = localStorage.getItem('mockEmail');
             
-            if (perfil && this.grupo?.id) {
+            if (emailLogado && this.grupo?.id) {
               
               // Processa grupos locais (JSON) movendo-os diretamente para o histórico
               if (this.grupo.id.length < 15) {
@@ -141,8 +140,8 @@ export class DetalheGrupoPage implements OnInit {
                 
                 this.router.navigateByUrl('/tabs/tab2');
               } else {
-                // Remove o utilizador do grupo na base de dados remota (Firebase)
-                const sucesso = await this.gruposService.sairDoGrupo(this.grupo.id, perfil.email);
+                // Remove o utilizador do grupo na base de dados remota usando o email real
+                const sucesso = await this.gruposService.sairDoGrupo(this.grupo.id, emailLogado);
                 if (sucesso) {
                   await this.garantiasService.guardarGrupoAntigo(this.grupo);
                   
@@ -152,7 +151,6 @@ export class DetalheGrupoPage implements OnInit {
                   this.router.navigateByUrl('/tabs/tab2');
                 }
               }
-              
             }
           }
         },

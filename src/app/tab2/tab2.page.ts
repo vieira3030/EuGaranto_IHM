@@ -68,11 +68,13 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   // Obtém e combina os dados dos grupos provenientes da nuvem, de ficheiros locais e da memória interna
   async carregarGrupos() {
-    const perfil = await this.garantiasService.getPerfil();
+    // 1. Vai buscar o email real da pessoa que iniciou sessão
+    const emailLogado = localStorage.getItem('mockEmail');
     
-    if (perfil) {
-      // Obtém os grupos da base de dados remota (Firebase) associados ao email do perfil
-      let todosRemotos = await this.garantiasService.getGruposRemotos(perfil.email);
+    // Se o utilizador tiver sessão iniciada
+    if (emailLogado) {
+      // 2. Pede ao Firebase APENAS os grupos onde o email deste utilizador está inserido
+      let todosRemotos = await this.garantiasService.getGruposRemotos(emailLogado);
       
       // Tenta ler e anexar dados de teste locais guardados num ficheiro JSON estático
       try {

@@ -68,21 +68,35 @@ export class CriarGrupoPage implements OnInit {
     });
   }
 
-  // Executado ao iniciar a página: verifica a existência de um ID para ativar o modo de edição
+ // Executado ao iniciar a página: verifica a existência de um ID para ativar o modo de edição
   async ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
+    // Vai buscar o email de quem tem a sessão iniciada
+    const emailLogado = localStorage.getItem('mockEmail');
     
-    if (id) {
+    if (id && emailLogado) {
       this.emModoEdicao = true;
       
-      // Obtém o perfil local e procura o grupo correspondente na base de dados remota
-      const perfil = await this.garantiasService.getPerfil();
-      if (perfil) {
-        const lista = await this.garantiasService.getGruposRemotos(perfil.email);
-        const grupoAEditar = lista.find(g => g.id === id);
-        if (grupoAEditar) {
-          this.novoGrupo = { ...grupoAEditar };
+      // 1. Procura o grupo nos dados remotos (Firebase) usando o email real
+      let gruposAtuais = await this.garantiasService.getGruposRemotos(emailLogado);
+      
+      // 2. Junta os grupos de teste locais (JSON) para garantir que também os consegues editar
+      try {
+        const res = await fetch('/assets/data/grupos.json');
+        const dadosJson = await res.json();
+        if (dadosJson && dadosJson.grupos) {
+          gruposAtuais = [...gruposAtuais, ...dadosJson.grupos];
         }
+      } catch (e) {
+        console.error('Aviso: ficheiro grupos.json não encontrado.');
+      }
+
+      // Procura o grupo exato que queres editar
+      const grupoAEditar = gruposAtuais.find((g: any) => g.id === id);
+      
+      // Se encontrar o grupo, preenche o formulário com as informações que já existem
+      if (grupoAEditar) {
+        this.novoGrupo = { ...grupoAEditar };
       }
     }
   }

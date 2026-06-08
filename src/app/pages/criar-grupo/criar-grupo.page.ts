@@ -87,17 +87,22 @@ export class CriarGrupoPage implements OnInit {
     }
   }
 
-  // Executado sempre que a página fica visível: define o criador e carrega a lista de garantias
+ // Executado sempre que a página fica visível: define o criador e carrega a lista de garantias
   async ionViewWillEnter() {
-    const perfil = await this.garantiasService.getPerfil();
-    if (perfil && !this.emModoEdicao) {
-      this.novoGrupo.adminEmail = perfil.email;
+    // Recupera o email do utilizador real que iniciou sessão através da memória local
+    const emailLogado = localStorage.getItem('mockEmail');
+    
+    if (emailLogado && !this.emModoEdicao) {
+      // Define o administrador do grupo como sendo o utilizador atual
+      this.novoGrupo.adminEmail = emailLogado;
       
       // Insere automaticamente o email do criador na lista de membros do novo grupo
-      if (!this.novoGrupo.membros.includes(perfil.email)) {
-        this.novoGrupo.membros.push(perfil.email);
+      if (!this.novoGrupo.membros.includes(emailLogado)) {
+        this.novoGrupo.membros.push(emailLogado);
       }
     }
+    
+    // Obtém a lista completa de garantias para o passo seguinte
     await this.carregarGarantias();
   }
 
@@ -162,7 +167,7 @@ export class CriarGrupoPage implements OnInit {
     await toast.present();
   }
 
-  // Executa a gravação do grupo e redireciona o utilizador em caso de sucesso
+ // Executa a gravação do grupo e redireciona o utilizador em caso de sucesso
   async concluirCriacao() {
     let sucesso = false;
 
@@ -181,8 +186,11 @@ export class CriarGrupoPage implements OnInit {
       const msg = this.emModoEdicao ? 'Grupo atualizado com sucesso!' : 'Grupo criado com sucesso!';
       await this.mostrarSucesso(msg);
       
-      // Retorna à lista principal de grupos
-      this.router.navigateByUrl('/tabs/tab2'); 
+      // Dá uma folga de meio segundo (500ms) para o Firebase sincronizar os dados
+      // antes de atirar o utilizador para a lista de grupos
+      setTimeout(() => {
+        this.router.navigateByUrl('/tabs/tab2'); 
+      }, 500);
     }
   }
 }

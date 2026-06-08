@@ -43,6 +43,9 @@ export class LoginPage {
       localStorage.setItem('mockPassword', this.palavraPasse);
       localStorage.setItem('mockNome', this.nome);
       
+      // SOLUÇÃO: Limpa a fotografia da conta anterior sempre que uma nova conta é criada!
+      localStorage.removeItem('mockFoto');
+      
       await this.mostrarAviso('Conta criada com sucesso! Já podes iniciar sessão.', 'success');
       this.alternarModo(); // Muda automaticamente para o ecrã de entrada
       
